@@ -96,5 +96,9 @@ void Sphere::render() const
         material->reset_gl_state();
 }
 
+bool Sphere::hit (const Ray ray, const real_t start, const real_t end, HitRecord& record) {
+	return false;
+}
+
 } /* _462 */
 

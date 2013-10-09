@@ -25,6 +25,7 @@ struct HitRecord {
 	real_t time;
 	Vector3 normal;
 	Material* material_ptr;
+	Vector3 hit_point;
 };
 
 class Geometry
@@ -123,6 +124,7 @@ public:
     size_t num_materials() const;
     Mesh* const* get_meshes() const;
     size_t num_meshes() const;
+    real_t get_refractive_index() const;
 
     /// Clears the scene, and invokes delete on everything in geometries.
     void reset();
@@ -133,6 +135,9 @@ public:
     void add_material( Material* m );
     void add_mesh( Mesh* m );
     void add_light( const SphereLight& l );
+    void add_refractive_index(const real_t refractive_index);
+
+    void pop_refractive_index();
 
 private:
 

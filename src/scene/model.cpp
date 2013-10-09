@@ -33,4 +33,8 @@ void Model::render() const
         material->reset_gl_state();
 }
 
+bool Model::hit(const Ray ray, const real_t start, const real_t end, HitRecord& record) {
+
+}
+
 } /* _462 */

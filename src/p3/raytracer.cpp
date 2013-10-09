@@ -14,6 +14,7 @@
 #include <SDL_timer.h>
 #include <iostream>
 #include <random>
+#include <limits>
 
 #ifdef OPENMP // just a defense in case OpenMP is not installed.
 
@@ -106,13 +107,45 @@ Color3 Raytracer::trace_pixel(const Scene* scene,
         real_t j = real_t(2)*(real_t(y)+random())*dy - real_t(1);
 
         Ray r = Ray(scene->camera.get_position(), Ray::get_pixel_dir(i, j));
+        Geometry* shapes = scene->get_geometries();
+        HitRecord record;
+        record.material_ptr = NULL;
 
-        // TODO return the color of the given pixel
-        // you don't have to use this stub function if you prefer to
-        // write your own version of Raytracer::raytrace.
-
+        real_t t0 = 0;
+        real_t t1 = std::numeric_limits<double>::infinity();
+        for (size_t i = 0; i < scene->num_geometries(); i++) {
+        	if ((shapes + i)->hit(r, t0, t1, record)) {
+        		t1 = record.time;
+        	}
+        }
+        res += shade(r, record);
     }
     return res*(real_t(1)/num_samples);
+}
+
+Color3 Raytracer::shade(const Ray ray, const HitRecord record) {
+	Color3 result;
+
+	if (record.material_ptr == NULL) {
+		result = scene->background_color;
+		return result;
+	}
+
+	result = record.material_ptr->ambient * scene->ambient_light;
+	unsigned int iter;
+	for (iter = 0; iter < num_samples; iter++) {
+		Vector3 rand_dir(random_gaussian(), random_gaussian(), random_gaussian());
+		rand_dir = normalize(rand_dir);
+		Ray shadow_light(record.hit_point, rand_dir);
+		real_t light_t;
+		for (size_t i = 0; i < scene->num_lights(); i++)
+			if (scene->get_lights()[i].intersect(shadow_light, light_t) && light_t > 0)
+				goto light_found;
+	}
+	light_found:
+	if (iter == num_samples)
+		return result;
+
 }
 
 /**

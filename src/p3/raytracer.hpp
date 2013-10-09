@@ -42,6 +42,8 @@ private:
 		       size_t width,
 		       size_t height);
 
+    Color3 shade(const Ray ray, const HitRecord record);
+
     // the scene to trace
     Scene* scene;
 
