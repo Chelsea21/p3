@@ -121,7 +121,8 @@ void Scene::reset()
 
     background_color = Color3::Black();
     ambient_light = Color3::Black();
-    refractive_index = 1.0;
+    refractive_indices.clear();
+    refractive_indices.push_back(1.0);
 }
 
 void Scene::add_geometry( Geometry* g )

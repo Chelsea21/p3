@@ -21,6 +21,12 @@
 
 namespace _462 {
 
+struct HitRecord {
+	real_t time;
+	Vector3 normal;
+	Material* material_ptr;
+};
+
 class Geometry
 {
 public:
@@ -55,6 +61,9 @@ public:
     virtual void render() const = 0;
 
 	bool initialize();
+
+	// Hit function
+	virtual bool hit(const Ray ray, const real_t start, const real_t end, HitRecord& record) const = 0;
 };
 
 
@@ -94,8 +103,8 @@ public:
     Color3 background_color;
     /// the amibient light of the scene
     Color3 ambient_light;
-    /// the refraction index of air
-    real_t refractive_index;
+    /// the refraction index stack (starting with the air).
+    std::vector<real_t> refractive_indices;
 
     /// Creates a new empty scene.
     Scene();
@@ -130,6 +139,8 @@ private:
     typedef std::vector< SphereLight > SphereLightList;
     typedef std::vector< Material* > MaterialList;
     typedef std::vector< Mesh* > MeshList;
+
+    // TODO Change to octree?
     typedef std::vector< Geometry* > GeometryList;
 
     // list of all lights in the scene
