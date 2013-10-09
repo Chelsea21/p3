@@ -1,0 +1,392 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>P3-Debug@build</name>
+	<comment></comment>
+	<projects>
+	</projects>
+	<buildSpec>
+		<buildCommand>
+			<name>org.eclipse.cdt.make.core.makeBuilder</name>
+			<triggers>clean,full,incremental,</triggers>
+			<arguments>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.cleanBuildTarget</key>
+					<value>clean</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.enableCleanBuild</key>
+					<value>true</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.append_environment</key>
+					<value>true</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.stopOnError</key>
+					<value>true</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.enabledIncrementalBuild</key>
+					<value>true</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.build.command</key>
+					<value>/usr/bin/make</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.contents</key>
+					<value>org.eclipse.cdt.make.core.activeConfigSettings</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.build.target.inc</key>
+					<value>all</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.build.arguments</key>
+					<value></value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.buildLocation</key>
+					<value>/home/chelsea/Documents/GraphicsProjects/p3/build</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.useDefaultBuildCmd</key>
+					<value>false</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.environment</key>
+					<value>VERBOSE=1|CMAKE_NO_VERBOSE=1|</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.enableFullBuild</key>
+					<value>true</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.build.target.auto</key>
+					<value>all</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.enableAutoBuild</key>
+					<value>false</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.build.target.clean</key>
+					<value>clean</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.fullBuildTarget</key>
+					<value>all</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.buildArguments</key>
+					<value></value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.build.location</key>
+					<value>/home/chelsea/Documents/GraphicsProjects/p3/build</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.autoBuildTarget</key>
+					<value>all</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.core.errorOutputParser</key>
+					<value>org.eclipse.cdt.core.MakeErrorParser;org.eclipse.cdt.core.GCCErrorParser;org.eclipse.cdt.core.GASErrorParser;org.eclipse.cdt.core.GLDErrorParser;</value>
+				</dictionary>
+			</arguments>
+		</buildCommand>
+		<buildCommand>
+			<name>org.eclipse.cdt.make.core.ScannerConfigBuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+	</buildSpec>
+	<natures>
+		<nature>org.eclipse.cdt.core.ccnature</nature>
+		<nature>org.eclipse.cdt.make.core.makeNature</nature>
+		<nature>org.eclipse.cdt.make.core.ScannerConfigNature</nature>
+		<nature>org.eclipse.cdt.core.cnature</nature>
+	</natures>
+	<linkedResources>
+		<link>
+			<name>[Source directory]</name>
+			<type>2</type>
+			<location>/home/chelsea/Documents/GraphicsProjects/p3/src</location>
+		</link>
+		<link>
+			<name>[Subprojects]</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Subprojects]/P3</name>
+			<type>2</type>
+			<location>/home/chelsea/Documents/GraphicsProjects/p3/src</location>
+		</link>
+		<link>
+			<name>[Targets]</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[lib] application</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[lib] application/</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[lib] application/Source Files</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[lib] application/Source Files/application.cpp</name>
+			<type>1</type>
+			<location>/home/chelsea/Documents/GraphicsProjects/p3/src/application/application.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[lib] application/Source Files/camera_roam.cpp</name>
+			<type>1</type>
+			<location>/home/chelsea/Documents/GraphicsProjects/p3/src/application/camera_roam.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[lib] application/Source Files/imageio.cpp</name>
+			<type>1</type>
+			<location>/home/chelsea/Documents/GraphicsProjects/p3/src/application/imageio.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[lib] application/Source Files/scene_loader.cpp</name>
+			<type>1</type>
+			<location>/home/chelsea/Documents/GraphicsProjects/p3/src/application/scene_loader.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[lib] application/Header Files</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[lib] application/CMake Rules</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[lib] application/Resources</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[lib] math</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[lib] math/</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[lib] math/Source Files</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[lib] math/Source Files/camera.cpp</name>
+			<type>1</type>
+			<location>/home/chelsea/Documents/GraphicsProjects/p3/src/math/camera.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[lib] math/Source Files/color.cpp</name>
+			<type>1</type>
+			<location>/home/chelsea/Documents/GraphicsProjects/p3/src/math/color.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[lib] math/Source Files/math.cpp</name>
+			<type>1</type>
+			<location>/home/chelsea/Documents/GraphicsProjects/p3/src/math/math.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[lib] math/Source Files/matrix.cpp</name>
+			<type>1</type>
+			<location>/home/chelsea/Documents/GraphicsProjects/p3/src/math/matrix.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[lib] math/Source Files/quaternion.cpp</name>
+			<type>1</type>
+			<location>/home/chelsea/Documents/GraphicsProjects/p3/src/math/quaternion.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[lib] math/Source Files/vector.cpp</name>
+			<type>1</type>
+			<location>/home/chelsea/Documents/GraphicsProjects/p3/src/math/vector.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[lib] math/Header Files</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[lib] math/CMake Rules</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[lib] math/Resources</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[exe] p3</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[exe] p3/</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[exe] p3/Source Files</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[exe] p3/Source Files/main.cpp</name>
+			<type>1</type>
+			<location>/home/chelsea/Documents/GraphicsProjects/p3/src/p3/main.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] p3/Source Files/raytracer.cpp</name>
+			<type>1</type>
+			<location>/home/chelsea/Documents/GraphicsProjects/p3/src/p3/raytracer.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] p3/Header Files</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[exe] p3/CMake Rules</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[exe] p3/Resources</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[lib] scene</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[lib] scene/</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[lib] scene/Source Files</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[lib] scene/Source Files/material.cpp</name>
+			<type>1</type>
+			<location>/home/chelsea/Documents/GraphicsProjects/p3/src/scene/material.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[lib] scene/Source Files/mesh.cpp</name>
+			<type>1</type>
+			<location>/home/chelsea/Documents/GraphicsProjects/p3/src/scene/mesh.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[lib] scene/Source Files/model.cpp</name>
+			<type>1</type>
+			<location>/home/chelsea/Documents/GraphicsProjects/p3/src/scene/model.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[lib] scene/Source Files/scene.cpp</name>
+			<type>1</type>
+			<location>/home/chelsea/Documents/GraphicsProjects/p3/src/scene/scene.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[lib] scene/Source Files/sphere.cpp</name>
+			<type>1</type>
+			<location>/home/chelsea/Documents/GraphicsProjects/p3/src/scene/sphere.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[lib] scene/Source Files/triangle.cpp</name>
+			<type>1</type>
+			<location>/home/chelsea/Documents/GraphicsProjects/p3/src/scene/triangle.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[lib] scene/Source Files/ray.cpp</name>
+			<type>1</type>
+			<location>/home/chelsea/Documents/GraphicsProjects/p3/src/scene/ray.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[lib] scene/Header Files</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[lib] scene/CMake Rules</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[lib] scene/Resources</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[lib] tinyxml</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[lib] tinyxml/</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[lib] tinyxml/Source Files</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[lib] tinyxml/Source Files/tinyxml.cpp</name>
+			<type>1</type>
+			<location>/home/chelsea/Documents/GraphicsProjects/p3/src/tinyxml/tinyxml.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[lib] tinyxml/Source Files/tinyxmlerror.cpp</name>
+			<type>1</type>
+			<location>/home/chelsea/Documents/GraphicsProjects/p3/src/tinyxml/tinyxmlerror.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[lib] tinyxml/Source Files/tinyxmlparser.cpp</name>
+			<type>1</type>
+			<location>/home/chelsea/Documents/GraphicsProjects/p3/src/tinyxml/tinyxmlparser.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[lib] tinyxml/Header Files</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[lib] tinyxml/CMake Rules</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[lib] tinyxml/Resources</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+	</linkedResources>
+</projectDescription>
