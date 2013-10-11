@@ -18,6 +18,7 @@
 
 namespace _462 {
 
+struct HitRecord;
 class Scene;
 class Ray;
 struct Intersection;

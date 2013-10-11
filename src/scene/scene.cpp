@@ -7,6 +7,7 @@
  */
 
 #include "scene/scene.hpp"
+#include "math/random462.hpp"
 
 namespace _462 {
 
@@ -41,8 +42,10 @@ SphereLight::SphereLight():
     attenuation.quadratic = 0;
 }
 
-bool SphereLight::intersect(const Ray& r, real_t& t) {
-	// TODO use the formula in sphere?
+Vector3 SphereLight::generate_random_point() const {
+	Vector3 rand_dir(random_gaussian(), random_gaussian(), random_gaussian());
+	rand_dir = normalize(rand_dir) * radius;
+	return position + rand_dir;
 }
 
 Scene::Scene()

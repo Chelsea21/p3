@@ -81,6 +81,8 @@ struct SphereLight
 
 	bool intersect(const Ray& r, real_t& t);
 
+	Vector3 generate_random_point() const;
+
     // The position of the light, relative to world origin.
     Vector3 position;
     // The color of the light (both diffuse and specular)
@@ -116,7 +118,7 @@ public:
 	bool initialize();
 
     // accessor functions
-    Geometry* const* get_geometries() const;
+    Geometry* const * get_geometries() const;
     size_t num_geometries() const;
     const SphereLight* get_lights() const;
     size_t num_lights() const;

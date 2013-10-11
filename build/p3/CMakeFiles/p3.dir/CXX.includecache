@@ -106,20 +106,6 @@ iostream
 cstring
 -
 
-/home/chelsea/Documents/GraphicsProjects/p3/src/p3/raytracer.cpp
-raytracer.hpp
-/home/chelsea/Documents/GraphicsProjects/p3/src/p3/raytracer.hpp
-scene/scene.hpp
-/home/chelsea/Documents/GraphicsProjects/p3/src/p3/scene/scene.hpp
-SDL_timer.h
--
-iostream
--
-random
--
-omp.h
--
-
 /home/chelsea/Documents/GraphicsProjects/p3/src/p3/raytracer.hpp
 math/color.hpp
 /home/chelsea/Documents/GraphicsProjects/p3/src/p3/math/color.hpp

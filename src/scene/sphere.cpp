@@ -96,7 +96,7 @@ void Sphere::render() const
         material->reset_gl_state();
 }
 
-bool Sphere::hit (const Ray ray, const real_t start, const real_t end, HitRecord& record) {
+bool Sphere::hit(const Ray ray, const real_t start, const real_t end, HitRecord& record) const {
 	return false;
 }
 

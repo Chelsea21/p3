@@ -49,8 +49,8 @@ void Triangle::render() const
         vertices[0].material->reset_gl_state();
 }
 
-bool Model::hit(const Ray ray, const real_t start, const real_t end, HitRecord& record) {
-
+bool Triangle::hit(const Ray ray, const real_t start, const real_t end, HitRecord& record) const {
+	return false;
 }
 
 } /* _462 */

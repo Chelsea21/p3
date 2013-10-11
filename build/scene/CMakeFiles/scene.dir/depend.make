@@ -60,6 +60,7 @@ scene/CMakeFiles/scene.dir/scene.cpp.o: /home/chelsea/Documents/GraphicsProjects
 scene/CMakeFiles/scene.dir/scene.cpp.o: /home/chelsea/Documents/GraphicsProjects/p3/src/math/math.hpp
 scene/CMakeFiles/scene.dir/scene.cpp.o: /home/chelsea/Documents/GraphicsProjects/p3/src/math/matrix.hpp
 scene/CMakeFiles/scene.dir/scene.cpp.o: /home/chelsea/Documents/GraphicsProjects/p3/src/math/quaternion.hpp
+scene/CMakeFiles/scene.dir/scene.cpp.o: /home/chelsea/Documents/GraphicsProjects/p3/src/math/random462.hpp
 scene/CMakeFiles/scene.dir/scene.cpp.o: /home/chelsea/Documents/GraphicsProjects/p3/src/math/vector.hpp
 scene/CMakeFiles/scene.dir/scene.cpp.o: /home/chelsea/Documents/GraphicsProjects/p3/src/scene/material.hpp
 scene/CMakeFiles/scene.dir/scene.cpp.o: /home/chelsea/Documents/GraphicsProjects/p3/src/scene/mesh.hpp
