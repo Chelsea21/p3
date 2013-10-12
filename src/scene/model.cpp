@@ -16,7 +16,6 @@
 #include <fstream>
 #include <sstream>
 
-
 namespace _462 {
 
 Model::Model() : mesh( 0 ), material( 0 ) { }
@@ -33,7 +32,8 @@ void Model::render() const
         material->reset_gl_state();
 }
 
-bool Model::hit(const Ray ray, const real_t start, const real_t end, HitRecord& record) const {
+bool Model::hit(const Ray ray, const real_t start, const real_t end, const bool check_only,
+		HitRecord& record) const {
 	return false;
 }
 

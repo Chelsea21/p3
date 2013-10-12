@@ -88,6 +88,9 @@ bool Triangle::hit(const Ray ray, const real_t start, const real_t end,
 	if (gamma < 0 || gamma > 1 - beta)
 		return false;
 
+	if (check_only)
+		return true;
+
 	Material* v1_mat = vertices[0].material;
 	Material* v2_mat = vertices[1].material;
 	Material* v3_mat = vertices[2].material;
