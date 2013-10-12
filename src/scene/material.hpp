@@ -15,77 +15,98 @@
 
 namespace _462 {
 
-class Material
-{
+class Material {
 public:
 
-    Material();
-    ~Material();
+	Material();
+	~Material();
 
-    // ambient color (ignored if refractive_index != 0)
-    Color3 ambient;
+	Material(Color3 ambient, Color3 diffuse, real_t shininess, real_t refractive_index,
+			std::string texture_filename)
+			: ambient(ambient), diffuse(diffuse), shininess(shininess), refractive_index(refractive_index),
+			  texture_filename(texture_filename),  tex_height(0), tex_width(0), tex_data(NULL),
+			  tex_handle(NULL) { }
 
-    // diffuse color
-    Color3 diffuse;
+	// ambient color (ignored if refractive_index != 0)
+	Color3 ambient;
 
-    // specular (reflective) color
-    Color3 specular;
+	// diffuse color
+	Color3 diffuse;
 
-    // IGNORE THIS FOR THE RAYTRACER, only used for the OpenGL renderer
-    real_t shininess;
+	// specular (reflective) color
+	Color3 specular;
 
-    // refractive index of material dielectric. 0 is special case for
-    // infinity, i.e. opaque. Any other value means transparent with the
-    // given refractive index.
-    real_t refractive_index;
+	// IGNORE THIS FOR THE RAYTRACER, only used for the OpenGL renderer
+	real_t shininess;
 
-    // filename of the texture
-    std::string texture_filename;
+	// refractive index of material dielectric. 0 is special case for
+	// infinity, i.e. opaque. Any other value means transparent with the
+	// given refractive index.
+	real_t refractive_index;
 
-    /**
-     * Loads the texture from a file and optionally create a gl texture handle
-     * for it. DO NOT CALL EVERY FRAME, as it will re-load the texture each time.
-     * @return true on success, false on error.
-     */
-    bool load();
+	// filename of the texture
+	std::string texture_filename;
 
-    /// returns the raw texture data
-    const unsigned char* get_texture_data() const;
+	/**
+	 * Loads the texture from a file and optionally create a gl texture handle
+	 * for it. DO NOT CALL EVERY FRAME, as it will re-load the texture each time.
+	 * @return true on success, false on error.
+	 */
+	bool load();
 
-    /// puts the dimensions into width and height
-    void get_texture_size( int* width, int* height ) const;
+	/// returns the raw texture data
+	const unsigned char* get_texture_data() const;
 
-    /**
-     * returns the color of the (x,y) pixel, where
-     * x ranges from [0, width-1] and y ranges from [0, height-1].
-     * Returns white if there is no texture.
-     */
-    Color3 get_texture_pixel( int x, int y ) const;
+	/// puts the dimensions into width and height
+	void get_texture_size(int* width, int* height) const;
 
-    /// Creates opengl data for rendering
-    bool create_gl_data();
+	/**
+	 * returns the color of the (x,y) pixel, where
+	 * x ranges from [0, width-1] and y ranges from [0, height-1].
+	 * Returns white if there is no texture.
+	 */
+	Color3 get_texture_pixel(int x, int y) const;
 
-    /// sets all the gl state for this material
-    void set_gl_state() const;
+	/// Creates opengl data for rendering
+	bool create_gl_data();
 
-    /// clears out setting that depend on this material, such as the texture.
-    /// leaves other settings unchanged for efficiency.
-    void reset_gl_state() const;
+	/// sets all the gl state for this material
+	void set_gl_state() const;
+
+	/// clears out setting that depend on this material, such as the texture.
+	/// leaves other settings unchanged for efficiency.
+	void reset_gl_state() const;
+
+	// operators overwrite for interpolating.
+	Material operator+(const Material& mat) const {
+		return Material(ambient + mat.ambient, diffuse + mat.diffuse, shininess + mat.shininess,
+				refractive_index + mat.refractive_index, texture_filename);
+	}
+
+	Material operator-(const Material& mat) const {
+		return Material(ambient - mat.ambient, diffuse - mat.diffuse, shininess - mat.shininess,
+				refractive_index - mat.refractive_index, texture_filename);
+	}
+
+	Material operator*(const real_t s) const {
+		return Material(s * ambient, diffuse, s * shininess,
+						s * refractive_index, texture_filename);
+	}
 
 private:
 
-    // dimensions of the texture
-    int tex_width, tex_height;
+	// dimensions of the texture
+	int tex_width, tex_height;
 
-    // raw texture data
-    unsigned char* tex_data;
+	// raw texture data
+	unsigned char* tex_data;
 
-    // opengl descriptor of the texture
-    GLuint tex_handle;
+	// opengl descriptor of the texture
+	GLuint tex_handle;
 
-    // prevent copy/assignment
-    Material( const Material& );
-    Material& operator=( const Material& );
+	// prevent copy/assignment
+	Material(const Material&);
+	Material& operator=(const Material&);
 };
 
 } /* _462 */

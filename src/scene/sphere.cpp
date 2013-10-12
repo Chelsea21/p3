@@ -121,7 +121,7 @@ bool Sphere::hit(const Ray ray, const real_t start, const real_t end,
 		return false;
 	}
 
-	record.material_ptr = this->material;
+	record.material = *this->material;
 	record.hit_point = ray.e + record.time * ray.d;
 	record.normal = normalize(record.hit_point - position);
 

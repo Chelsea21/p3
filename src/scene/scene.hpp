@@ -23,9 +23,9 @@ namespace _462 {
 
 struct HitRecord {
 	real_t time;
-	Vector3 normal;
-	Material* material_ptr;
 	Vector3 hit_point;
+	Vector3 normal;
+	Material material;
 };
 
 class Geometry
