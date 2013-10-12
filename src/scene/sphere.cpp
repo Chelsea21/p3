@@ -8,6 +8,7 @@
 
 #include "scene/sphere.hpp"
 #include "application/opengl.hpp"
+#include <cmath>
 
 namespace _462 {
 
@@ -96,8 +97,35 @@ void Sphere::render() const
         material->reset_gl_state();
 }
 
-bool Sphere::hit(const Ray ray, const real_t start, const real_t end, HitRecord& record) const {
-	return false;
+bool Sphere::hit(const Ray ray, const real_t start, const real_t end,
+				const bool check_only, HitRecord& record) const {
+	// TODO check whether the transformation is correct.
+	Ray transformed_ray = this->invMat * ray;
+	Vector3 e_minus_c = transformed_ray.e - position;
+	real_t a = dot(transformed_ray.d, transformed_ray.d);
+	real_t c = dot(e_minus_c, e_minus_c) - radius * radius;
+	real_t b = dot(transformed_ray.d, e_minus_c);
+	real_t discriminant = b * b - a * c;
+
+	if (discriminant < 0 || check_only)
+		return (discriminant < 0);
+
+	real_t numerator = -b;
+
+	if (discriminant > 0)
+		numerator -= std::sqrt(discriminant);
+	record.time = numerator / a;
+
+	if (record.time < start || record.time > end) {
+		record.time = 0;
+		return false;
+	}
+
+	record.material_ptr = this->material;
+	record.hit_point = ray.e + record.time * ray.d;
+	record.normal = normalize(record.hit_point - position);
+
+	return true;
 }
 
 } /* _462 */

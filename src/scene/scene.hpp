@@ -64,7 +64,7 @@ public:
 	bool initialize();
 
 	// Hit function
-	virtual bool hit(const Ray ray, const real_t start, const real_t end, HitRecord& record) const = 0;
+	virtual bool hit(const Ray ray, const real_t start, const real_t end, const bool check_only, HitRecord& record) const = 0;
 };
 
 

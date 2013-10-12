@@ -40,7 +40,8 @@ public:
     virtual ~Triangle();
     virtual void render() const;
 
-    virtual bool hit(const Ray ray, const real_t start, const real_t end, HitRecord& record) const;
+    virtual bool hit(const Ray ray, const real_t start, const real_t end,
+    					const bool check_only, HitRecord& record) const;
 };
 
 
