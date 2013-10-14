@@ -104,22 +104,21 @@ bool Sphere::hit(const Ray ray, const real_t start, const real_t end,
 	(void) model_index;
 
 	Ray transformed_ray = ray.transform(this->invMat);
-	Vector3 e_minus_c = transformed_ray.e - position;
+	Vector3 e_minus_c = transformed_ray.e - Vector3(0, 0, 0);
 	real_t a = dot(transformed_ray.d, transformed_ray.d);
 	real_t c = dot(e_minus_c, e_minus_c) - radius * radius;
-	real_t b = dot(transformed_ray.d, e_minus_c);
-	real_t discriminant = b * b - a * c;
+	real_t b_half = dot(transformed_ray.d, e_minus_c);
+	real_t discriminant = b_half * b_half - a * c;
 
-	if (discriminant < 0 || (record_ptr == NULL))
-		return (discriminant < 0);
+	if (discriminant < 0)
+		return false;
 
-	real_t numerator = -b;
+	real_t numerator = -b_half;
 
 	if (discriminant > 0)
 		numerator -= std::sqrt(discriminant);
 
 	real_t t = numerator / a;
-
 
 	if (t < start || t > end) {
 		return false;
@@ -128,8 +127,12 @@ bool Sphere::hit(const Ray ray, const real_t start, const real_t end,
 	if (record_ptr != NULL) {
 		record_ptr->time = t;
 		record_ptr->material_ptr = this->material;
+
+		Vector3 transformed_point = transformed_ray.e + record_ptr->time * transformed_ray.d;
+		Vector3 transformed_normal = transformed_point - Vector3(0, 0, 0);
+
 		record_ptr->hit_point = ray.e + record_ptr->time * ray.d;
-		record_ptr->normal = normalize(record_ptr->hit_point - position);
+		record_ptr->normal = normalize(this->normMat * transformed_normal);
 		record_ptr->shade_factors.ambient = this->material->ambient;
 		record_ptr->shade_factors.diffuse = this->material->diffuse;
 		record_ptr->shade_factors.refractive_index = this->material->refractive_index;

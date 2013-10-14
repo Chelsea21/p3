@@ -110,6 +110,7 @@ public:
 
 	// accessor functions
 	Geometry* const * get_geometries() const;
+	Geometry* get_geometry(unsigned int geometry_num) const;
 	size_t num_geometries() const;
 	const SphereLight* get_lights() const;
 	size_t num_lights() const;

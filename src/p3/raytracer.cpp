@@ -24,8 +24,9 @@
 #endif
 namespace _462 {
 
+// TODO
 // max number of threads OpenMP can use. Change this if you like.
-#define MAX_THREADS 8
+#define MAX_THREADS 1
 
 static const unsigned STEP_SIZE = 8;
 
@@ -108,16 +109,16 @@ Color3 Raytracer::trace_pixel(const Scene* scene,
         real_t j = real_t(2)*(real_t(y)+random())*dy - real_t(1);
 
         Ray r = Ray(scene->camera.get_position(), Ray::get_pixel_dir(i, j));
-        Geometry* const * const shapes = scene->get_geometries();
         HitRecord record;
         record.material_ptr = NULL;
 
         real_t t0 = 0;
         real_t t1 = std::numeric_limits<double>::infinity();
         for (size_t i = 0; i < scene->num_geometries(); i++) {
-        	for (size_t j = 0; j < (*shapes + i)->num_models(); j++)
-				if ((*shapes + i)->hit(r, t0, t1, j, &record)) {
+        	for (size_t j = 0; j < scene->get_geometry(i)->num_models(); j++)
+				if (scene->get_geometry(i)->hit(r, t0, t1, j, &record)) {
 					t1 = record.time;
+					//std::cout << "i: " << i << "; " << t1 << std::endl;
 				}
         }
         res += shade(r, record);
@@ -141,14 +142,14 @@ Color3 Raytracer::shade(const Ray ray, const HitRecord record) {
 		for (iter = 0; iter < num_samples; iter++) {
 			// Random vector generate by the light source is a vector from the center to a random
 			// point on its surface.
-			Ray light_ray(record.hit_point, scene->get_lights()[i].generate_random_point()
-							- record.hit_point);
+			Vector3 random_light_point = scene->get_lights()[i].generate_random_point();
+			Ray light_ray(record.hit_point, random_light_point - record.hit_point);
+
 			for (size_t j = 0; j < scene->num_geometries(); j++) {
-				Geometry* const* const shapes = scene->get_geometries();
 				HitRecord shadow_record;
 				// D vector here is the vector pointing from the object surface to the light source.
-				for (size_t k = 0; k < (*shapes + j)->num_models(); k++)
-					if ((*shapes + j)->hit(light_ray, 0, 1, k, &shadow_record)) {
+				for (size_t k = 0; k < scene->get_geometry(j)->num_models(); k++)
+					if (scene->get_geometry(j)->hit(light_ray, 1e-3, 1, k, &shadow_record)) {
 						light_rays[i] = light_ray;
 						goto ray_found;
 					}
@@ -159,6 +160,8 @@ Color3 Raytracer::shade(const Ray ray, const HitRecord record) {
 			light_number.push_back(i);
 	}
 
+	//std::cout << record.hit_point << std::endl;
+	//std::cout << light_number.size() << std::endl;
 	// Shadow.
 	if (light_number.size() < 1)
 		return result;
@@ -166,9 +169,9 @@ Color3 Raytracer::shade(const Ray ray, const HitRecord record) {
 	// Render diffuse and specular light for each light sources.
 	for (std::vector<unsigned int>::iterator itr = light_number.begin(); itr != light_number.end(); itr++) {
 		const SphereLight* light = (scene->get_lights()+ *itr);
-		Vector3 h = normalize(normalize(light_rays[*itr].d) + normalize(ray.d));
-
-		result += record.shade_factors.diffuse * light->color * std::fmax(0, dot(record.normal, normalize(light_rays[*itr].d))) +
+		Vector3 h = normalize(normalize(light_rays[*itr].d) + normalize(-ray.d));
+		real_t diffuse_cos = (dot(record.normal, normalize(light_rays[*itr].d)) > 0) ? dot(record.normal, normalize(light_rays[*itr].d)) : 0;
+		result += record.shade_factors.diffuse * light->color * diffuse_cos +
 				record.shade_factors.specular * light->color * std::pow(dot(record.normal, h), record.shade_factors.shininess);
 	}
 

@@ -68,26 +68,6 @@ application/opengl.hpp
 string
 -
 
-/home/chelsea/Documents/GraphicsProjects/p3/src/scene/mesh.cpp
-scene/mesh.hpp
-/home/chelsea/Documents/GraphicsProjects/p3/src/scene/scene/mesh.hpp
-scene/triangle.hpp
-/home/chelsea/Documents/GraphicsProjects/p3/src/scene/scene/triangle.hpp
-application/opengl.hpp
-/home/chelsea/Documents/GraphicsProjects/p3/src/scene/application/opengl.hpp
-iostream
--
-cstring
--
-string
--
-fstream
--
-sstream
--
-map
--
-
 /home/chelsea/Documents/GraphicsProjects/p3/src/scene/mesh.hpp
 math/vector.hpp
 /home/chelsea/Documents/GraphicsProjects/p3/src/scene/math/vector.hpp
@@ -136,7 +116,15 @@ vector
 cfloat
 -
 
-/home/chelsea/Documents/GraphicsProjects/p3/src/scene/triangle.hpp
+/home/chelsea/Documents/GraphicsProjects/p3/src/scene/sphere.cpp
+scene/sphere.hpp
+/home/chelsea/Documents/GraphicsProjects/p3/src/scene/scene/sphere.hpp
+application/opengl.hpp
+/home/chelsea/Documents/GraphicsProjects/p3/src/scene/application/opengl.hpp
+cmath
+-
+
+/home/chelsea/Documents/GraphicsProjects/p3/src/scene/sphere.hpp
 scene/scene.hpp
 /home/chelsea/Documents/GraphicsProjects/p3/src/scene/scene/scene.hpp
 

@@ -52,7 +52,6 @@ void Triangle::render() const
 bool Triangle::hit(const Ray ray, const real_t start, const real_t end,
 			const unsigned int model_index, HitRecord* record_ptr) {
 	(void) model_index;
-
 	Ray transformed_ray = ray.transform(this->invMat);
 	Material material;
 
@@ -108,6 +107,9 @@ bool Triangle::hit(const Ray ray, const real_t start, const real_t end,
 			vertices[0].material->shininess, vertices[1].material->shininess, vertices[2].material->shininess);
 	record_ptr->shade_factors.refractive_index = interpolate<real_t>(beta, gamma,
 			vertices[0].material->refractive_index, vertices[1].material->refractive_index, vertices[2].material->refractive_index);
+
+	//std::cout << "beta: " << beta << "; gamma: " << gamma << std::endl;
+	//std::cout << record_ptr->shade_factors.ambient << std::endl;
 
 	return true;
 }

@@ -72,6 +72,12 @@ Geometry* const* Scene::get_geometries() const
     return geometries.empty() ? NULL : &geometries[0];
 }
 
+Geometry* Scene::get_geometry(unsigned int geometry_num) const {
+	if (geometry_num < num_geometries())
+		return geometries[geometry_num];
+	return NULL;
+}
+
 size_t Scene::num_geometries() const
 {
     return geometries.size();

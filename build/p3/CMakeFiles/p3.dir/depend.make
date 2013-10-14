@@ -58,6 +58,7 @@ p3/CMakeFiles/p3.dir/raytracer.cpp.o: /home/chelsea/Documents/GraphicsProjects/p
 p3/CMakeFiles/p3.dir/raytracer.cpp.o: /home/chelsea/Documents/GraphicsProjects/p3/src/p3/raytracer.cpp
 p3/CMakeFiles/p3.dir/raytracer.cpp.o: /home/chelsea/Documents/GraphicsProjects/p3/src/p3/raytracer.hpp
 p3/CMakeFiles/p3.dir/raytracer.cpp.o: /home/chelsea/Documents/GraphicsProjects/p3/src/scene/material.hpp
+p3/CMakeFiles/p3.dir/raytracer.cpp.o: /home/chelsea/Documents/GraphicsProjects/p3/src/scene/mesh.hpp
 p3/CMakeFiles/p3.dir/raytracer.cpp.o: /home/chelsea/Documents/GraphicsProjects/p3/src/scene/ray.hpp
 p3/CMakeFiles/p3.dir/raytracer.cpp.o: /home/chelsea/Documents/GraphicsProjects/p3/src/scene/scene.hpp
 p3/CMakeFiles/p3.dir/raytracer.cpp.o: /usr/include/SDL/SDL_config.h

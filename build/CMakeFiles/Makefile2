@@ -172,8 +172,8 @@ p3/preinstall:
 
 # All Build rule for target.
 p3/CMakeFiles/p3.dir/all: application/CMakeFiles/application.dir/all
-p3/CMakeFiles/p3.dir/all: scene/CMakeFiles/scene.dir/all
 p3/CMakeFiles/p3.dir/all: math/CMakeFiles/math.dir/all
+p3/CMakeFiles/p3.dir/all: scene/CMakeFiles/scene.dir/all
 p3/CMakeFiles/p3.dir/all: tinyxml/CMakeFiles/tinyxml.dir/all
 	$(MAKE) -f p3/CMakeFiles/p3.dir/build.make p3/CMakeFiles/p3.dir/depend
 	$(MAKE) -f p3/CMakeFiles/p3.dir/build.make p3/CMakeFiles/p3.dir/build
