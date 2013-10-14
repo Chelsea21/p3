@@ -106,6 +106,24 @@ iostream
 cstring
 -
 
+/home/chelsea/Documents/GraphicsProjects/p3/src/p3/raytracer.cpp
+raytracer.hpp
+/home/chelsea/Documents/GraphicsProjects/p3/src/p3/raytracer.hpp
+scene/scene.hpp
+/home/chelsea/Documents/GraphicsProjects/p3/src/p3/scene/scene.hpp
+SDL_timer.h
+-
+iostream
+-
+random
+-
+limits
+-
+cmath
+-
+omp.h
+-
+
 /home/chelsea/Documents/GraphicsProjects/p3/src/p3/raytracer.hpp
 math/color.hpp
 /home/chelsea/Documents/GraphicsProjects/p3/src/p3/math/color.hpp
@@ -122,14 +140,6 @@ application/opengl.hpp
 string
 -
 
-/home/chelsea/Documents/GraphicsProjects/p3/src/scene/mesh.hpp
-math/vector.hpp
-/home/chelsea/Documents/GraphicsProjects/p3/src/scene/math/vector.hpp
-vector
--
-cassert
--
-
 /home/chelsea/Documents/GraphicsProjects/p3/src/scene/ray.hpp
 math/vector.hpp
 /home/chelsea/Documents/GraphicsProjects/p3/src/scene/math/vector.hpp
@@ -141,8 +151,6 @@ math/camera.hpp
 /home/chelsea/Documents/GraphicsProjects/p3/src/scene/math/camera.hpp
 scene/material.hpp
 /home/chelsea/Documents/GraphicsProjects/p3/src/scene/scene/material.hpp
-scene/mesh.hpp
-/home/chelsea/Documents/GraphicsProjects/p3/src/scene/scene/mesh.hpp
 string
 -
 vector
@@ -159,10 +167,8 @@ math/camera.hpp
 /home/chelsea/Documents/GraphicsProjects/p3/src/scene/math/camera.hpp
 scene/material.hpp
 /home/chelsea/Documents/GraphicsProjects/p3/src/scene/scene/material.hpp
-scene/mesh.hpp
-/home/chelsea/Documents/GraphicsProjects/p3/src/scene/scene/mesh.hpp
-ray.hpp
-/home/chelsea/Documents/GraphicsProjects/p3/src/scene/ray.hpp
+scene/ray.hpp
+/home/chelsea/Documents/GraphicsProjects/p3/src/scene/scene/ray.hpp
 string
 -
 vector

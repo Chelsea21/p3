@@ -40,12 +40,12 @@ public:
     virtual ~Triangle();
     virtual void render() const;
     virtual bool hit(const Ray ray, const real_t start, const real_t end,
-    					const bool check_only, HitRecord& record) const;
+    				const unsigned int model_index, HitRecord* record_ptr) const;
 };
 
 template<typename T> inline T interpolate(const real_t beta, const real_t gamma,
 										const T a, const T b, const T c) {
-	return a + beta * (b - a) + gamma * (c - a);
+	return a + (b - a) * beta + (c - a) * gamma;
 }
 
 } /* _462 */

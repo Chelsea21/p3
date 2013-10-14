@@ -32,9 +32,13 @@ void Model::render() const
         material->reset_gl_state();
 }
 
-bool Model::hit(const Ray ray, const real_t start, const real_t end, const bool check_only,
-		HitRecord& record) const {
-	return false;
+bool Model::hit(const Ray ray, const real_t start, const real_t end,
+			const unsigned int model_index, HitRecord* record_ptr) const {
+	bool hit_result = mesh->hit(ray, start, end, model_index, record_ptr);
+
+	record_ptr->material = *this->material;
+
+	return hit_result;
 }
 
 } /* _462 */

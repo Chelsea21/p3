@@ -14,7 +14,7 @@
 #include "scene/material.hpp"
 #include "scene/mesh.hpp"
 //#include "scene/bvh.hpp"
-#include "ray.hpp"
+#include "scene/ray.hpp"
 #include <string>
 #include <vector>
 #include <cfloat>
@@ -65,7 +65,7 @@ public:
 
 	// Hit function
 	virtual bool hit(const Ray ray, const real_t start, const real_t end,
-			const bool check_only, HitRecord& record) const = 0;
+			const unsigned int model_index, HitRecord* record_ptr) const = 0;
 };
 
 

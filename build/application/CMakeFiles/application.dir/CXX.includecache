@@ -117,8 +117,6 @@ math/camera.hpp
 /home/chelsea/Documents/GraphicsProjects/p3/src/scene/math/camera.hpp
 scene/material.hpp
 /home/chelsea/Documents/GraphicsProjects/p3/src/scene/scene/material.hpp
-scene/mesh.hpp
-/home/chelsea/Documents/GraphicsProjects/p3/src/scene/scene/mesh.hpp
 string
 -
 vector
@@ -137,8 +135,8 @@ scene/material.hpp
 /home/chelsea/Documents/GraphicsProjects/p3/src/scene/scene/material.hpp
 scene/mesh.hpp
 /home/chelsea/Documents/GraphicsProjects/p3/src/scene/scene/mesh.hpp
-ray.hpp
-/home/chelsea/Documents/GraphicsProjects/p3/src/scene/ray.hpp
+scene/ray.hpp
+/home/chelsea/Documents/GraphicsProjects/p3/src/scene/scene/ray.hpp
 string
 -
 vector

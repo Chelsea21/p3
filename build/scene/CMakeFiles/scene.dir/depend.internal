@@ -14,10 +14,16 @@ scene/CMakeFiles/scene.dir/material.cpp.o
  /usr/include/SDL/SDL_platform.h
 scene/CMakeFiles/scene.dir/mesh.cpp.o
  /home/chelsea/Documents/GraphicsProjects/p3/src/application/opengl.hpp
+ /home/chelsea/Documents/GraphicsProjects/p3/src/math/camera.hpp
+ /home/chelsea/Documents/GraphicsProjects/p3/src/math/color.hpp
  /home/chelsea/Documents/GraphicsProjects/p3/src/math/math.hpp
+ /home/chelsea/Documents/GraphicsProjects/p3/src/math/matrix.hpp
+ /home/chelsea/Documents/GraphicsProjects/p3/src/math/quaternion.hpp
  /home/chelsea/Documents/GraphicsProjects/p3/src/math/vector.hpp
+ /home/chelsea/Documents/GraphicsProjects/p3/src/scene/material.hpp
  /home/chelsea/Documents/GraphicsProjects/p3/src/scene/mesh.cpp
  /home/chelsea/Documents/GraphicsProjects/p3/src/scene/mesh.hpp
+ /home/chelsea/Documents/GraphicsProjects/p3/src/scene/ray.hpp
  /usr/include/SDL/SDL_config.h
  /usr/include/SDL/SDL_opengl.h
  /usr/include/SDL/SDL_platform.h
@@ -48,7 +54,6 @@ scene/CMakeFiles/scene.dir/ray.cpp.o
  /home/chelsea/Documents/GraphicsProjects/p3/src/math/quaternion.hpp
  /home/chelsea/Documents/GraphicsProjects/p3/src/math/vector.hpp
  /home/chelsea/Documents/GraphicsProjects/p3/src/scene/material.hpp
- /home/chelsea/Documents/GraphicsProjects/p3/src/scene/mesh.hpp
  /home/chelsea/Documents/GraphicsProjects/p3/src/scene/ray.cpp
  /home/chelsea/Documents/GraphicsProjects/p3/src/scene/ray.hpp
  /usr/include/SDL/SDL_config.h

@@ -27,7 +27,8 @@ public:
     virtual ~Model();
 
     virtual void render() const;
-    virtual bool hit(const Ray ray, const real_t start, const real_t end, const bool check_only, HitRecord& record) const;
+    virtual bool hit(const Ray ray, const real_t start, const real_t end,
+    			const unsigned int model_index, HitRecord* record_ptr) const;
 };
 
 

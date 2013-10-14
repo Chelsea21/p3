@@ -10,6 +10,7 @@
 #define _462_SCENE_MESH_HPP_
 
 #include "math/vector.hpp"
+#include "scene/ray.hpp"
 
 #include <vector>
 #include <cassert>
@@ -28,6 +29,8 @@ struct MeshTriangle
     // index into the vertex list of the 3 vertices
     unsigned int vertices[3];
 };
+
+struct HitRecord;
 
 /**
  * A mesh of triangles.
@@ -65,7 +68,7 @@ public:
     /// Creates opengl data for rendering and computes normals if needed
     bool create_gl_data();
     /// Renders the mesh using opengl.
-    void render() const;
+    virtual void render() const;
 
     typedef std::vector< MeshTriangle > MeshTriangleList;
     typedef std::vector< MeshVertex > MeshVertexList;
@@ -76,10 +79,15 @@ public:
     // The list of all vertices in this model.
     MeshVertexList vertices;
 
+    const Material* material;
+
     bool has_tcoords;
     bool has_normals;
 
 	bool initialize();
+
+	virtual bool hit(const Ray ray, const real_t start, const real_t end,
+				const unsigned int list_num, HitRecord* record_ptr) const;
 
 private:
 

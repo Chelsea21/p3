@@ -13,10 +13,16 @@ scene/CMakeFiles/scene.dir/material.cpp.o: /usr/include/SDL/SDL_opengl.h
 scene/CMakeFiles/scene.dir/material.cpp.o: /usr/include/SDL/SDL_platform.h
 
 scene/CMakeFiles/scene.dir/mesh.cpp.o: /home/chelsea/Documents/GraphicsProjects/p3/src/application/opengl.hpp
+scene/CMakeFiles/scene.dir/mesh.cpp.o: /home/chelsea/Documents/GraphicsProjects/p3/src/math/camera.hpp
+scene/CMakeFiles/scene.dir/mesh.cpp.o: /home/chelsea/Documents/GraphicsProjects/p3/src/math/color.hpp
 scene/CMakeFiles/scene.dir/mesh.cpp.o: /home/chelsea/Documents/GraphicsProjects/p3/src/math/math.hpp
+scene/CMakeFiles/scene.dir/mesh.cpp.o: /home/chelsea/Documents/GraphicsProjects/p3/src/math/matrix.hpp
+scene/CMakeFiles/scene.dir/mesh.cpp.o: /home/chelsea/Documents/GraphicsProjects/p3/src/math/quaternion.hpp
 scene/CMakeFiles/scene.dir/mesh.cpp.o: /home/chelsea/Documents/GraphicsProjects/p3/src/math/vector.hpp
+scene/CMakeFiles/scene.dir/mesh.cpp.o: /home/chelsea/Documents/GraphicsProjects/p3/src/scene/material.hpp
 scene/CMakeFiles/scene.dir/mesh.cpp.o: /home/chelsea/Documents/GraphicsProjects/p3/src/scene/mesh.cpp
 scene/CMakeFiles/scene.dir/mesh.cpp.o: /home/chelsea/Documents/GraphicsProjects/p3/src/scene/mesh.hpp
+scene/CMakeFiles/scene.dir/mesh.cpp.o: /home/chelsea/Documents/GraphicsProjects/p3/src/scene/ray.hpp
 scene/CMakeFiles/scene.dir/mesh.cpp.o: /usr/include/SDL/SDL_config.h
 scene/CMakeFiles/scene.dir/mesh.cpp.o: /usr/include/SDL/SDL_opengl.h
 scene/CMakeFiles/scene.dir/mesh.cpp.o: /usr/include/SDL/SDL_platform.h
@@ -47,7 +53,6 @@ scene/CMakeFiles/scene.dir/ray.cpp.o: /home/chelsea/Documents/GraphicsProjects/p
 scene/CMakeFiles/scene.dir/ray.cpp.o: /home/chelsea/Documents/GraphicsProjects/p3/src/math/quaternion.hpp
 scene/CMakeFiles/scene.dir/ray.cpp.o: /home/chelsea/Documents/GraphicsProjects/p3/src/math/vector.hpp
 scene/CMakeFiles/scene.dir/ray.cpp.o: /home/chelsea/Documents/GraphicsProjects/p3/src/scene/material.hpp
-scene/CMakeFiles/scene.dir/ray.cpp.o: /home/chelsea/Documents/GraphicsProjects/p3/src/scene/mesh.hpp
 scene/CMakeFiles/scene.dir/ray.cpp.o: /home/chelsea/Documents/GraphicsProjects/p3/src/scene/ray.cpp
 scene/CMakeFiles/scene.dir/ray.cpp.o: /home/chelsea/Documents/GraphicsProjects/p3/src/scene/ray.hpp
 scene/CMakeFiles/scene.dir/ray.cpp.o: /usr/include/SDL/SDL_config.h

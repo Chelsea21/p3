@@ -50,8 +50,8 @@ void Triangle::render() const
 }
 
 bool Triangle::hit(const Ray ray, const real_t start, const real_t end,
-					const bool check_only, HitRecord& record) const {
-	Ray transformed_ray = this->invMat * ray;
+			const unsigned int model_index, HitRecord* record_ptr) const {
+	Ray transformed_ray = ray.transform(this->invMat);
 	Material material;
 
 	real_t a = vertices[0].position.x - vertices[1].position.x;
@@ -88,18 +88,14 @@ bool Triangle::hit(const Ray ray, const real_t start, const real_t end,
 	if (gamma < 0 || gamma > 1 - beta)
 		return false;
 
-	if (check_only)
+	if (record_ptr == NULL)
 		return true;
 
-	Material* v1_mat = vertices[0].material;
-	Material* v2_mat = vertices[1].material;
-	Material* v3_mat = vertices[2].material;
-
-	record.time = time;
-	record.material = interpolate<Material>(beta, gamma,
+	record_ptr->time = time;
+	record_ptr->material = interpolate<Material>(beta, gamma,
 			*vertices[0].material, *vertices[1].material, *vertices[2].material);
-	record.hit_point = ray.e + record.time * ray.d;
-	record.normal = interpolate<Vector3>(beta, gamma,
+	record_ptr->hit_point = ray.e + record_ptr->time * ray.d;
+	record_ptr->normal = interpolate<Vector3>(beta, gamma,
 										vertices[0].normal, vertices[1].normal, vertices[2].normal);
 
 	return true;

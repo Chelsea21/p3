@@ -6,7 +6,6 @@
 #include "math/matrix.hpp"
 #include "math/camera.hpp"
 #include "scene/material.hpp"
-#include "scene/mesh.hpp"
 #include <string>
 #include <vector>
 
@@ -23,6 +22,8 @@ public:
 
     static Vector3 get_pixel_dir(real_t x, real_t y);
 	static void init(const Camera& camera);
+
+	Ray transform(const Matrix4 matrix) const;
 };
 
 }

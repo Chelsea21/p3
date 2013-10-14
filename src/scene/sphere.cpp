@@ -98,32 +98,32 @@ void Sphere::render() const
 }
 
 bool Sphere::hit(const Ray ray, const real_t start, const real_t end,
-				const bool check_only, HitRecord& record) const {
+    			const unsigned int model_index, HitRecord* record_ptr) const {
 	// TODO check whether the transformation is correct.
-	Ray transformed_ray = this->invMat * ray;
+	Ray transformed_ray = ray.transform(this->invMat);
 	Vector3 e_minus_c = transformed_ray.e - position;
 	real_t a = dot(transformed_ray.d, transformed_ray.d);
 	real_t c = dot(e_minus_c, e_minus_c) - radius * radius;
 	real_t b = dot(transformed_ray.d, e_minus_c);
 	real_t discriminant = b * b - a * c;
 
-	if (discriminant < 0 || check_only)
+	if (discriminant < 0 || (record_ptr == NULL))
 		return (discriminant < 0);
 
 	real_t numerator = -b;
 
 	if (discriminant > 0)
 		numerator -= std::sqrt(discriminant);
-	record.time = numerator / a;
+	record_ptr->time = numerator / a;
 
-	if (record.time < start || record.time > end) {
-		record.time = 0;
+	if (record_ptr->time < start || record_ptr->time > end) {
+		record_ptr->time = 0;
 		return false;
 	}
 
-	record.material = *this->material;
-	record.hit_point = ray.e + record.time * ray.d;
-	record.normal = normalize(record.hit_point - position);
+	record_ptr->material = *this->material;
+	record_ptr->hit_point = ray.e + record_ptr->time * ray.d;
+	record_ptr->normal = normalize(record_ptr->hit_point - position);
 
 	return true;
 }
