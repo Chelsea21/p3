@@ -115,9 +115,10 @@ Color3 Raytracer::trace_pixel(const Scene* scene,
         real_t t0 = 0;
         real_t t1 = std::numeric_limits<double>::infinity();
         for (size_t i = 0; i < scene->num_geometries(); i++) {
-        	if ((*shapes + i)->hit(r, t0, t1, record)) {
-        		t1 = record.time;
-        	}
+        	for (size_t j = 0; j < (*shapes + i)->num_models(); j++)
+				if ((*shapes + i)->hit(r, t0, t1, j, &record)) {
+					t1 = record.time;
+				}
         }
         res += shade(r, record);
     }
@@ -134,7 +135,7 @@ Color3 Raytracer::shade(const Ray ray, const HitRecord record) {
 		return result;
 	}
 
-	result = record.material_ptr->ambient * scene->ambient_light;
+	result = record.shade_factors.ambient * scene->ambient_light;
 	unsigned int iter;
 	for (size_t i = 0; i < scene->num_lights(); i++) {
 		for (iter = 0; iter < num_samples; iter++) {
@@ -146,10 +147,11 @@ Color3 Raytracer::shade(const Ray ray, const HitRecord record) {
 				Geometry* const* const shapes = scene->get_geometries();
 				HitRecord shadow_record;
 				// D vector here is the vector pointing from the object surface to the light source.
-				if ((*shapes + j)->hit(light_ray, 0, 1, shadow_record)) {
-					light_rays[i] = light_ray;
-					goto ray_found;
-				}
+				for (size_t k = 0; k < (*shapes + j)->num_models(); k++)
+					if ((*shapes + j)->hit(light_ray, 0, 1, k, &shadow_record)) {
+						light_rays[i] = light_ray;
+						goto ray_found;
+					}
 			}
 		}
 		ray_found:
@@ -166,8 +168,8 @@ Color3 Raytracer::shade(const Ray ray, const HitRecord record) {
 		const SphereLight* light = (scene->get_lights()+ *itr);
 		Vector3 h = normalize(normalize(light_rays[*itr].d) + normalize(ray.d));
 
-		result += record.material_ptr->diffuse * light->color * std::fmax(0, dot(record.normal, normalize(light_rays[*itr].d))) +
-				record.material_ptr->specular * light->color * std::pow(dot(record.normal, h), record.material_ptr->shininess);
+		result += record.shade_factors.diffuse * light->color * std::fmax(0, dot(record.normal, normalize(light_rays[*itr].d))) +
+				record.shade_factors.specular * light->color * std::pow(dot(record.normal, h), record.shade_factors.shininess);
 	}
 
 	return result;

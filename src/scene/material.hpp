@@ -21,13 +21,6 @@ public:
 	Material();
 	~Material();
 
-	Material(Color3 ambient, Color3 diffuse, real_t shininess, real_t refractive_index,
-			std::string texture_filename, int tex_width, int tex_height, unsigned char* tex_data,
-			GLuint tex_handle)
-			: ambient(ambient), diffuse(diffuse), shininess(shininess), refractive_index(refractive_index),
-			  texture_filename(texture_filename),  tex_width(tex_width), tex_height(tex_height),
-			  tex_data(tex_data), tex_handle(tex_handle) { }
-
 	// ambient color (ignored if refractive_index != 0)
 	Color3 ambient;
 
@@ -78,43 +71,6 @@ public:
 	/// leaves other settings unchanged for efficiency.
 	void reset_gl_state() const;
 
-	// operators overwrite for interpolating.
-	Material operator+(const Material& mat) const {
-		return Material(ambient + mat.ambient, diffuse + mat.diffuse, shininess + mat.shininess,
-				refractive_index + mat.refractive_index, texture_filename, tex_width, tex_height,
-				tex_data, tex_handle);
-	}
-
-	Material operator-(const Material& mat) const {
-		return Material(ambient - mat.ambient, diffuse - mat.diffuse, shininess - mat.shininess,
-				refractive_index - mat.refractive_index, texture_filename, tex_width, tex_height,
-				tex_data, tex_handle);
-	}
-
-	Material operator*(const real_t s) const {
-		return Material(s * ambient, diffuse, s * shininess,
-						s * refractive_index, texture_filename, tex_width, tex_height,
-						tex_data, tex_handle);
-	}
-
-	Material& operator=(const Material& mat) {
-		ambient = mat.ambient;
-		diffuse = mat.diffuse;
-		shininess = mat.shininess;
-		refractive_index = mat.refractive_index;
-		texture_filename = mat.texture_filename;
-		tex_width = mat.tex_width;
-		tex_height = mat.tex_height;
-		tex_data = mat.tex_data;
-		tex_handle = mat.tex_handle;
-
-		return *this;
-	}
-
-	Material(const Material& mat)
-	: ambient(mat.ambient), diffuse(mat.diffuse), shininess(mat.shininess), refractive_index(mat.refractive_index),
-	  texture_filename(mat.texture_filename),  tex_width(mat.tex_width), tex_height(mat.tex_height),
-	  tex_data(mat.tex_data), tex_handle(mat.tex_handle){	}
 private:
 
 	// dimensions of the texture
@@ -125,6 +81,9 @@ private:
 
 	// opengl descriptor of the texture
 	GLuint tex_handle;
+
+	Material(const Material& mat);
+	Material& operator=(const Material& mat);
 };
 
 } /* _462 */

@@ -23,6 +23,8 @@ scene/CMakeFiles/scene.dir/mesh.cpp.o: /home/chelsea/Documents/GraphicsProjects/
 scene/CMakeFiles/scene.dir/mesh.cpp.o: /home/chelsea/Documents/GraphicsProjects/p3/src/scene/mesh.cpp
 scene/CMakeFiles/scene.dir/mesh.cpp.o: /home/chelsea/Documents/GraphicsProjects/p3/src/scene/mesh.hpp
 scene/CMakeFiles/scene.dir/mesh.cpp.o: /home/chelsea/Documents/GraphicsProjects/p3/src/scene/ray.hpp
+scene/CMakeFiles/scene.dir/mesh.cpp.o: /home/chelsea/Documents/GraphicsProjects/p3/src/scene/scene.hpp
+scene/CMakeFiles/scene.dir/mesh.cpp.o: /home/chelsea/Documents/GraphicsProjects/p3/src/scene/triangle.hpp
 scene/CMakeFiles/scene.dir/mesh.cpp.o: /usr/include/SDL/SDL_config.h
 scene/CMakeFiles/scene.dir/mesh.cpp.o: /usr/include/SDL/SDL_opengl.h
 scene/CMakeFiles/scene.dir/mesh.cpp.o: /usr/include/SDL/SDL_platform.h

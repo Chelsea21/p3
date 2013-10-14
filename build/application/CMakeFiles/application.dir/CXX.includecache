@@ -95,6 +95,8 @@ string
 /home/chelsea/Documents/GraphicsProjects/p3/src/scene/mesh.hpp
 math/vector.hpp
 /home/chelsea/Documents/GraphicsProjects/p3/src/scene/math/vector.hpp
+scene/ray.hpp
+/home/chelsea/Documents/GraphicsProjects/p3/src/scene/scene/ray.hpp
 vector
 -
 cassert

@@ -24,6 +24,8 @@ scene/CMakeFiles/scene.dir/mesh.cpp.o
  /home/chelsea/Documents/GraphicsProjects/p3/src/scene/mesh.cpp
  /home/chelsea/Documents/GraphicsProjects/p3/src/scene/mesh.hpp
  /home/chelsea/Documents/GraphicsProjects/p3/src/scene/ray.hpp
+ /home/chelsea/Documents/GraphicsProjects/p3/src/scene/scene.hpp
+ /home/chelsea/Documents/GraphicsProjects/p3/src/scene/triangle.hpp
  /usr/include/SDL/SDL_config.h
  /usr/include/SDL/SDL_opengl.h
  /usr/include/SDL/SDL_platform.h

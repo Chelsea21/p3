@@ -11,6 +11,22 @@
 
 namespace _462 {
 
+struct ShadeFactors {
+	Color3 ambient;
+	Color3 diffuse;
+	Color3 specular;
+	real_t shininess;
+	real_t refractive_index;
+};
+
+struct HitRecord {
+	real_t time;
+	Vector3 hit_point;
+	Vector3 normal;
+	const Material* material_ptr;
+	ShadeFactors shade_factors;
+};
+
 class Ray
 {
 

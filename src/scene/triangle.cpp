@@ -50,7 +50,9 @@ void Triangle::render() const
 }
 
 bool Triangle::hit(const Ray ray, const real_t start, const real_t end,
-			const unsigned int model_index, HitRecord* record_ptr) const {
+			const unsigned int model_index, HitRecord* record_ptr) {
+	(void) model_index;
+
 	Ray transformed_ray = ray.transform(this->invMat);
 	Material material;
 
@@ -92,13 +94,26 @@ bool Triangle::hit(const Ray ray, const real_t start, const real_t end,
 		return true;
 
 	record_ptr->time = time;
-	record_ptr->material = interpolate<Material>(beta, gamma,
-			*vertices[0].material, *vertices[1].material, *vertices[2].material);
+	record_ptr->material_ptr = vertices[0].material;
 	record_ptr->hit_point = ray.e + record_ptr->time * ray.d;
 	record_ptr->normal = interpolate<Vector3>(beta, gamma,
 										vertices[0].normal, vertices[1].normal, vertices[2].normal);
+	record_ptr->shade_factors.ambient = interpolate<Color3>(beta, gamma,
+			vertices[0].material->ambient, vertices[1].material->ambient, vertices[2].material->ambient);
+	record_ptr->shade_factors.diffuse = interpolate<Color3>(beta, gamma,
+				vertices[0].material->diffuse, vertices[1].material->diffuse, vertices[2].material->diffuse);
+	record_ptr->shade_factors.specular = interpolate<Color3>(beta, gamma,
+				vertices[0].material->specular, vertices[1].material->specular, vertices[2].material->specular);
+	record_ptr->shade_factors.shininess = interpolate<real_t>(beta, gamma,
+			vertices[0].material->shininess, vertices[1].material->shininess, vertices[2].material->shininess);
+	record_ptr->shade_factors.refractive_index = interpolate<real_t>(beta, gamma,
+			vertices[0].material->refractive_index, vertices[1].material->refractive_index, vertices[2].material->refractive_index);
 
 	return true;
+}
+
+size_t Triangle::num_models() const {
+	return 1;
 }
 
 } /* _462 */

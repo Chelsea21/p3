@@ -7,6 +7,7 @@
  */
 
 #include "scene/mesh.hpp"
+#include "scene/triangle.hpp"
 #include "application/opengl.hpp"
 #include <iostream>
 #include <cstring>
@@ -392,6 +393,9 @@ bool Mesh::initialize() {
 
 bool Mesh::hit(const Ray ray, const real_t start, const real_t end,
 		const unsigned int list_num, HitRecord* record_ptr) const {
+	if (list_num >= this->num_triangles())
+		return false;
+
 	unsigned int v0 = triangles[list_num].vertices[0];
 	unsigned int v1 = triangles[list_num].vertices[1];
 	unsigned int v2 = triangles[list_num].vertices[2];
@@ -436,8 +440,7 @@ bool Mesh::hit(const Ray ray, const real_t start, const real_t end,
 	record_ptr->time = time;
 	record_ptr->hit_point = ray.e + record_ptr->time * ray.d;
 
-	if (!has_normals)
-		create_gl_data();
+	assert (has_normals);
 	record_ptr->normal = interpolate<Vector3>(beta, gamma, vertices[v0].normal,
 			vertices[v1].normal, vertices[v2].normal);
 

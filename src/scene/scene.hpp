@@ -21,75 +21,66 @@
 
 namespace _462 {
 
-struct HitRecord {
-	real_t time;
-	Vector3 hit_point;
-	Vector3 normal;
-	Material material;
-};
-
-class Geometry
-{
+class Geometry {
 public:
-    Geometry();
-    virtual ~Geometry();
+	Geometry();
+	virtual ~Geometry();
 
-    /*
-       World transformation are applied in the following order:
-       1. Scale
-       2. Orientation
-       3. Position
-    */
+	/*
+	 World transformation are applied in the following order:
+	 1. Scale
+	 2. Orientation
+	 3. Position
+	 */
 
-    // The world position of the object.
-    Vector3 position;
+	// The world position of the object.
+	Vector3 position;
 
-    // The world orientation of the object.
-    // Use Quaternion::to_matrix to get the rotation matrix.
-    Quaternion orientation;
+	// The world orientation of the object.
+	// Use Quaternion::to_matrix to get the rotation matrix.
+	Quaternion orientation;
 
-    // The world scale of the object.
-    Vector3 scale;
+	// The world scale of the object.
+	Vector3 scale;
 
-    // Inverse transformation matrix
+	// Inverse transformation matrix
 	Matrix4 invMat;
-    // Normal transformation matrix
+	// Normal transformation matrix
 	Matrix3 normMat;
 
-    /**
-     * Renders this geometry using OpenGL in the local coordinate space.
-     */
-    virtual void render() const = 0;
+	/**
+	 * Renders this geometry using OpenGL in the local coordinate space.
+	 */
+	virtual void render() const = 0;
 
 	bool initialize();
 
 	// Hit function
 	virtual bool hit(const Ray ray, const real_t start, const real_t end,
-			const unsigned int model_index, HitRecord* record_ptr) const = 0;
+			const unsigned int model_index, HitRecord* record_ptr) = 0;
+
+	virtual size_t num_models() const = 0;
 };
 
+struct SphereLight {
+	struct Attenuation {
+		real_t constant;
+		real_t linear;
+		real_t quadratic;
+	};
 
-struct SphereLight
-{
-    struct Attenuation
-    {
-        real_t constant;
-        real_t linear;
-        real_t quadratic;
-    };
-
-    SphereLight();
+	SphereLight();
 
 	bool intersect(const Ray& r, real_t& t);
 
 	Vector3 generate_random_point() const;
 
-    // The position of the light, relative to world origin.
-    Vector3 position;
-    // The color of the light (both diffuse and specular)
-    Color3 color;
-    // attenuation
-    Attenuation attenuation;
+	// The position of the light, relative to world origin.
+	Vector3 position;
+	// The color of the light (both diffuse and specular)
+	Color3 color;
+	// attenuation
+	Attenuation attenuation;
 	real_t radius;
 };
 
@@ -97,74 +88,73 @@ struct SphereLight
  * The container class for information used to render a scene composed of
  * Geometries.
  */
-class Scene
-{
+class Scene {
 public:
 
-    /// the camera
-    Camera camera;
-    /// the background color
-    Color3 background_color;
-    /// the amibient light of the scene
-    Color3 ambient_light;
-    /// the refraction index stack (starting with the air).
-    std::vector<real_t> refractive_indices;
+	/// the camera
+	Camera camera;
+	/// the background color
+	Color3 background_color;
+	/// the amibient light of the scene
+	Color3 ambient_light;
+	/// the refraction index stack (starting with the air).
+	std::vector<real_t> refractive_indices;
 
-    /// Creates a new empty scene.
-    Scene();
+	/// Creates a new empty scene.
+	Scene();
 
-    /// Destroys this scene. Invokes delete on everything in geometries.
-    ~Scene();
+	/// Destroys this scene. Invokes delete on everything in geometries.
+	~Scene();
 
 	bool initialize();
 
-    // accessor functions
-    Geometry* const * get_geometries() const;
-    size_t num_geometries() const;
-    const SphereLight* get_lights() const;
-    size_t num_lights() const;
-    Material* const* get_materials() const;
-    size_t num_materials() const;
-    Mesh* const* get_meshes() const;
-    size_t num_meshes() const;
-    real_t get_refractive_index() const;
+	// accessor functions
+	Geometry* const * get_geometries() const;
+	size_t num_geometries() const;
+	const SphereLight* get_lights() const;
+	size_t num_lights() const;
+	Material* const * get_materials() const;
+	size_t num_materials() const;
+	Mesh* const * get_meshes() const;
+	size_t num_meshes() const;
+	real_t get_refractive_index() const;
 
-    /// Clears the scene, and invokes delete on everything in geometries.
-    void reset();
+	/// Clears the scene, and invokes delete on everything in geometries.
+	void reset();
 
-    // functions to add things to the scene
-    // all pointers are deleted by the scene upon scene deconstruction.
-    void add_geometry( Geometry* g );
-    void add_material( Material* m );
-    void add_mesh( Mesh* m );
-    void add_light( const SphereLight& l );
-    void add_refractive_index(const real_t refractive_index);
+	// functions to add things to the scene
+	// all pointers are deleted by the scene upon scene deconstruction.
+	void add_geometry(Geometry* g);
+	void add_material(Material* m);
+	void add_mesh(Mesh* m);
+	void add_light(const SphereLight& l);
+	void add_refractive_index(const real_t refractive_index);
 
-    void pop_refractive_index();
-
-private:
-
-    typedef std::vector< SphereLight > SphereLightList;
-    typedef std::vector< Material* > MaterialList;
-    typedef std::vector< Mesh* > MeshList;
-
-    // TODO Change to octree?
-    typedef std::vector< Geometry* > GeometryList;
-
-    // list of all lights in the scene
-    SphereLightList point_lights;
-    // all materials used by geometries
-    MaterialList materials;
-    // all meshes used by models
-    MeshList meshes;
-    // list of all geometries. deleted in dctor, so should be allocated on heap.
-    GeometryList geometries;
+	void pop_refractive_index();
 
 private:
 
-    // no meaningful assignment or copy
-    Scene(const Scene&);
-    Scene& operator=(const Scene&);
+	typedef std::vector<SphereLight> SphereLightList;
+	typedef std::vector<Material*> MaterialList;
+	typedef std::vector<Mesh*> MeshList;
+
+	// TODO Change to octree?
+	typedef std::vector<Geometry*> GeometryList;
+
+	// list of all lights in the scene
+	SphereLightList point_lights;
+	// all materials used by geometries
+	MaterialList materials;
+	// all meshes used by models
+	MeshList meshes;
+	// list of all geometries. deleted in dctor, so should be allocated on heap.
+	GeometryList geometries;
+
+private:
+
+	// no meaningful assignment or copy
+	Scene(const Scene&);
+	Scene& operator=(const Scene&);
 
 };
 

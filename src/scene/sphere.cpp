@@ -98,8 +98,11 @@ void Sphere::render() const
 }
 
 bool Sphere::hit(const Ray ray, const real_t start, const real_t end,
-    			const unsigned int model_index, HitRecord* record_ptr) const {
+    			const unsigned int model_index, HitRecord* record_ptr) {
 	// TODO check whether the transformation is correct.
+
+	(void) model_index;
+
 	Ray transformed_ray = ray.transform(this->invMat);
 	Vector3 e_minus_c = transformed_ray.e - position;
 	real_t a = dot(transformed_ray.d, transformed_ray.d);
@@ -114,18 +117,31 @@ bool Sphere::hit(const Ray ray, const real_t start, const real_t end,
 
 	if (discriminant > 0)
 		numerator -= std::sqrt(discriminant);
-	record_ptr->time = numerator / a;
 
-	if (record_ptr->time < start || record_ptr->time > end) {
-		record_ptr->time = 0;
+	real_t t = numerator / a;
+
+
+	if (t < start || t > end) {
 		return false;
 	}
 
-	record_ptr->material = *this->material;
-	record_ptr->hit_point = ray.e + record_ptr->time * ray.d;
-	record_ptr->normal = normalize(record_ptr->hit_point - position);
+	if (record_ptr != NULL) {
+		record_ptr->time = t;
+		record_ptr->material_ptr = this->material;
+		record_ptr->hit_point = ray.e + record_ptr->time * ray.d;
+		record_ptr->normal = normalize(record_ptr->hit_point - position);
+		record_ptr->shade_factors.ambient = this->material->ambient;
+		record_ptr->shade_factors.diffuse = this->material->diffuse;
+		record_ptr->shade_factors.refractive_index = this->material->refractive_index;
+		record_ptr->shade_factors.shininess = this->material->shininess;
+		record_ptr->shade_factors.specular = this->material->specular;
+	}
 
 	return true;
+}
+
+size_t Sphere::num_models() const {
+	return 1;
 }
 
 } /* _462 */
