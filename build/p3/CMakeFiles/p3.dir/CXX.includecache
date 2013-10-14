@@ -87,6 +87,8 @@ math/color.hpp
 /home/chelsea/Documents/GraphicsProjects/p3/src/p3/math/color.hpp
 math/random462.hpp
 /home/chelsea/Documents/GraphicsProjects/p3/src/p3/math/random462.hpp
+math/vector.hpp
+/home/chelsea/Documents/GraphicsProjects/p3/src/p3/math/vector.hpp
 
 /home/chelsea/Documents/GraphicsProjects/p3/src/scene/material.hpp
 math/color.hpp

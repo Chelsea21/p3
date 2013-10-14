@@ -15,6 +15,7 @@
 
 #include "math/color.hpp"
 #include "math/random462.hpp"
+#include "math/vector.hpp"
 
 namespace _462 {
 
@@ -43,7 +44,9 @@ private:
 		       size_t width,
 		       size_t height);
 
-    Color3 shade(const Ray ray, const HitRecord record);
+    Color3 trace_point(const Scene* scene, Vector3 e, Vector3 d, unsigned int depth) const;
+
+    Color3 shade(const Ray ray, const HitRecord record, unsigned int depth) const;
 
     // the scene to trace
     Scene* scene;
