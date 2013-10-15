@@ -26,7 +26,7 @@ namespace _462 {
 
 // TODO
 // max number of threads OpenMP can use. Change this if you like.
-#define MAX_THREADS 4
+#define MAX_THREADS 1
 
 #define MAX_DEPTH 3
 
@@ -154,7 +154,17 @@ Color3 Raytracer::shade(const Ray ray, const HitRecord record, unsigned int dept
 			Ray shadow_ray(record.hit_point, shadow_d);
 
 			// Back side of the object.
-			if (dot(ray.d, record.normal) > 0)
+			// TODO figure out what's wrong with the ray.d
+			if (record.normal == Vector3(0, 0, 1) && depth > 1)
+			{
+				/*
+				if (dot(ray.d, record.normal) < 0){
+					std::cout << dot(ray.d, record.normal) << ":" << std::endl;
+					std::cout << ray.e << std::endl;
+				}*/
+				//goto hit_found;
+			}
+			if (dot(ray.d, record.normal) >= 0)
 				goto hit_found;
 
 			for (size_t j = 0; j < scene->num_geometries(); j++) {
@@ -189,11 +199,18 @@ Color3 Raytracer::shade(const Ray ray, const HitRecord record, unsigned int dept
 		real_t dot_n_h = dot(record.normal, h);
 		real_t diffuse_cos = (dot_n_l > 0) ? dot_n_l : 0;
 
-		result += record.shade_factors.diffuse * light->color * diffuse_cos;
-				//+ record.shade_factors.specular * light->color
-					//	* std::pow(dot_n_h > 0 ? dot_n_h : 0, record.shade_factors.shininess);
+		result += record.shade_factors.diffuse * light->color * diffuse_cos
+				+ record.shade_factors.specular * light->color
+						* std::pow(dot_n_h > 0 ? dot_n_h : 0, record.shade_factors.shininess);
 		if (record.shade_factors.specular != Color3::Black()) {
 			Vector3 r = ray.d - 2 * dot(ray.d, record.normal) * record.normal;
+
+			if (dot(record.hit_point - Vector3(1.84607,0.366918,0.640051),
+					record.hit_point - Vector3(1.84607,0.366918,0.640051)) < 1e-3 && depth == 1) {
+				std::cout << ray.d << "\t" << record.normal << std::endl;
+				std::cout << r << std::endl;
+			}
+
 			result += record.shade_factors.specular *
 					trace_point(scene, record.hit_point, r, ++depth);
 		}

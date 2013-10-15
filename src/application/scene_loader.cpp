@@ -193,6 +193,7 @@ static void parse_camera( const TiXmlElement* elem, Camera* camera )
     parse_elem( elem, true,  STR_POSITION,  &camera->position );
     parse_elem( elem, true,  STR_ORIENT,    &ori );
     // normalize orientation
+    // TODO change back to Quaternion(0.692035, -0.702953, -0.129167, -0.101294)
     camera->orientation = normalize( ori );
 }
 

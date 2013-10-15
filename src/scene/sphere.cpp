@@ -129,7 +129,7 @@ bool Sphere::hit(const Ray ray, const real_t start, const real_t end,
 		record_ptr->material_ptr = this->material;
 
 		Vector3 transformed_point = transformed_ray.e + record_ptr->time * transformed_ray.d;
-		Vector3 transformed_normal = transformed_point - Vector3(0, 0, 0);
+		Vector3 transformed_normal = normalize(transformed_point - Vector3(0, 0, 0));
 
 		record_ptr->hit_point = ray.e + record_ptr->time * ray.d;
 		record_ptr->normal = normalize(this->normMat * transformed_normal);
