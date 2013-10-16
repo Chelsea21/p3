@@ -62,7 +62,7 @@ public:
 
     RaytracerApplication( const Options& opt )
         : options( opt ), buffer( 0 ), buf_width( 0 ),
-	  buf_height( 0 ), raytracing( false ) { }
+	  buf_height( 0 ), raytracing( false ), raytrace_finished(false) { }
     virtual ~RaytracerApplication() { free( buffer ); }
 
     virtual bool initialize();
@@ -255,7 +255,7 @@ void RaytracerApplication::handle_event( const SDL_Event& event )
             break;
         default:
             break;
-        }
+        } break;
     default:
         break;
     }

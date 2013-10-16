@@ -83,7 +83,7 @@ public:
     /**
      * Default constructor. Leaves values unitialized.
      */
-    Vector2() {}
+    Vector2() : x(0), y(0) {}
 
     /**
      * Create a vector with the given values.
@@ -310,7 +310,7 @@ public:
     /**
      * Default constructor. Leaves values unitialized.
      */
-    Vector3() {}
+    Vector3() : x(0), y(0), z(0) {}
 
     /**
      * Create a vector with the given values.
@@ -575,7 +575,7 @@ public:
     /**
      * Default constructor. Leaves values unitialized.
      */
-    Vector4() {}
+    Vector4() : x( 0 ), y( 0 ), z( 0 ), w( 0 ) {}
 
     /**
      * Create a vector with the given values.

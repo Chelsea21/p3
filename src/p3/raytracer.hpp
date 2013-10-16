@@ -11,7 +11,7 @@
 #ifndef _462_RAYTRACER_HPP_
 #define _462_RAYTRACER_HPP_
 
-#define MAX_DEPTH 3
+#define MAX_DEPTH 5
 
 #include "math/color.hpp"
 #include "math/random462.hpp"

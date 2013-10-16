@@ -59,7 +59,8 @@ public:
     /**
      * Default constructor. Leaves values unitialized.
      */
-    Color3() {}
+    Color3()
+    : r(0), g(0), b(0) {}
 
     /**
      * Create a color with the given values.

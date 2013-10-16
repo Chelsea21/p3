@@ -104,7 +104,7 @@ bool Sphere::hit(const Ray ray, const real_t start, const real_t end,
 	(void) model_index;
 
 	Ray transformed_ray = ray.transform(this->invMat);
-	Vector3 e_minus_c = transformed_ray.e - Vector3(0, 0, 0);
+	Vector3 e_minus_c = transformed_ray.e;
 	real_t a = dot(transformed_ray.d, transformed_ray.d);
 	real_t c = dot(e_minus_c, e_minus_c) - radius * radius;
 	real_t b_half = dot(transformed_ray.d, e_minus_c);
@@ -114,15 +114,26 @@ bool Sphere::hit(const Ray ray, const real_t start, const real_t end,
 		return false;
 
 	real_t numerator = -b_half;
+	real_t t1;
+	real_t t2;
+	real_t t;
 
-	if (discriminant > 0)
-		numerator -= std::sqrt(discriminant);
-
-	real_t t = numerator / a;
-
-	if (t < start || t > end) {
+	if (discriminant > 0) {
+		real_t sqrt_discriminant = std::sqrt(discriminant);
+		t1 = (numerator - sqrt_discriminant) / a;
+		t2 = (numerator + sqrt_discriminant) / a;
+	}
+	else
+		t = t1 = t2 = numerator / a;
+	if (t1 > end || t2 < start) {
 		return false;
 	}
+	t = (t1 < start) ? t2 : t1;
+
+	/*
+	if (material->refractive_index == 2 &&
+				abs(length(ray.e - Vector3(0.378684,-1.03496,1.78278))) < 1e-3)
+			std::cout << t << " in [" << start << ", " << end << "]" << std::endl;*/
 
 	if (record_ptr != NULL) {
 		record_ptr->time = t;
