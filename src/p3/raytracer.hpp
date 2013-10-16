@@ -11,7 +11,7 @@
 #ifndef _462_RAYTRACER_HPP_
 #define _462_RAYTRACER_HPP_
 
-#define MAX_DEPTH 5
+#define MAX_DEPTH 3
 
 #include "math/color.hpp"
 #include "math/random462.hpp"
@@ -44,9 +44,11 @@ private:
 		       size_t width,
 		       size_t height);
 
-    Color3 trace_point(const Scene* scene, Vector3 e, Vector3 d, unsigned int depth) const;
+    Color3 trace_point(const Scene* scene, Vector3 e, Vector3 d, unsigned int depth,
+    					std::vector<real_t> refractive_indices) const;
 
-    Color3 shade(const Ray ray, const HitRecord record, unsigned int depth) const;
+    Color3 shade(const Ray ray, const HitRecord record, unsigned int depth,
+    			std::vector<real_t> refractive_indices) const;
 
     // the scene to trace
     Scene* scene;
@@ -59,6 +61,8 @@ private:
 
     unsigned int num_samples;
 };
+
+inline bool is_air(const double n, const double default_n) { return std::abs(n - default_n) < 1e-6; }
 
 } /* _462 */
 

@@ -113,10 +113,6 @@ size_t Scene::num_meshes() const
     return meshes.size();
 }
 
-real_t Scene::get_refractive_index() const {
-	return refractive_indices.back();
-}
-
 void Scene::reset()
 {
     for ( GeometryList::iterator i = geometries.begin(); i != geometries.end(); ++i ) {
@@ -138,8 +134,6 @@ void Scene::reset()
 
     background_color = Color3::Black();
     ambient_light = Color3::Black();
-    refractive_indices.clear();
-    refractive_indices.push_back(1.0);
 }
 
 void Scene::add_geometry( Geometry* g )
@@ -160,14 +154,6 @@ void Scene::add_mesh( Mesh* m )
 void Scene::add_light( const SphereLight& l )
 {
     point_lights.push_back( l );
-}
-
-void Scene::add_refractive_index(const real_t refractive_index) {
-	refractive_indices.push_back(refractive_index);
-}
-
-void Scene::pop_refractive_index() {
-	refractive_indices.pop_back();
 }
 
 } /* _462 */

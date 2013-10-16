@@ -28,12 +28,10 @@ namespace _462 {
 // max number of threads OpenMP can use. Change this if you like.
 #define MAX_THREADS 1
 
-#define MAX_DEPTH 3
-
 static const unsigned STEP_SIZE = 8;
 
 Raytracer::Raytracer() :
-		scene(0), width(0), height(0) {
+		scene(0), width(0), height(0), current_row(0), num_samples(1) {
 }
 
 // random real_t in [0, 1)
@@ -104,13 +102,16 @@ Color3 Raytracer::trace_pixel(const Scene* scene, size_t x, size_t y,
 		// ray through.
 		real_t i = real_t(2) * (real_t(x) + random()) * dx - real_t(1);
 		real_t j = real_t(2) * (real_t(y) + random()) * dy - real_t(1);
-
-		res += trace_point(scene, scene->camera.get_position(), Ray::get_pixel_dir(i, j), 1);
+		std::vector<real_t> refractive_indices;
+		refractive_indices.push_back(scene->refractive_index);
+		res += trace_point(scene, scene->camera.get_position(), Ray::get_pixel_dir(i, j), 1,
+							refractive_indices);
 	}
 	return res * (real_t(1) / num_samples);
 }
 
-Color3 Raytracer::trace_point(const Scene* scene, Vector3 e, Vector3 d, unsigned int depth) const {
+Color3 Raytracer::trace_point(const Scene* scene, Vector3 e, Vector3 d, unsigned int depth,
+							std::vector<real_t> refractive_indices) const {
 	if (depth > MAX_DEPTH)
 		return Color3::Black();
 
@@ -127,12 +128,13 @@ Color3 Raytracer::trace_point(const Scene* scene, Vector3 e, Vector3 d, unsigned
 				t1 = record.time;
 			}
 	}
-	Color3 res = shade(r, record, depth);
+	Color3 res = shade(r, record, depth, refractive_indices);
 
 	return res;
 }
 
-Color3 Raytracer::shade(const Ray ray, const HitRecord record, unsigned int depth) const {
+Color3 Raytracer::shade(const Ray ray, const HitRecord record, unsigned int depth,
+			std::vector<real_t> refractive_indices) const {
 	Color3 result;
 	std::vector<unsigned int> light_number;
 	std::vector<Ray> light_rays(scene->num_lights());
@@ -154,17 +156,9 @@ Color3 Raytracer::shade(const Ray ray, const HitRecord record, unsigned int dept
 			Ray shadow_ray(record.hit_point, shadow_d);
 
 			// Back side of the object.
-			// TODO figure out what's wrong with the ray.d
-			if (record.normal == Vector3(0, 0, 1) && depth > 1)
-			{
-				/*
-				if (dot(ray.d, record.normal) < 0){
-					std::cout << dot(ray.d, record.normal) << ":" << std::endl;
-					std::cout << ray.e << std::endl;
-				}*/
-				//goto hit_found;
-			}
-			if (dot(ray.d, record.normal) >= 0)
+			// Non-refractive.
+			if (dot(ray.d, record.normal) >= 0 &&
+				record.shade_factors.refractive_index < 1e-3)
 				goto hit_found;
 
 			for (size_t j = 0; j < scene->num_geometries(); j++) {
@@ -194,7 +188,6 @@ Color3 Raytracer::shade(const Ray ray, const HitRecord record, unsigned int dept
 		const SphereLight* light = (scene->get_lights() + *itr);
 		Vector3 h = normalize(normalize(light_rays[*itr].d) + normalize(-ray.d));
 
-		// TODO Brighter?
 		real_t dot_n_l = dot(record.normal, normalize(light_rays[*itr].d));
 		real_t dot_n_h = dot(record.normal, h);
 		real_t diffuse_cos = (dot_n_l > 0) ? dot_n_l : 0;
@@ -202,17 +195,58 @@ Color3 Raytracer::shade(const Ray ray, const HitRecord record, unsigned int dept
 		result += record.shade_factors.diffuse * light->color * diffuse_cos
 				+ record.shade_factors.specular * light->color
 						* std::pow(dot_n_h > 0 ? dot_n_h : 0, record.shade_factors.shininess);
-		if (record.shade_factors.specular != Color3::Black()) {
-			Vector3 r = ray.d - 2 * dot(ray.d, record.normal) * record.normal;
 
-			if (dot(record.hit_point - Vector3(1.84607,0.366918,0.640051),
-					record.hit_point - Vector3(1.84607,0.366918,0.640051)) < 1e-3 && depth == 1) {
-				std::cout << ray.d << "\t" << record.normal << std::endl;
-				std::cout << r << std::endl;
+		real_t dot_n_d = dot(ray.d, record.normal);
+		Vector3 t(0, 0, 0);
+		real_t R = 1;
+
+		// Refraction.
+		if (record.shade_factors.refractive_index > 1e-3 ||
+				refractive_indices.back() > 1e-3) {
+			real_t n = refractive_indices.back();
+			real_t n_t;
+
+			// TODO Check condition.
+			if (!is_air(n, scene->refractive_index)) {
+				n_t = refractive_indices[refractive_indices.size() - 2];
+			}
+			else {
+				n_t = record.shade_factors.refractive_index;
 			}
 
-			result += record.shade_factors.specular *
-					trace_point(scene, record.hit_point, r, ++depth);
+			real_t n_over_n_t = n / n_t;
+			real_t cos_t_square = 1 - n_over_n_t * n_over_n_t * (1 - dot_n_d * dot_n_d);
+
+			// Total internal refraction will skip this step.
+			if (cos_t_square > 0) {
+				real_t cos_t = sqrt(cos_t_square);
+				t = n_over_n_t * (ray.d - dot_n_d * record.normal) - record.normal * cos_t;
+				R = (n_t - 1) / (n_t + 1);
+				cos_t = (cos_t < dot_n_d) ? cos_t : dot_n_d;
+				R = R + (1 - R) * (1 - cos_t) * (1 - cos_t) * (1 - cos_t) * (1 - cos_t) * (1 - cos_t);
+			}
+		}
+
+		// Randomly trace refective ray or refractive ray.
+		real_t rand_r = 1. * random() / RAND_MAX;
+		if (rand_r < R) {
+			// TODO glossy reflection.
+			if (record.shade_factors.specular != Color3::Black()) {
+				Vector3 r = ray.d - 2 * dot_n_d * record.normal;
+
+				result += record.shade_factors.specular *
+						trace_point(scene, record.hit_point, r, ++depth, refractive_indices);
+			}
+		}
+		else {
+			// TODO Check condition.
+			if (!is_air(refractive_indices.back(), scene->refractive_index)) {
+				refractive_indices.pop_back();
+			} else {
+				refractive_indices.push_back(record.shade_factors.refractive_index);
+			}
+
+			result += trace_point(scene, record.hit_point, t, depth, refractive_indices);
 		}
 	}
 

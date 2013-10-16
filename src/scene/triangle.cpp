@@ -95,8 +95,7 @@ bool Triangle::hit(const Ray ray, const real_t start, const real_t end,
 	record_ptr->time = time;
 	record_ptr->material_ptr = vertices[0].material;
 	record_ptr->hit_point = ray.e + record_ptr->time * ray.d;
-	record_ptr->normal = interpolate<Vector3>(beta, gamma,
-										vertices[0].normal, vertices[1].normal, vertices[2].normal);
+	record_ptr->normal = normalize(this->normMat * vertices[0].normal);
 	record_ptr->shade_factors.ambient = interpolate<Color3>(beta, gamma,
 			vertices[0].material->ambient, vertices[1].material->ambient, vertices[2].material->ambient);
 	record_ptr->shade_factors.diffuse = interpolate<Color3>(beta, gamma,

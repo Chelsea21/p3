@@ -363,7 +363,7 @@ bool load_scene( Scene* scene, const char* filename )
         // parse background color
         parse_elem( root, true,  STR_BACKGROUND, &scene->background_color );
         // parse refractive index
-        parse_elem( root, true,  STR_REFRACT, &scene->refractive_indices.front() );
+        parse_elem( root, true,  STR_REFRACT, &scene->refractive_index );
         // parse ambient light
         parse_elem( root, false, STR_AMLIGHT, &scene->ambient_light );
 
