@@ -26,7 +26,7 @@ namespace _462 {
 
 // TODO
 // max number of threads OpenMP can use. Change this if you like.
-#define MAX_THREADS 4
+#define MAX_THREADS 1
 
 static const unsigned STEP_SIZE = 8;
 
@@ -116,7 +116,7 @@ Color3 Raytracer::trace_point(const Scene* scene, Vector3 e, Vector3 d, unsigned
 	if (depth > MAX_DEPTH)
 		return Color3::Black();
 
-	Ray r = Ray(e, d);
+	Ray r(e, d);
 	HitRecord record;
 	record.material_ptr = NULL;
 
@@ -126,7 +126,9 @@ Color3 Raytracer::trace_point(const Scene* scene, Vector3 e, Vector3 d, unsigned
 	for (size_t i = 0; i < scene->num_geometries(); i++) {
 		for (size_t j = 0; j < scene->get_geometry(i)->num_models(); j++) {
 			if (scene->get_geometry(i)->hit(r, t0, t1, j, &record)) {
-				t1 = record.time;
+				if (is_air(refractive_indices.back(), scene->refractive_index) ||
+						abs(refractive_indices.back() - record.shade_factors.refractive_index) < 1e-6)
+					t1 = record.time;
 			}
 		}
 	}
@@ -146,57 +148,50 @@ Color3 Raytracer::shade(const Ray ray, const HitRecord record, unsigned int dept
 		return result;
 	}
 
-	result = record.shade_factors.ambient * scene->ambient_light;
-	unsigned int iter;
-	for (size_t i = 0; i < scene->num_lights(); i++) {
-		for (iter = 0; iter < num_samples; iter++) {
-			// Random vector generate by the light source is a vector from the center to a random
-			// point on its surface.
-			Vector3 random_light_point =
-					scene->get_lights()[i].generate_random_point();
-			Vector3 shadow_d = random_light_point - record.hit_point;
-			Ray shadow_ray(record.hit_point, shadow_d);
+	if (record.shade_factors.refractive_index < 1e-3) {
+		result = record.shade_factors.ambient * scene->ambient_light;
+		if (dot(ray.d, record.normal) < 0) {
+			for (size_t i = 0; i < scene->num_lights(); i++) {
+				// Random vector generate by the light source is a vector from the center to a random
+				// point on its surface.
+				Vector3 random_light_point =
+						scene->get_lights()[i].generate_random_point();
+				Vector3 shadow_d = random_light_point - record.hit_point;
+				Ray shadow_ray(record.hit_point, shadow_d);
 
-			// Back side of the object.
-			if (dot(ray.d, record.normal) >= 0) {
-				goto hit_found;
-			}
-
-			for (size_t j = 0; j < scene->num_geometries(); j++) {
-				// D vector here is the vector pointing from the object surface to the light source.
-				for (size_t k = 0; k < scene->get_geometry(j)->num_models(); k++) {
-					bool hit_flag = scene->get_geometry(j)->hit(shadow_ray, 1e-3, 1, k, NULL);
-					if (hit_flag)
-						goto hit_found;
-					else
-						light_rays[i] = shadow_ray;
+				size_t j = 0;
+				for (; j < scene->num_geometries(); j++) {
+					// D vector here is the vector pointing from the object surface to the light source.
+					for (size_t k = 0; k < scene->get_geometry(j)->num_models(); k++) {
+						if (scene->get_geometry(j)->hit(shadow_ray, 1e-3, 1, k, NULL)) {
+							goto hit_found;
+						} else
+							light_rays[i] = shadow_ray;
+					}
 				}
+				hit_found:
+				if (j == scene->num_geometries())
+					light_number.push_back(i);
 			}
 		}
-		hit_found:
-		if (iter == num_samples) {
-			light_number.push_back(i);
+
+		// Non-shadow.
+		if (light_number.size() >= 1) {
+			// Render diffuse and specular light for each light sources.
+			for (std::vector<unsigned int>::iterator itr = light_number.begin();
+					itr != light_number.end(); itr++) {
+				const SphereLight* light = (scene->get_lights() + *itr);
+				Vector3 h = normalize(normalize(light_rays[*itr].d) - ray.d);
+				real_t dot_n_l = dot(record.normal,
+						normalize(light_rays[*itr].d));
+				real_t diffuse_cos = (dot_n_l > 0) ? dot_n_l : 0;
+
+				result += record.shade_factors.diffuse * light->color * diffuse_cos;
+			}
 		}
 	}
-
-	// Non-shadow.
-	if (light_number.size() >= 1) {
-		// Render diffuse and specular light for each light sources.
-		for (std::vector<unsigned int>::iterator itr = light_number.begin();
-				itr != light_number.end(); itr++) {
-			const SphereLight* light = (scene->get_lights() + *itr);
-			Vector3 h = normalize(
-					normalize(light_rays[*itr].d) + normalize(-ray.d));
-
-			real_t dot_n_l = dot(record.normal, normalize(light_rays[*itr].d));
-			real_t dot_n_h = dot(record.normal, h);
-			real_t diffuse_cos = (dot_n_l > 0) ? dot_n_l : 0;
-
-			result += record.shade_factors.diffuse * light->color * diffuse_cos
-					+ record.shade_factors.specular * light->color
-							* std::pow(dot_n_h > 0 ? dot_n_h : 0,
-									record.shade_factors.shininess);
-		}
+	else {
+		result = Color3::Black();
 	}
 
 	// Refraction and reflection.
@@ -239,6 +234,7 @@ Color3 Raytracer::shade(const Ray ray, const HitRecord record, unsigned int dept
 							* (1 - cos_t) * (1 - cos_t);
 		}
 	}
+
 	// Randomly trace refective ray or refractive ray.
 	real_t rand_r = 1. * random();
 	if (rand_r < R) {
@@ -247,18 +243,19 @@ Color3 Raytracer::shade(const Ray ray, const HitRecord record, unsigned int dept
 			Vector3 r = ray.d - 2 * dot_n_d * normal;
 
 			result += record.shade_factors.specular
-					* trace_point(scene, record.hit_point, r, ++depth,
+					* trace_point(scene, record.hit_point, normalize(r), ++depth,
 							refractive_indices);
 		}
-	} else {
+	}
+	else {
 		if (!is_air(refractive_indices.back(), scene->refractive_index)) {
 			refractive_indices.pop_back();
 		} else {
 			refractive_indices.push_back(record.shade_factors.refractive_index);
 		}
 
-		result += trace_point(scene, record.hit_point, t, ++depth,
-				refractive_indices);
+		result += trace_point(scene, record.hit_point, normalize(t), ++depth,
+					refractive_indices);
 	}
 
 	return result;
@@ -305,6 +302,7 @@ bool Raytracer::raytrace(unsigned char* buffer, real_t* max_time) {
 		// This tells OpenMP that this loop can be parallelized.
 #pragma omp parallel for
 		for (int c_row = current_row; c_row < loop_upper; c_row++) {
+		//for (int c_row = current_row; c_row < 1; c_row++) {
 			/*
 			 * This defines a critical region of code that should be
 			 * executed sequentially.
@@ -316,6 +314,7 @@ bool Raytracer::raytrace(unsigned char* buffer, real_t* max_time) {
 			}
 
 			for (size_t x = 0; x < width; x++) {
+			//for (size_t x = 0; x < 1; x++) {
 				// trace a pixel
 				Color3 color = trace_pixel(scene, x, c_row, width, height);
 				// write the result to the buffer, always use 1.0 as the alpha

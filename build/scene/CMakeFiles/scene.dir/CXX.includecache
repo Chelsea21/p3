@@ -128,6 +128,16 @@ cmath
 scene/scene.hpp
 /home/chelsea/Documents/GraphicsProjects/p3/src/scene/scene/scene.hpp
 
+/home/chelsea/Documents/GraphicsProjects/p3/src/scene/triangle.cpp
+scene/triangle.hpp
+/home/chelsea/Documents/GraphicsProjects/p3/src/scene/scene/triangle.hpp
+application/opengl.hpp
+/home/chelsea/Documents/GraphicsProjects/p3/src/scene/application/opengl.hpp
+
+/home/chelsea/Documents/GraphicsProjects/p3/src/scene/triangle.hpp
+scene/scene.hpp
+/home/chelsea/Documents/GraphicsProjects/p3/src/scene/scene/scene.hpp
+
 /usr/include/SDL/SDL_config.h
 SDL_platform.h
 /usr/include/SDL/SDL_platform.h

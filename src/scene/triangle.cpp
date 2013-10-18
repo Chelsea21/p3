@@ -77,7 +77,7 @@ bool Triangle::hit(const Ray ray, const real_t start, const real_t end,
 
 	real_t M = a * ei_minus_hf + b * gf_minus_di + c * dh_minus_eg;
 	real_t time = (f * ak_minus_jb + e * jc_minus_al + d * bl_minus_kc) / -M;
-	if (time < start || time > end) {
+	if (time <= start || time >= end) {
 		return false;
 	}
 

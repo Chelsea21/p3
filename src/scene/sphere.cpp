@@ -99,8 +99,6 @@ void Sphere::render() const
 
 bool Sphere::hit(const Ray ray, const real_t start, const real_t end,
     			const unsigned int model_index, HitRecord* record_ptr) {
-	// TODO check whether the transformation is correct.
-
 	(void) model_index;
 
 	Ray transformed_ray = ray.transform(this->invMat);
@@ -129,6 +127,9 @@ bool Sphere::hit(const Ray ray, const real_t start, const real_t end,
 		return false;
 	}
 	t = (t1 < start) ? t2 : t1;
+
+	if (t == end || t == start)
+		return false;
 
 	/*
 	if (material->refractive_index == 2 &&
