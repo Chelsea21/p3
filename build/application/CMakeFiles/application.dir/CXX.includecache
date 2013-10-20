@@ -82,6 +82,12 @@ cmath
 iostream
 -
 
+/home/chelsea/Documents/GraphicsProjects/p3/src/scene/boundingbox.hpp
+scene/scene.hpp
+/home/chelsea/Documents/GraphicsProjects/p3/src/scene/scene/scene.hpp
+math/vector.hpp
+/home/chelsea/Documents/GraphicsProjects/p3/src/scene/math/vector.hpp
+
 /home/chelsea/Documents/GraphicsProjects/p3/src/scene/material.hpp
 math/color.hpp
 /home/chelsea/Documents/GraphicsProjects/p3/src/scene/math/color.hpp
@@ -107,6 +113,8 @@ scene/scene.hpp
 /home/chelsea/Documents/GraphicsProjects/p3/src/scene/scene/scene.hpp
 scene/mesh.hpp
 /home/chelsea/Documents/GraphicsProjects/p3/src/scene/scene/mesh.hpp
+scene/boundingbox.hpp
+/home/chelsea/Documents/GraphicsProjects/p3/src/scene/scene/boundingbox.hpp
 
 /home/chelsea/Documents/GraphicsProjects/p3/src/scene/ray.hpp
 math/vector.hpp
@@ -149,10 +157,14 @@ cfloat
 /home/chelsea/Documents/GraphicsProjects/p3/src/scene/sphere.hpp
 scene/scene.hpp
 /home/chelsea/Documents/GraphicsProjects/p3/src/scene/scene/scene.hpp
+scene/boundingbox.hpp
+/home/chelsea/Documents/GraphicsProjects/p3/src/scene/scene/boundingbox.hpp
 
 /home/chelsea/Documents/GraphicsProjects/p3/src/scene/triangle.hpp
 scene/scene.hpp
 /home/chelsea/Documents/GraphicsProjects/p3/src/scene/scene/scene.hpp
+scene/boundingbox.hpp
+/home/chelsea/Documents/GraphicsProjects/p3/src/scene/scene/boundingbox.hpp
 
 /home/chelsea/Documents/GraphicsProjects/p3/src/tinyxml/tinyxml.h
 ctype.h

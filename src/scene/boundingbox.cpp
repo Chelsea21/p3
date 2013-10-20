@@ -18,6 +18,7 @@ void Boundingbox::render() const {
 
 bool Boundingbox::hit(const Ray ray, const real_t start, const real_t end,
 			const unsigned int model_index, HitRecord* record_ptr) {
+	(void) model_index;
 	if (!isLoose)
 		construct_boundingbox();
 
@@ -28,12 +29,20 @@ bool Boundingbox::hit(const Ray ray, const real_t start, const real_t end,
 		tmin = denominator_x * (minPoint.x - ray.e.x);
 		tmax = denominator_x * (maxPoint.x - ray.e.x);
 	}
+	else {
+		tmin = denominator_x * (maxPoint.x - ray.e.x);
+		tmax = denominator_x * (minPoint.x - ray.e.x);
+	}
 	real_t denominator_y = 1 / ray.d.y;
 	real_t tmin_y;
 	real_t tmax_y;
 	if (denominator_y >= 0) {
 		tmin_y = denominator_y * (minPoint.y - ray.e.y);
 		tmax_y = denominator_y * (maxPoint.y - ray.e.y);
+	}
+	else {
+		tmin_y = denominator_y * (maxPoint.y - ray.e.y);
+		tmax_y = denominator_y * (minPoint.y - ray.e.y);
 	}
 
 	if (tmin > tmax_y || tmax < tmin_y)
@@ -48,6 +57,10 @@ bool Boundingbox::hit(const Ray ray, const real_t start, const real_t end,
 		tmin_z = denominator_z * (minPoint.z - ray.e.z);
 		tmax_z = denominator_z * (maxPoint.z - ray.e.z);
 	}
+	else {
+		tmin_z = denominator_z * (maxPoint.z - ray.e.z);
+		tmax_z = denominator_z * (minPoint.z - ray.e.z);
+	}
 	if (tmin > tmax_z || tmax < tmin_z)
 		return false;
 	tmin = (tmin > tmin_z) ? tmin : tmin_z;
@@ -55,8 +68,11 @@ bool Boundingbox::hit(const Ray ray, const real_t start, const real_t end,
 
 	if (tmin > end || tmax < start)
 		return false;
-	record_ptr->time = tmin;
-	record_ptr->time_max = tmax;
+
+	if (record_ptr != NULL) {
+		record_ptr->time = tmin;
+		record_ptr->time_max = tmax;
+	}
 
 	return true;
 }
@@ -64,8 +80,9 @@ bool Boundingbox::hit(const Ray ray, const real_t start, const real_t end,
 size_t Boundingbox::num_models() const {
 	return 1;
 }
-Boundingbox* const Boundingbox::get_boundingbox() const {
-	return this;
+
+Boundingbox* Boundingbox::get_boundingbox() const {
+	return const_cast<Boundingbox*>(this);
 }
 
 void Boundingbox::construct_boundingbox() {
@@ -79,8 +96,8 @@ void Boundingbox::construct_boundingbox() {
 	vertices[6] = minPoint;
 	vertices[7] = maxPoint;
 	real_t inf = std::numeric_limits<double>::infinity();
-	Vector3 newMinPoint(-inf, -inf, -inf);
-	Vector3 newMaxPoint(inf, inf, inf);
+	Vector3 newMinPoint(inf, inf, inf);
+	Vector3 newMaxPoint(-inf, -inf, -inf);
 
 	for (size_t i = 0; i < vertices.size(); i++) {
 		Vector3 transformed = this->mat.transform_point(vertices[i]);

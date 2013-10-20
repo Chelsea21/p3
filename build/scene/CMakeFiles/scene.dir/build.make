@@ -187,9 +187,32 @@ scene/CMakeFiles/scene.dir/triangle.cpp.o.provides: scene/CMakeFiles/scene.dir/t
 
 scene/CMakeFiles/scene.dir/triangle.cpp.o.provides.build: scene/CMakeFiles/scene.dir/triangle.cpp.o
 
+scene/CMakeFiles/scene.dir/boundingbox.cpp.o: scene/CMakeFiles/scene.dir/flags.make
+scene/CMakeFiles/scene.dir/boundingbox.cpp.o: /home/chelsea/Documents/GraphicsProjects/p3/src/scene/boundingbox.cpp
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/chelsea/Documents/GraphicsProjects/p3/build/CMakeFiles $(CMAKE_PROGRESS_7)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object scene/CMakeFiles/scene.dir/boundingbox.cpp.o"
+	cd /home/chelsea/Documents/GraphicsProjects/p3/build/scene && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/scene.dir/boundingbox.cpp.o -c /home/chelsea/Documents/GraphicsProjects/p3/src/scene/boundingbox.cpp
+
+scene/CMakeFiles/scene.dir/boundingbox.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/scene.dir/boundingbox.cpp.i"
+	cd /home/chelsea/Documents/GraphicsProjects/p3/build/scene && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/chelsea/Documents/GraphicsProjects/p3/src/scene/boundingbox.cpp > CMakeFiles/scene.dir/boundingbox.cpp.i
+
+scene/CMakeFiles/scene.dir/boundingbox.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/scene.dir/boundingbox.cpp.s"
+	cd /home/chelsea/Documents/GraphicsProjects/p3/build/scene && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/chelsea/Documents/GraphicsProjects/p3/src/scene/boundingbox.cpp -o CMakeFiles/scene.dir/boundingbox.cpp.s
+
+scene/CMakeFiles/scene.dir/boundingbox.cpp.o.requires:
+.PHONY : scene/CMakeFiles/scene.dir/boundingbox.cpp.o.requires
+
+scene/CMakeFiles/scene.dir/boundingbox.cpp.o.provides: scene/CMakeFiles/scene.dir/boundingbox.cpp.o.requires
+	$(MAKE) -f scene/CMakeFiles/scene.dir/build.make scene/CMakeFiles/scene.dir/boundingbox.cpp.o.provides.build
+.PHONY : scene/CMakeFiles/scene.dir/boundingbox.cpp.o.provides
+
+scene/CMakeFiles/scene.dir/boundingbox.cpp.o.provides.build: scene/CMakeFiles/scene.dir/boundingbox.cpp.o
+
 scene/CMakeFiles/scene.dir/ray.cpp.o: scene/CMakeFiles/scene.dir/flags.make
 scene/CMakeFiles/scene.dir/ray.cpp.o: /home/chelsea/Documents/GraphicsProjects/p3/src/scene/ray.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/chelsea/Documents/GraphicsProjects/p3/build/CMakeFiles $(CMAKE_PROGRESS_7)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/chelsea/Documents/GraphicsProjects/p3/build/CMakeFiles $(CMAKE_PROGRESS_8)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object scene/CMakeFiles/scene.dir/ray.cpp.o"
 	cd /home/chelsea/Documents/GraphicsProjects/p3/build/scene && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/scene.dir/ray.cpp.o -c /home/chelsea/Documents/GraphicsProjects/p3/src/scene/ray.cpp
 
@@ -218,6 +241,7 @@ scene_OBJECTS = \
 "CMakeFiles/scene.dir/scene.cpp.o" \
 "CMakeFiles/scene.dir/sphere.cpp.o" \
 "CMakeFiles/scene.dir/triangle.cpp.o" \
+"CMakeFiles/scene.dir/boundingbox.cpp.o" \
 "CMakeFiles/scene.dir/ray.cpp.o"
 
 # External object files for target scene
@@ -229,6 +253,7 @@ scene/libscene.a: scene/CMakeFiles/scene.dir/model.cpp.o
 scene/libscene.a: scene/CMakeFiles/scene.dir/scene.cpp.o
 scene/libscene.a: scene/CMakeFiles/scene.dir/sphere.cpp.o
 scene/libscene.a: scene/CMakeFiles/scene.dir/triangle.cpp.o
+scene/libscene.a: scene/CMakeFiles/scene.dir/boundingbox.cpp.o
 scene/libscene.a: scene/CMakeFiles/scene.dir/ray.cpp.o
 scene/libscene.a: scene/CMakeFiles/scene.dir/build.make
 scene/libscene.a: scene/CMakeFiles/scene.dir/link.txt
@@ -246,6 +271,7 @@ scene/CMakeFiles/scene.dir/requires: scene/CMakeFiles/scene.dir/model.cpp.o.requ
 scene/CMakeFiles/scene.dir/requires: scene/CMakeFiles/scene.dir/scene.cpp.o.requires
 scene/CMakeFiles/scene.dir/requires: scene/CMakeFiles/scene.dir/sphere.cpp.o.requires
 scene/CMakeFiles/scene.dir/requires: scene/CMakeFiles/scene.dir/triangle.cpp.o.requires
+scene/CMakeFiles/scene.dir/requires: scene/CMakeFiles/scene.dir/boundingbox.cpp.o.requires
 scene/CMakeFiles/scene.dir/requires: scene/CMakeFiles/scene.dir/ray.cpp.o.requires
 .PHONY : scene/CMakeFiles/scene.dir/requires
 

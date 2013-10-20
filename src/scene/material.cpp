@@ -134,7 +134,7 @@ void Material::reset_gl_state() const
 }
 
 const Vector2 Material::clap_texture(const Vector2 coord) const {
-	if (coord.x >= 1 || coord.y >= 1)
+	if (coord.x > 1 || coord.y > 1)
 		return Vector2(std::fmod(coord.x, 1.0) * tex_width, std::fmod(coord.y, 1.0) * tex_height);
 	return Vector2(coord.x * tex_width, coord.y * tex_height);
 }
@@ -145,10 +145,10 @@ Color3 Material::get_texture_pixel(const Vector2 coord) const {
 	real_t u = coord.x - i;
 	real_t v = coord.y - j;
 
-	return (1 - u) * (1 - v) * get_texture_pixel(i + 1, j + 1) +
-			u * (1 - v) * get_texture_pixel(i, j + 1) +
-			(1 - u) * v * get_texture_pixel(i + 1, j) +
-			u * v * get_texture_pixel(i, j);
+	return (1 - u) * (1 - v) * get_texture_pixel(i, j) +
+			u * (1 - v) * get_texture_pixel(i + 1, j) +
+			(1 - u) * v * get_texture_pixel(i, j + 1) +
+			u * v * get_texture_pixel(i + 1, j + 1);
 }
 
 }

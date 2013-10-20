@@ -89,6 +89,7 @@ application/CMakeFiles/application.dir/scene_loader.cpp.o
  /home/chelsea/Documents/GraphicsProjects/p3/src/math/matrix.hpp
  /home/chelsea/Documents/GraphicsProjects/p3/src/math/quaternion.hpp
  /home/chelsea/Documents/GraphicsProjects/p3/src/math/vector.hpp
+ /home/chelsea/Documents/GraphicsProjects/p3/src/scene/boundingbox.hpp
  /home/chelsea/Documents/GraphicsProjects/p3/src/scene/material.hpp
  /home/chelsea/Documents/GraphicsProjects/p3/src/scene/mesh.hpp
  /home/chelsea/Documents/GraphicsProjects/p3/src/scene/model.hpp

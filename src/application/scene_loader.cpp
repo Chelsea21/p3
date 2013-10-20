@@ -274,6 +274,7 @@ static void parse_geom_base( const MaterialMap& /*matmap*/, const TiXmlElement* 
     parse_elem( elem, false, STR_SCALE,     &geom->scale );
     // normalize orientation
     geom->orientation = normalize( ori );
+    geom->initialize();
 }
 
 static void parse_geom_sphere( const MaterialMap& matmap, const TiXmlElement* elem, Sphere* geom )
@@ -282,8 +283,6 @@ static void parse_geom_sphere( const MaterialMap& matmap, const TiXmlElement* el
     parse_geom_base( matmap, elem, geom );
     parse_elem( elem, true,  STR_RADIUS,  &geom->radius );
     parse_lookup_data( matmap, elem, STR_MATERIAL, &geom->material );
-
-    geom->construct_boundingbox();
 }
 
 static void parse_geom_triangle( const MaterialMap& matmap, const TriVertMap& tvmap, const TiXmlElement* elem, Triangle* geom )
@@ -310,8 +309,6 @@ static void parse_geom_triangle( const MaterialMap& matmap, const TriVertMap& tv
         std::cout << "To few vertices for triangle.\n";
         throw std::exception();
     }
-
-    geom->construct_boundingbox();
 }
 
 static void parse_geom_model( const MaterialMap& matmap, const MeshMap& meshmap, const TiXmlElement* elem, Model* geom )
@@ -319,8 +316,6 @@ static void parse_geom_model( const MaterialMap& matmap, const MeshMap& meshmap,
     parse_geom_base( matmap, elem, geom );
     parse_lookup_data( meshmap, elem, STR_MESH, &geom->mesh );
     parse_lookup_data( matmap, elem, STR_MATERIAL, &geom->material );
-
-    geom->construct_boundingbox();
 }
 
 static void check_mem( void* ptr )

@@ -324,6 +324,11 @@
 			<location>/home/chelsea/Documents/GraphicsProjects/p3/src/scene/triangle.cpp</location>
 		</link>
 		<link>
+			<name>[Targets]/[lib] scene/Source Files/boundingbox.cpp</name>
+			<type>1</type>
+			<location>/home/chelsea/Documents/GraphicsProjects/p3/src/scene/boundingbox.cpp</location>
+		</link>
+		<link>
 			<name>[Targets]/[lib] scene/Source Files/ray.cpp</name>
 			<type>1</type>
 			<location>/home/chelsea/Documents/GraphicsProjects/p3/src/scene/ray.cpp</location>

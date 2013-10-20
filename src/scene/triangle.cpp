@@ -52,6 +52,10 @@ void Triangle::render() const
 bool Triangle::hit(const Ray ray, const real_t start, const real_t end,
 			const unsigned int model_index, HitRecord* record_ptr) {
 	(void) model_index;
+
+	if (!boundingbox.hit(ray, start, end, model_index, record_ptr))
+		return false;
+
 	Ray transformed_ray = ray.transform(this->invMat);
 	Vector3 a_minus_b = vertices[0].position - vertices[1].position;
 	Vector3 a_minus_c = vertices[0].position - vertices[2].position;
@@ -123,16 +127,16 @@ size_t Triangle::num_models() const {
 	return 1;
 }
 
-Boundingbox* const Triangle::get_boundingbox() const {
-	return &boundingbox;
+Boundingbox* Triangle::get_boundingbox() const {
+	return const_cast<Boundingbox*>(&boundingbox);
 }
 
 void Triangle::construct_boundingbox() {
 	boundingbox.mat = mat;
 
 	real_t inf = std::numeric_limits<double>::infinity();
-	Vector3 newMinPoint(-inf, -inf, -inf);
-	Vector3 newMaxPoint(inf, inf, inf);
+	Vector3 newMinPoint(inf, inf, inf);
+	Vector3 newMaxPoint(-inf, -inf, -inf);
 
 	for (size_t i = 0; i < 3; i++) {
 		Vector3 transformed = this->mat.transform_point(vertices[i].position);
@@ -149,6 +153,7 @@ void Triangle::construct_boundingbox() {
 	boundingbox.minPoint = newMinPoint;
 	boundingbox.maxPoint = newMaxPoint;
 	boundingbox.construct_boundingbox();
+	boundingbox.isLoose = true;
 }
 
 } /* _462 */

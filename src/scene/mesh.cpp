@@ -59,8 +59,8 @@ bool Mesh::load() {
 	std::cout << "Loading mesh from '" << filename << "'..." << std::endl;
 
 	real_t inf = std::numeric_limits<real_t>::infinity();
-	minPoint = Vector3(-inf, -inf, -inf);
-	maxPoint = Vector3(inf, inf, inf);
+	minPoint = Vector3(inf, inf, inf);
+	maxPoint = Vector3(-inf, -inf, -inf);
 
 	std::string line;
 	std::ifstream file(filename.c_str());
@@ -126,7 +126,6 @@ bool Mesh::load() {
 						<< std::endl;
 				return false;
 			}
-
 			position_list.push_back(position);
 
 		} else if (token == "vn") {
@@ -310,6 +309,7 @@ bool Mesh::load() {
 	initialize();
 
 	std::cout << "Successfully loaded mesh '" << filename << "'.\n";
+
 	return true;
 }
 

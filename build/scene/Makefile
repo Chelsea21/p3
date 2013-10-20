@@ -153,6 +153,30 @@ scene/fast:
 	cd /home/chelsea/Documents/GraphicsProjects/p3/build && $(MAKE) -f scene/CMakeFiles/scene.dir/build.make scene/CMakeFiles/scene.dir/build
 .PHONY : scene/fast
 
+boundingbox.o: boundingbox.cpp.o
+.PHONY : boundingbox.o
+
+# target to build an object file
+boundingbox.cpp.o:
+	cd /home/chelsea/Documents/GraphicsProjects/p3/build && $(MAKE) -f scene/CMakeFiles/scene.dir/build.make scene/CMakeFiles/scene.dir/boundingbox.cpp.o
+.PHONY : boundingbox.cpp.o
+
+boundingbox.i: boundingbox.cpp.i
+.PHONY : boundingbox.i
+
+# target to preprocess a source file
+boundingbox.cpp.i:
+	cd /home/chelsea/Documents/GraphicsProjects/p3/build && $(MAKE) -f scene/CMakeFiles/scene.dir/build.make scene/CMakeFiles/scene.dir/boundingbox.cpp.i
+.PHONY : boundingbox.cpp.i
+
+boundingbox.s: boundingbox.cpp.s
+.PHONY : boundingbox.s
+
+# target to generate assembly for a file
+boundingbox.cpp.s:
+	cd /home/chelsea/Documents/GraphicsProjects/p3/build && $(MAKE) -f scene/CMakeFiles/scene.dir/build.make scene/CMakeFiles/scene.dir/boundingbox.cpp.s
+.PHONY : boundingbox.cpp.s
+
 material.o: material.cpp.o
 .PHONY : material.o
 
@@ -334,6 +358,9 @@ help:
 	@echo "... list_install_components"
 	@echo "... rebuild_cache"
 	@echo "... scene"
+	@echo "... boundingbox.o"
+	@echo "... boundingbox.i"
+	@echo "... boundingbox.s"
 	@echo "... material.o"
 	@echo "... material.i"
 	@echo "... material.s"

@@ -4,6 +4,7 @@ SET(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 SET(CMAKE_DEPENDS_CHECK_CXX
+  "/home/chelsea/Documents/GraphicsProjects/p3/src/scene/boundingbox.cpp" "/home/chelsea/Documents/GraphicsProjects/p3/build/scene/CMakeFiles/scene.dir/boundingbox.cpp.o"
   "/home/chelsea/Documents/GraphicsProjects/p3/src/scene/material.cpp" "/home/chelsea/Documents/GraphicsProjects/p3/build/scene/CMakeFiles/scene.dir/material.cpp.o"
   "/home/chelsea/Documents/GraphicsProjects/p3/src/scene/mesh.cpp" "/home/chelsea/Documents/GraphicsProjects/p3/build/scene/CMakeFiles/scene.dir/mesh.cpp.o"
   "/home/chelsea/Documents/GraphicsProjects/p3/src/scene/model.cpp" "/home/chelsea/Documents/GraphicsProjects/p3/build/scene/CMakeFiles/scene.dir/model.cpp.o"

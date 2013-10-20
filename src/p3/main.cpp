@@ -109,10 +109,11 @@ bool RaytracerApplication::initialize()
 
         Material* const* materials = scene.get_materials();
         Mesh* const* meshes = scene.get_meshes();
+        Geometry* const* geometries = scene.get_geometries();
 
         // load all textures
         for ( size_t i = 0; i < scene.num_materials(); ++i )
-	{
+        {
             if ( !materials[i]->load() ||
 		 ( load_gl && !materials[i]->create_gl_data() ) )
 	    {
@@ -123,13 +124,18 @@ bool RaytracerApplication::initialize()
 
         // load all meshes
         for ( size_t i = 0; i < scene.num_meshes(); ++i )
-	{
+        {
             if ( !meshes[i]->load() ||
 		 ( load_gl && !meshes[i]->create_gl_data() ) )
 	    {
                 std::cout << "Error loading mesh, aborting.\n";
                 return false;
             }
+        }
+
+        // constructs all bounding box.
+        for (size_t i = 0; i < scene.num_geometries(); i++) {
+        	geometries[i]->construct_boundingbox();
         }
 
     }

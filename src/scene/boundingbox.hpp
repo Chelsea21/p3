@@ -35,7 +35,7 @@ public:
 			const unsigned int model_index, HitRecord* record_ptr);
 
 	virtual size_t num_models() const;
-	virtual Boundingbox* const get_boundingbox() const;
+	virtual Boundingbox* get_boundingbox() const;
 
 	virtual void construct_boundingbox();
 

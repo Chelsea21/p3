@@ -101,7 +101,11 @@ bool Sphere::hit(const Ray ray, const real_t start, const real_t end,
     			const unsigned int model_index, HitRecord* record_ptr) {
 	(void) model_index;
 
+	if (!boundingbox.hit(ray, start, end, model_index, record_ptr))
+		return false;
+
 	Ray transformed_ray = ray.transform(this->invMat);
+
 	Vector3 e_minus_c = transformed_ray.e;
 	real_t a = dot(transformed_ray.d, transformed_ray.d);
 	real_t c = dot(e_minus_c, e_minus_c) - radius * radius;
@@ -159,8 +163,8 @@ size_t Sphere::num_models() const {
 	return 1;
 }
 
-Boundingbox* const Sphere::get_boundingbox() const {
-	return &boundingbox;
+Boundingbox* Sphere::get_boundingbox() const {
+	return const_cast<Boundingbox*>(&boundingbox);
 }
 
 void Sphere::construct_boundingbox() {
@@ -168,6 +172,7 @@ void Sphere::construct_boundingbox() {
 	boundingbox.minPoint = Vector3(-radius, -radius, -radius);
 	boundingbox.maxPoint = Vector3(radius, radius, radius);
 	boundingbox.construct_boundingbox();
+	boundingbox.isLoose = true;
 }
 
 } /* _462 */

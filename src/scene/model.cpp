@@ -36,6 +36,8 @@ void Model::render() const {
 
 bool Model::hit(const Ray ray, const real_t start, const real_t end,
 		const unsigned int model_index, HitRecord* record_ptr) {
+	if (!boundingbox.hit(ray, start, end, model_index, record_ptr))
+		return false;
 	Ray transformed_ray = ray.transform(this->invMat);
 	real_t beta;
 	real_t gamma;
@@ -61,8 +63,8 @@ size_t Model::num_models() const {
 	return mesh->num_triangles();
 }
 
-Boundingbox* const Model::get_boundingbox() const {
-	return &boundingbox;
+Boundingbox* Model::get_boundingbox() const {
+	return const_cast<Boundingbox*>(&boundingbox);
 }
 
 void Model::construct_boundingbox() {
@@ -70,6 +72,7 @@ void Model::construct_boundingbox() {
 	boundingbox.minPoint = mesh->minPoint;
 	boundingbox.maxPoint = mesh->maxPoint;
 	boundingbox.construct_boundingbox();
+	boundingbox.isLoose = true;
 }
 
 } /* _462 */

@@ -10,6 +10,7 @@
 
 #include "scene/scene.hpp"
 #include "scene/mesh.hpp"
+#include "scene/boundingbox.hpp"
 
 namespace _462 {
 
@@ -31,7 +32,7 @@ public:
     virtual bool hit(const Ray ray, const real_t start, const real_t end,
     			const unsigned int model_index, HitRecord* record_ptr);
     virtual size_t num_models() const;
-    virtual Boundingbox* const get_boundingbox() const;
+    virtual Boundingbox* get_boundingbox() const;
     virtual void construct_boundingbox();
 };
 
