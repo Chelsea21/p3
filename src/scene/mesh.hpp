@@ -83,7 +83,7 @@ public:
 	bool initialize();
 
 	bool hit(const Ray ray, const real_t start, const real_t end,
-				const unsigned int list_num, HitRecord* record_ptr) const;
+				const unsigned int list_num, HitRecord* record_ptr, real_t& beta, real_t& gamma) const;
 
 private:
 

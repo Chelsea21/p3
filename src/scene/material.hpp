@@ -71,6 +71,9 @@ public:
 	/// leaves other settings unchanged for efficiency.
 	void reset_gl_state() const;
 
+	const Vector2 clap_texture(const Vector2 coord) const;
+	Color3 get_texture_pixel(const Vector2 coord) const;
+
 private:
 
 	// dimensions of the texture

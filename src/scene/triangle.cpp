@@ -53,20 +53,24 @@ bool Triangle::hit(const Ray ray, const real_t start, const real_t end,
 			const unsigned int model_index, HitRecord* record_ptr) {
 	(void) model_index;
 	Ray transformed_ray = ray.transform(this->invMat);
-	Material material;
+	Vector3 a_minus_b = vertices[0].position - vertices[1].position;
+	Vector3 a_minus_c = vertices[0].position - vertices[2].position;
+	Vector3 a_minus_e = vertices[0].position - transformed_ray.e;
 
-	real_t a = vertices[0].position.x - vertices[1].position.x;
-	real_t b = vertices[0].position.y - vertices[1].position.y;
-	real_t c = vertices[0].position.z - vertices[1].position.z;
-	real_t d = vertices[0].position.x - vertices[2].position.x;
-	real_t e = vertices[0].position.y - vertices[2].position.y;
-	real_t f = vertices[0].position.z - vertices[2].position.z;
+	//std::cout << transformed_ray.e.x << "\t" << transformed_ray.e.y << "\t" << transformed_ray.e.z << std::endl;
+
+	real_t a = a_minus_b.x;
+	real_t b = a_minus_b.y;
+	real_t c = a_minus_b.z;
+	real_t d = a_minus_c.x;
+	real_t e = a_minus_c.y;
+	real_t f = a_minus_c.z;
 	real_t g = transformed_ray.d.x;
 	real_t h = transformed_ray.d.y;
 	real_t i = transformed_ray.d.z;
-	real_t j = vertices[0].position.x - transformed_ray.e.x;
-	real_t k = vertices[0].position.y - transformed_ray.e.y;
-	real_t l = vertices[0].position.z - transformed_ray.e.z;
+	real_t j = a_minus_e.x;
+	real_t k = a_minus_e.y;
+	real_t l = a_minus_e.z;
 
 	real_t ei_minus_hf = e * i - h * f;
 	real_t gf_minus_di = g * f - d * i;
@@ -96,6 +100,12 @@ bool Triangle::hit(const Ray ray, const real_t start, const real_t end,
 	record_ptr->material_ptr = vertices[0].material;
 	record_ptr->hit_point = ray.e + record_ptr->time * ray.d;
 	record_ptr->normal = normalize(this->normMat * vertices[0].normal);
+
+	record_ptr->tex_coord = interpolate<Vector2>(beta, gamma,
+			vertices[0].tex_coord, vertices[1].tex_coord, vertices[2].tex_coord);
+	//std::cout << record_ptr->tex_coord.x << "\t" << record_ptr->tex_coord.y << std::endl;
+	record_ptr->tex_coord = record_ptr->material_ptr->clap_texture(record_ptr->tex_coord);
+
 	record_ptr->shade_factors.ambient = interpolate<Color3>(beta, gamma,
 			vertices[0].material->ambient, vertices[1].material->ambient, vertices[2].material->ambient);
 	record_ptr->shade_factors.diffuse = interpolate<Color3>(beta, gamma,
@@ -107,8 +117,7 @@ bool Triangle::hit(const Ray ray, const real_t start, const real_t end,
 	record_ptr->shade_factors.refractive_index = interpolate<real_t>(beta, gamma,
 			vertices[0].material->refractive_index, vertices[1].material->refractive_index, vertices[2].material->refractive_index);
 
-	//std::cout << "beta: " << beta << "; gamma: " << gamma << std::endl;
-	//std::cout << record_ptr->shade_factors.ambient << std::endl;
+	//std::cout << record_ptr->material_ptr->texture_filename << ": " << record_ptr->normal.y << std::endl;
 
 	return true;
 }

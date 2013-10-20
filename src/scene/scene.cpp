@@ -25,7 +25,6 @@ Geometry::~Geometry() { }
 bool Geometry::initialize()
 {
 	make_inverse_transformation_matrix(&invMat, position, orientation, scale);
-	Matrix4 mat;
 	make_transformation_matrix(&mat, position, orientation, scale);
 	make_normal_matrix(&normMat, mat);
 

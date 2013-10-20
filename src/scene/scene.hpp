@@ -43,6 +43,8 @@ public:
 	// The world scale of the object.
 	Vector3 scale;
 
+	// Transformation matrix
+	Matrix4 mat;
 	// Inverse transformation matrix
 	Matrix4 invMat;
 	// Normal transformation matrix

@@ -392,7 +392,7 @@ bool Mesh::initialize() {
 }
 
 bool Mesh::hit(const Ray ray, const real_t start, const real_t end,
-		const unsigned int list_num, HitRecord* record_ptr) const {
+		const unsigned int list_num, HitRecord* record_ptr, real_t& beta, real_t& gamma) const {
 	if (list_num >= this->num_triangles())
 		return false;
 
@@ -426,11 +426,11 @@ bool Mesh::hit(const Ray ray, const real_t start, const real_t end,
 		return false;
 	}
 
-	real_t beta = (j * ei_minus_hf + k * gf_minus_di + l * dh_minus_eg) / M;
+	beta = (j * ei_minus_hf + k * gf_minus_di + l * dh_minus_eg) / M;
 	if (beta < 0 || beta > 1)
 		return false;
 
-	real_t gamma = (i * ak_minus_jb + h * jc_minus_al + g * bl_minus_kc) / M;
+	gamma = (i * ak_minus_jb + h * jc_minus_al + g * bl_minus_kc) / M;
 	if (gamma < 0 || gamma > 1 - beta)
 		return false;
 
@@ -438,7 +438,8 @@ bool Mesh::hit(const Ray ray, const real_t start, const real_t end,
 		return true;
 
 	record_ptr->time = time;
-	record_ptr->hit_point = ray.e + record_ptr->time * ray.d;
+	record_ptr->tex_coord = interpolate<Vector2>(beta, gamma,
+				vertices[v0].tex_coord, vertices[v1].tex_coord, vertices[v2].tex_coord);
 
 	assert (has_normals);
 	record_ptr->normal = interpolate<Vector3>(beta, gamma, vertices[v0].normal,

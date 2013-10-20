@@ -37,10 +37,16 @@ void Model::render() const {
 bool Model::hit(const Ray ray, const real_t start, const real_t end,
 		const unsigned int model_index, HitRecord* record_ptr) {
 	Ray transformed_ray = ray.transform(this->invMat);
-	bool hit_result = mesh->hit(transformed_ray, start, end, model_index, record_ptr);
+	real_t beta;
+	real_t gamma;
+	bool hit_result = mesh->hit(transformed_ray, start, end, model_index, record_ptr, beta, gamma);
 
-	if (record_ptr != NULL) {
+	if (hit_result && record_ptr != NULL) {
+		record_ptr->hit_point = ray.e + record_ptr->time * ray.d;
 		record_ptr->material_ptr = this->material;
+		record_ptr->tex_coord = record_ptr->material_ptr->clap_texture(record_ptr->tex_coord);
+		//std::cout << record_ptr->tex_coord.x << "\t" << record_ptr->tex_coord.y << std::endl;
+		record_ptr->normal = normalize(this->normMat * record_ptr->normal);
 		record_ptr->shade_factors.ambient = this->material->ambient;
 		record_ptr->shade_factors.diffuse = this->material->diffuse;
 		record_ptr->shade_factors.refractive_index = this->material->refractive_index;

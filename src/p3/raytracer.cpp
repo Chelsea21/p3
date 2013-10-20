@@ -149,7 +149,11 @@ Color3 Raytracer::shade(const Ray ray, const HitRecord record, unsigned int dept
 	}
 
 	if (record.shade_factors.refractive_index < 1e-3) {
-		result = record.shade_factors.ambient * scene->ambient_light;
+		Color3 ambient_color = (record.material_ptr->texture_filename.empty()) ?
+				record.shade_factors.ambient :
+				record.shade_factors.ambient * record.material_ptr->get_texture_pixel(record.tex_coord);
+
+		result = ambient_color * scene->ambient_light;
 		if (dot(ray.d, record.normal) < 0) {
 			for (size_t i = 0; i < scene->num_lights(); i++) {
 				// Random vector generate by the light source is a vector from the center to a random
@@ -181,12 +185,13 @@ Color3 Raytracer::shade(const Ray ray, const HitRecord record, unsigned int dept
 			for (std::vector<unsigned int>::iterator itr = light_number.begin();
 					itr != light_number.end(); itr++) {
 				const SphereLight* light = (scene->get_lights() + *itr);
-				Vector3 h = normalize(normalize(light_rays[*itr].d) - ray.d);
 				real_t dot_n_l = dot(record.normal,
 						normalize(light_rays[*itr].d));
 				real_t diffuse_cos = (dot_n_l > 0) ? dot_n_l : 0;
-
-				result += record.shade_factors.diffuse * light->color * diffuse_cos;
+				Color3 diffuse_color = (record.material_ptr->texture_filename.empty()) ?
+						record.shade_factors.diffuse :
+						record.shade_factors.diffuse * record.material_ptr->get_texture_pixel(record.tex_coord);
+				result += diffuse_color * light->color * diffuse_cos;
 			}
 		}
 	}
@@ -250,7 +255,8 @@ Color3 Raytracer::shade(const Ray ray, const HitRecord record, unsigned int dept
 	else {
 		if (!is_air(refractive_indices.back(), scene->refractive_index)) {
 			refractive_indices.pop_back();
-		} else {
+		}
+		else {
 			refractive_indices.push_back(record.shade_factors.refractive_index);
 		}
 

@@ -23,6 +23,7 @@ struct HitRecord {
 	real_t time;
 	Vector3 hit_point;
 	Vector3 normal;
+	Vector2 tex_coord;
 	const Material* material_ptr;
 	ShadeFactors shade_factors;
 };
