@@ -159,5 +159,16 @@ size_t Sphere::num_models() const {
 	return 1;
 }
 
+Boundingbox* const Sphere::get_boundingbox() const {
+	return &boundingbox;
+}
+
+void Sphere::construct_boundingbox() {
+	boundingbox.mat = mat;
+	boundingbox.minPoint = Vector3(-radius, -radius, -radius);
+	boundingbox.maxPoint = Vector3(radius, radius, radius);
+	boundingbox.construct_boundingbox();
+}
+
 } /* _462 */
 

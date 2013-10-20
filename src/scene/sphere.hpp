@@ -23,12 +23,16 @@ public:
     real_t radius;
     const Material* material;
 
+    Boundingbox boundingbox;
+
     Sphere();
     virtual ~Sphere();
     virtual void render() const;
     virtual bool hit(const Ray ray, const real_t start, const real_t end,
         			const unsigned int model_index, HitRecord* record_ptr);
     virtual size_t num_models() const;
+    virtual Boundingbox* const get_boundingbox() const;
+    virtual void construct_boundingbox();
 };
 
 } /* _462 */

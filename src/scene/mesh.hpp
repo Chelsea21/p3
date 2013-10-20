@@ -40,6 +40,10 @@ public:
     Mesh();
     ~Mesh();
 
+    // For bounding box.
+    Vector3 minPoint;
+    Vector3 maxPoint;
+
     /**
      * Loads the model into a list of triangles and vertices.
      * @return True on success.

@@ -61,4 +61,15 @@ size_t Model::num_models() const {
 	return mesh->num_triangles();
 }
 
+Boundingbox* const Model::get_boundingbox() const {
+	return &boundingbox;
+}
+
+void Model::construct_boundingbox() {
+	boundingbox.mat = mat;
+	boundingbox.minPoint = mesh->minPoint;
+	boundingbox.maxPoint = mesh->maxPoint;
+	boundingbox.construct_boundingbox();
+}
+
 } /* _462 */

@@ -21,6 +21,8 @@ struct ShadeFactors {
 
 struct HitRecord {
 	real_t time;
+	// For bounding box;
+	real_t time_max;
 	Vector3 hit_point;
 	Vector3 normal;
 	Vector2 tex_coord;

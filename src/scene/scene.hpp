@@ -20,7 +20,7 @@
 #include <cfloat>
 
 namespace _462 {
-
+class Boundingbox;
 class Geometry {
 public:
 	Geometry();
@@ -62,6 +62,9 @@ public:
 			const unsigned int model_index, HitRecord* record_ptr) = 0;
 
 	virtual size_t num_models() const = 0;
+
+	virtual Boundingbox* const get_boundingbox() const = 0;
+	virtual void construct_boundingbox() = 0;
 };
 
 struct SphereLight {

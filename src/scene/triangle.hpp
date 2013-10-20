@@ -36,12 +36,16 @@ public:
     // the triangle's vertices, in CCW order
     Vertex vertices[3];
 
+    Boundingbox boundingbox;
+
     Triangle();
     virtual ~Triangle();
     virtual void render() const;
     virtual bool hit(const Ray ray, const real_t start, const real_t end,
     				const unsigned int model_index, HitRecord* record_ptr);
     virtual size_t num_models() const;
+    virtual Boundingbox* const get_boundingbox() const;
+    virtual void construct_boundingbox();
 };
 
 template<typename T> inline T interpolate(const real_t beta, const real_t gamma,

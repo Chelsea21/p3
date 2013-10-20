@@ -58,6 +58,10 @@ Mesh::~Mesh() {
 bool Mesh::load() {
 	std::cout << "Loading mesh from '" << filename << "'..." << std::endl;
 
+	real_t inf = std::numeric_limits<real_t>::infinity();
+	minPoint = Vector3(-inf, -inf, -inf);
+	maxPoint = Vector3(inf, inf, inf);
+
 	std::string line;
 	std::ifstream file(filename.c_str());
 
@@ -103,7 +107,19 @@ bool Mesh::load() {
 		if (token == "v") {
 
 			Vector3 position;
-			stream >> position.x >> position.y >> position.z;
+
+			// Read vertices positions and find the min and max point at the same time.
+			stream >> position.x;
+			minPoint.x = (position.x < minPoint.x) ? position.x : minPoint.x;
+			maxPoint.x = (position.x > maxPoint.x) ? position.x : maxPoint.x;
+
+			stream >> position.y;
+			minPoint.y = (position.y < minPoint.y) ? position.y : minPoint.y;
+			maxPoint.y = (position.y > maxPoint.y) ? position.y : maxPoint.y;
+
+			stream >> position.z;
+			minPoint.z = (position.z < minPoint.z) ? position.z : minPoint.z;
+			maxPoint.z = (position.z > maxPoint.z) ? position.z : maxPoint.z;
 
 			if (stream.fail()) {
 				std::cerr << "position syntax error on line " << line_num

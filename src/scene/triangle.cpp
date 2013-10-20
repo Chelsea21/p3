@@ -103,7 +103,6 @@ bool Triangle::hit(const Ray ray, const real_t start, const real_t end,
 
 	record_ptr->tex_coord = interpolate<Vector2>(beta, gamma,
 			vertices[0].tex_coord, vertices[1].tex_coord, vertices[2].tex_coord);
-	//std::cout << record_ptr->tex_coord.x << "\t" << record_ptr->tex_coord.y << std::endl;
 	record_ptr->tex_coord = record_ptr->material_ptr->clap_texture(record_ptr->tex_coord);
 
 	record_ptr->shade_factors.ambient = interpolate<Color3>(beta, gamma,
@@ -117,13 +116,39 @@ bool Triangle::hit(const Ray ray, const real_t start, const real_t end,
 	record_ptr->shade_factors.refractive_index = interpolate<real_t>(beta, gamma,
 			vertices[0].material->refractive_index, vertices[1].material->refractive_index, vertices[2].material->refractive_index);
 
-	//std::cout << record_ptr->material_ptr->texture_filename << ": " << record_ptr->normal.y << std::endl;
-
 	return true;
 }
 
 size_t Triangle::num_models() const {
 	return 1;
+}
+
+Boundingbox* const Triangle::get_boundingbox() const {
+	return &boundingbox;
+}
+
+void Triangle::construct_boundingbox() {
+	boundingbox.mat = mat;
+
+	real_t inf = std::numeric_limits<double>::infinity();
+	Vector3 newMinPoint(-inf, -inf, -inf);
+	Vector3 newMaxPoint(inf, inf, inf);
+
+	for (size_t i = 0; i < 3; i++) {
+		Vector3 transformed = this->mat.transform_point(vertices[i].position);
+		for (size_t j = 0; j < 3; j++) {
+			newMinPoint[j] =
+					(transformed[j] < newMinPoint[j]) ?
+							transformed[j] : newMinPoint[j];
+			newMaxPoint[j] =
+					(transformed[j] > newMaxPoint[j]) ?
+							transformed[j] : newMaxPoint[j];
+		}
+	}
+
+	boundingbox.minPoint = newMinPoint;
+	boundingbox.maxPoint = newMaxPoint;
+	boundingbox.construct_boundingbox();
 }
 
 } /* _462 */
