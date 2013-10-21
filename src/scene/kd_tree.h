@@ -30,6 +30,7 @@ public:
 	Boundingbox boundingbox;
 
 	const unsigned int THRESHOLD = 2;
+	const real_t RESOLUTION = 1e-3;
 
 	virtual void render() const;
 	// Hit function
@@ -39,17 +40,16 @@ public:
 	virtual Boundingbox* get_boundingbox() const;
 	virtual void construct_boundingbox();
 
-	void construct_kd_tree();
+	void build_kd_tree();
 
 private:
 	enum ClassifiedSide { RIGHT, LEFT };
 	GeometrySortedList geometry_sorted_list;
 	KdNode* root;
 	void build_kd_tree(KdNode* tree, const GeometryList& list);
-	void choose_plane(const GeometryList& list, size_t& axis, real_t& plane, bool& divisible) const;
-	void classify(const GeometryList& list, size_t axis, real_t plane,
+	bool choose_plane(GeometryList list, size_t& axis, real_t& plane) const;
+	void classify(const GeometryList* list_ptr, size_t axis, real_t plane,
 			GeometryList& left_list, GeometryList& right_list) const;
-	void classify(const GeometryList& list, real_t choice, ClassifiedSide& side)
 };
 
 }

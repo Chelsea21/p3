@@ -16,6 +16,18 @@ struct sort_pred {
 	}
 };
 
+struct SortBoundingbox {
+	size_t axis;
+	bool operator()(const Geometry* &left,
+			const Geometry* &right) {
+		real_t left_middle = (left->get_boundingbox()->minPoint[axis] +
+							left->get_boundingbox()->maxPoint[axis]) / 2;
+		real_t right_middle = (right->get_boundingbox()->minPoint[axis] +
+									right->get_boundingbox()->maxPoint[axis]) / 2;
+		return left_middle < right_middle;
+	}
+};
+
 KdTree::KdTree(GeometryList geometries)
 : geometry_sorted_list(std::vector<GeometryList>(3)) {
 	std::vector<std::pair<real_t, Geometry*>> aa_sort_list(geometries.size());
@@ -47,7 +59,7 @@ void KdTree::render() const {
 
 bool KdTree::hit(const Ray ray, const real_t start, const real_t end,
 		const unsigned int model_index, HitRecord* record_ptr) {
-
+	return true;
 }
 
 size_t KdTree::num_models() const {
@@ -68,7 +80,7 @@ void KdTree::construct_boundingbox() {
 	boundingbox.isLoose = true;
 }
 
-void KdTree::construct_kd_tree() {
+void KdTree::build_kd_tree() {
 	build_kd_tree(root, geometry_sorted_list[0]);
 }
 
@@ -76,13 +88,13 @@ void KdTree::build_kd_tree(KdNode* tree, const GeometryList& list) {
 	real_t plane;
 	size_t axis;
 	bool divisible;
-	choose_plane(list, axis, plane, divisible);
+	divisible = choose_plane(list, axis, plane);
 	if (divisible) {
 		tree = new KdNode();
 		tree->left = tree->right = NULL;
 		GeometryList left_list;
 		GeometryList right_list;
-		classify(list, axis, plane, left_list, right_list);
+		classify(&list, axis, plane, left_list, right_list);
 		if (left_list.size() > THRESHOLD)
 			build_kd_tree(tree->left, left_list);
 		if (tree->left == NULL) {
@@ -102,14 +114,83 @@ void KdTree::build_kd_tree(KdNode* tree, const GeometryList& list) {
 	}
 }
 
-void KdTree::choose_plane(const GeometryList& list, size_t& axis, real_t& plane, bool& divisible) const {
+bool KdTree::choose_plane(GeometryList list, size_t& axis, real_t& plane) const {
 	size_t current_axis = 0;
+	real_t metric;
+	real_t best_metric;
+	metric = best_metric = std::numeric_limits<real_t>::infinity();
 
+	real_t min = std::numeric_limits<real_t>::infinity();
+	real_t max = -std::numeric_limits<real_t>::infinity();
+	for (size_t i = 0; i < list.size(); i++) {
+		if (list[i]->get_boundingbox()->minPoint[current_axis] < min)
+			min = list[i]->get_boundingbox()->minPoint[current_axis];
+		if (list[i]->get_boundingbox()->maxPoint[current_axis] > max)
+			max = list[i]->get_boundingbox()->maxPoint[current_axis];
+	}
+	real_t choice = (min + max) / 2;
+
+	GeometryList* current_list_ptr = &list;
+	size_t left_count = 0;
+	size_t right_count = 0;
+	size_t share_count = 0;
+	GeometryList left_list;
+	GeometryList right_list;
+
+	while (metric > THRESHOLD && current_axis < 3) {
+		classify(current_list_ptr, current_axis, choice, left_list, right_list);
+		size_t current_left_count = left_list.size();
+		size_t current_right_count = right_list.size();
+		size_t current_share_count = current_list_ptr->size() - current_left_count - current_right_count;
+
+		if (current_left_count > current_right_count) {
+			left_count = current_left_count;
+			right_count += current_right_count;
+			metric = abs(left_count - right_count) + current_share_count;
+			current_list_ptr = &left_list;
+			max = choice;
+		}
+		else if (current_left_count < current_right_count) {
+			left_count += current_left_count;
+			right_count = current_right_count;
+			metric = abs(right_count - left_count) + current_share_count;
+			current_list_ptr = &right_list;
+			min = choice;
+		}
+		else {
+			current_list_ptr = &list;
+			left_count = 0;
+			right_count = 0;
+			share_count = 0;
+			current_axis++;
+			break;
+		}
+
+		if (metric < best_metric) {
+			best_metric = metric;
+			plane = choice;
+			axis = current_axis;
+		}
+
+		if (abs(max - min) < RESOLUTION || metric == current_list_ptr->size())
+			current_axis++;
+	}
+
+	return metric == current_list_ptr->size();
 }
 
-void KdTree::classify(const GeometryList& list, size_t axis, real_t plane,
+void KdTree::classify(const GeometryList* list_ptr, size_t axis, real_t plane,
 		GeometryList& left_list, GeometryList& right_list) const {
+	left_list.clear();
+	right_list.clear();
 
+	for (size_t i = 0; i < list_ptr->size(); i++) {
+		Boundingbox* boundingbox_ptr = (*list_ptr)[i]->get_boundingbox();
+		if (boundingbox_ptr->maxPoint[axis] < plane)
+			left_list.push_back((*list_ptr)[i]);
+		if (boundingbox_ptr->minPoint[axis] > plane)
+			right_list.push_back((*list_ptr)[i]);
+	}
 }
 
 }
