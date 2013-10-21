@@ -37,8 +37,6 @@ public:
     // the triangle's vertices, in CCW order
     Vertex vertices[3];
 
-    Boundingbox boundingbox;
-
     Triangle();
     virtual ~Triangle();
     virtual void render() const;
@@ -47,6 +45,9 @@ public:
     virtual size_t num_models() const;
     virtual Boundingbox* get_boundingbox() const;
     virtual void construct_boundingbox();
+
+private:
+    Boundingbox boundingbox;
 };
 
 template<typename T> inline T interpolate(const real_t beta, const real_t gamma,
