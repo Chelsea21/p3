@@ -18,6 +18,8 @@ typedef std::vector<GeometryList> GeometrySortedList;
 struct KdNode {
 	KdNode* left;
 	KdNode* right;
+	real_t plane;
+	size_t axis;
 	GeometryList geometries;
 };
 
@@ -32,6 +34,8 @@ public:
 	const unsigned int THRESHOLD = 2;
 	const real_t RESOLUTION = 1e-3;
 
+	enum ClassifiedSide { RIGHT, LEFT, RIGHT_LEFT, LEFT_RIGHT, UNKNOWN };
+
 	virtual void render() const;
 	// Hit function
 	virtual bool hit(const Ray ray, const real_t start, const real_t end,
@@ -43,13 +47,18 @@ public:
 	void build_kd_tree();
 
 private:
-	enum ClassifiedSide { RIGHT, LEFT };
 	GeometrySortedList geometry_sorted_list;
 	KdNode* root;
 	void build_kd_tree(KdNode* tree, const GeometryList& list);
 	bool choose_plane(GeometryList list, size_t& axis, real_t& plane) const;
 	void classify(const GeometryList* list_ptr, size_t axis, real_t plane,
 			GeometryList& left_list, GeometryList& right_list) const;
+	void find_min_max(const GeometryList* list_ptr, const size_t current_axis, real_t& min,
+						real_t& max) const;
+	bool traverse(KdNode* root, const Ray ray, const real_t start, const real_t end,
+					HitRecord* record_ptr);
+	int classify_ray(const Ray ray, const KdNode* root,
+					const real_t start, const real_t end, real_t& t_plane) const;
 };
 
 }

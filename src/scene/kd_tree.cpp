@@ -5,7 +5,8 @@
  *      Author: Chenxi Liu chenxil
  */
 
-#include <scene/kd_tree.h>
+#include "scene/kd_tree.hpp"
+#include "scene/ray.hpp"
 
 namespace _462 {
 
@@ -59,7 +60,67 @@ void KdTree::render() const {
 
 bool KdTree::hit(const Ray ray, const real_t start, const real_t end,
 		const unsigned int model_index, HitRecord* record_ptr) {
-	return true;
+	(void) model_index;
+	return traverse(root, ray, start, end, record_ptr);
+}
+
+bool KdTree::traverse(KdNode* root, const Ray ray, const real_t start, const real_t end,
+					HitRecord* record_ptr) {
+	if (root->left == NULL && root->right == NULL) {
+		real_t t0 = start;
+		real_t t1 = end;
+		for (size_t i = 0; i < root->geometries.size(); i++) {
+			for (size_t j = 0; j < root->geometries[i]->num_models(); j++) {
+				if (root->geometries[i]->hit(ray, t0, t1, j, record_ptr)) {
+					if (record_ptr != NULL)
+						t1 = record_ptr->time;
+					else
+						return true;
+				}
+			}
+		}
+
+		return record_ptr->material_ptr != NULL;
+	}
+
+	real_t t_plane;
+	int path = classify_ray(ray, root, start, end, t_plane);
+	switch (path) {
+	case LEFT_RIGHT:
+		if (traverse(root->left, ray, start, t_plane, record_ptr))
+			return true;
+		return traverse(root->right, ray, t_plane, end, record_ptr);
+	case RIGHT_LEFT:
+		if (traverse(root->right, ray, t_plane, end, record_ptr))
+			return true;
+		return traverse(root->left, ray, start, t_plane, record_ptr);
+	case LEFT:
+		return traverse(root->left, ray, start, t_plane, record_ptr);
+	case RIGHT:
+		return traverse(root->right, ray, t_plane, end, record_ptr);
+	default:
+		break;
+	}
+
+	return record_ptr->material_ptr != NULL;
+}
+
+int KdTree::classify_ray(const Ray ray, const KdNode* root,
+						const real_t start, const real_t end, real_t& t_plane) const {
+	real_t start_point = (ray.e + start * ray.d)[root->axis];
+	real_t end_point = (ray.e + end * ray.d)[root->axis];
+
+	t_plane = (root->plane - ray.e[root->axis]) / ray.d[root->axis];
+
+	if (start_point <= root->plane && end_point <= root->plane)
+		return RIGHT;
+	if (start_point <= root->plane && end_point >= root->plane)
+		return LEFT_RIGHT;
+	if (start_point >= root->plane && end_point >= root->plane)
+		return LEFT;
+	if (start_point >= root->plane && end_point <= root->plane)
+		return RIGHT_LEFT;
+	return UNKNOWN;
 }
 
 size_t KdTree::num_models() const {
@@ -95,6 +156,8 @@ void KdTree::build_kd_tree(KdNode* tree, const GeometryList& list) {
 		GeometryList left_list;
 		GeometryList right_list;
 		classify(&list, axis, plane, left_list, right_list);
+		tree->plane = plane;
+		tree->axis = axis;
 		if (left_list.size() > THRESHOLD)
 			build_kd_tree(tree->left, left_list);
 		if (tree->left == NULL) {
@@ -120,17 +183,12 @@ bool KdTree::choose_plane(GeometryList list, size_t& axis, real_t& plane) const 
 	real_t best_metric;
 	metric = best_metric = std::numeric_limits<real_t>::infinity();
 
-	real_t min = std::numeric_limits<real_t>::infinity();
-	real_t max = -std::numeric_limits<real_t>::infinity();
-	for (size_t i = 0; i < list.size(); i++) {
-		if (list[i]->get_boundingbox()->minPoint[current_axis] < min)
-			min = list[i]->get_boundingbox()->minPoint[current_axis];
-		if (list[i]->get_boundingbox()->maxPoint[current_axis] > max)
-			max = list[i]->get_boundingbox()->maxPoint[current_axis];
-	}
+	real_t min;
+	real_t max;
+	GeometryList* current_list_ptr = &list;
+	find_min_max(current_list_ptr, current_axis, min, max);
 	real_t choice = (min + max) / 2;
 
-	GeometryList* current_list_ptr = &list;
 	size_t left_count = 0;
 	size_t right_count = 0;
 	size_t share_count = 0;
@@ -145,14 +203,16 @@ bool KdTree::choose_plane(GeometryList list, size_t& axis, real_t& plane) const 
 
 		if (current_left_count > current_right_count) {
 			left_count = current_left_count;
-			right_count += current_right_count;
+			right_count += current_right_count + share_count;
+			share_count = current_share_count;
 			metric = abs(left_count - right_count) + current_share_count;
 			current_list_ptr = &left_list;
 			max = choice;
 		}
 		else if (current_left_count < current_right_count) {
-			left_count += current_left_count;
+			left_count += current_left_count + share_count;
 			right_count = current_right_count;
+			share_count = current_share_count;
 			metric = abs(right_count - left_count) + current_share_count;
 			current_list_ptr = &right_list;
 			min = choice;
@@ -163,7 +223,8 @@ bool KdTree::choose_plane(GeometryList list, size_t& axis, real_t& plane) const 
 			right_count = 0;
 			share_count = 0;
 			current_axis++;
-			break;
+			find_min_max(current_list_ptr, current_axis, min, max);
+			choice = (min + max) / 2;
 		}
 
 		if (metric < best_metric) {
@@ -172,11 +233,26 @@ bool KdTree::choose_plane(GeometryList list, size_t& axis, real_t& plane) const 
 			axis = current_axis;
 		}
 
-		if (abs(max - min) < RESOLUTION || metric == current_list_ptr->size())
+		if (abs(max - min) < RESOLUTION || metric == current_list_ptr->size()) {
 			current_axis++;
+			find_min_max(current_list_ptr, current_axis, min, max);
+			choice = (min + max) / 2;
+		}
 	}
 
-	return metric == current_list_ptr->size();
+	return metric < current_list_ptr->size();
+}
+
+void KdTree::find_min_max(const GeometryList* list_ptr, const size_t current_axis, real_t& min,
+						real_t& max) const {
+	min = std::numeric_limits<real_t>::infinity();
+	max = -std::numeric_limits<real_t>::infinity();
+	for (size_t i = 0; i < list_ptr->size(); i++) {
+		if ((*list_ptr)[i]->get_boundingbox()->minPoint[current_axis] < min)
+			min = (*list_ptr)[i]->get_boundingbox()->minPoint[current_axis];
+		if ((*list_ptr)[i]->get_boundingbox()->maxPoint[current_axis] > max)
+			max = (*list_ptr)[i]->get_boundingbox()->maxPoint[current_axis];
+	}
 }
 
 void KdTree::classify(const GeometryList* list_ptr, size_t axis, real_t plane,

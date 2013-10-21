@@ -9,7 +9,6 @@
 
 namespace _462 {
 Boundingbox::~Boundingbox() {
-	// TODO Auto-generated destructor stub
 }
 
 void Boundingbox::render() const {
