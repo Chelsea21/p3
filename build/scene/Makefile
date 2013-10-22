@@ -177,6 +177,30 @@ boundingbox.cpp.s:
 	cd /home/chelsea/Documents/GraphicsProjects/p3/build && $(MAKE) -f scene/CMakeFiles/scene.dir/build.make scene/CMakeFiles/scene.dir/boundingbox.cpp.s
 .PHONY : boundingbox.cpp.s
 
+kd_tree.o: kd_tree.cpp.o
+.PHONY : kd_tree.o
+
+# target to build an object file
+kd_tree.cpp.o:
+	cd /home/chelsea/Documents/GraphicsProjects/p3/build && $(MAKE) -f scene/CMakeFiles/scene.dir/build.make scene/CMakeFiles/scene.dir/kd_tree.cpp.o
+.PHONY : kd_tree.cpp.o
+
+kd_tree.i: kd_tree.cpp.i
+.PHONY : kd_tree.i
+
+# target to preprocess a source file
+kd_tree.cpp.i:
+	cd /home/chelsea/Documents/GraphicsProjects/p3/build && $(MAKE) -f scene/CMakeFiles/scene.dir/build.make scene/CMakeFiles/scene.dir/kd_tree.cpp.i
+.PHONY : kd_tree.cpp.i
+
+kd_tree.s: kd_tree.cpp.s
+.PHONY : kd_tree.s
+
+# target to generate assembly for a file
+kd_tree.cpp.s:
+	cd /home/chelsea/Documents/GraphicsProjects/p3/build && $(MAKE) -f scene/CMakeFiles/scene.dir/build.make scene/CMakeFiles/scene.dir/kd_tree.cpp.s
+.PHONY : kd_tree.cpp.s
+
 material.o: material.cpp.o
 .PHONY : material.o
 
@@ -361,6 +385,9 @@ help:
 	@echo "... boundingbox.o"
 	@echo "... boundingbox.i"
 	@echo "... boundingbox.s"
+	@echo "... kd_tree.o"
+	@echo "... kd_tree.i"
+	@echo "... kd_tree.s"
 	@echo "... material.o"
 	@echo "... material.i"
 	@echo "... material.s"

@@ -18,6 +18,24 @@ scene/CMakeFiles/scene.dir/boundingbox.cpp.o
  /usr/include/SDL/SDL_config.h
  /usr/include/SDL/SDL_opengl.h
  /usr/include/SDL/SDL_platform.h
+scene/CMakeFiles/scene.dir/kd_tree.cpp.o
+ /home/chelsea/Documents/GraphicsProjects/p3/src/application/opengl.hpp
+ /home/chelsea/Documents/GraphicsProjects/p3/src/math/camera.hpp
+ /home/chelsea/Documents/GraphicsProjects/p3/src/math/color.hpp
+ /home/chelsea/Documents/GraphicsProjects/p3/src/math/math.hpp
+ /home/chelsea/Documents/GraphicsProjects/p3/src/math/matrix.hpp
+ /home/chelsea/Documents/GraphicsProjects/p3/src/math/quaternion.hpp
+ /home/chelsea/Documents/GraphicsProjects/p3/src/math/vector.hpp
+ /home/chelsea/Documents/GraphicsProjects/p3/src/scene/boundingbox.hpp
+ /home/chelsea/Documents/GraphicsProjects/p3/src/scene/kd_tree.cpp
+ /home/chelsea/Documents/GraphicsProjects/p3/src/scene/kd_tree.hpp
+ /home/chelsea/Documents/GraphicsProjects/p3/src/scene/material.hpp
+ /home/chelsea/Documents/GraphicsProjects/p3/src/scene/mesh.hpp
+ /home/chelsea/Documents/GraphicsProjects/p3/src/scene/ray.hpp
+ /home/chelsea/Documents/GraphicsProjects/p3/src/scene/scene.hpp
+ /usr/include/SDL/SDL_config.h
+ /usr/include/SDL/SDL_opengl.h
+ /usr/include/SDL/SDL_platform.h
 scene/CMakeFiles/scene.dir/material.cpp.o
  /home/chelsea/Documents/GraphicsProjects/p3/src/application/imageio.hpp
  /home/chelsea/Documents/GraphicsProjects/p3/src/application/opengl.hpp
@@ -89,6 +107,8 @@ scene/CMakeFiles/scene.dir/scene.cpp.o
  /home/chelsea/Documents/GraphicsProjects/p3/src/math/quaternion.hpp
  /home/chelsea/Documents/GraphicsProjects/p3/src/math/random462.hpp
  /home/chelsea/Documents/GraphicsProjects/p3/src/math/vector.hpp
+ /home/chelsea/Documents/GraphicsProjects/p3/src/scene/boundingbox.hpp
+ /home/chelsea/Documents/GraphicsProjects/p3/src/scene/kd_tree.hpp
  /home/chelsea/Documents/GraphicsProjects/p3/src/scene/material.hpp
  /home/chelsea/Documents/GraphicsProjects/p3/src/scene/mesh.hpp
  /home/chelsea/Documents/GraphicsProjects/p3/src/scene/ray.hpp

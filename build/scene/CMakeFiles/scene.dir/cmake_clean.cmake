@@ -5,6 +5,7 @@ FILE(REMOVE_RECURSE
   "CMakeFiles/scene.dir/scene.cpp.o"
   "CMakeFiles/scene.dir/sphere.cpp.o"
   "CMakeFiles/scene.dir/triangle.cpp.o"
+  "CMakeFiles/scene.dir/kd_tree.cpp.o"
   "CMakeFiles/scene.dir/boundingbox.cpp.o"
   "CMakeFiles/scene.dir/ray.cpp.o"
   "libscene.pdb"

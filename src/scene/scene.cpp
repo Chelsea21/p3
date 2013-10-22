@@ -8,6 +8,7 @@
 
 #include "scene/scene.hpp"
 #include "math/random462.hpp"
+#include "scene/kd_tree.hpp"
 
 namespace _462 {
 
@@ -49,6 +50,7 @@ Vector3 SphereLight::generate_random_point() const {
 
 Scene::Scene()
 {
+	kd_tree_ptr = NULL;
     reset();
 }
 
@@ -114,6 +116,9 @@ size_t Scene::num_meshes() const
 
 void Scene::reset()
 {
+	delete kd_tree_ptr;
+	kd_tree_ptr = NULL;
+
     for ( GeometryList::iterator i = geometries.begin(); i != geometries.end(); ++i ) {
         delete *i;
     }
@@ -153,6 +158,15 @@ void Scene::add_mesh( Mesh* m )
 void Scene::add_light( const SphereLight& l )
 {
     point_lights.push_back( l );
+}
+
+void Scene::build_kd_tree() {
+	kd_tree_ptr = new KdTree(geometries);
+	kd_tree_ptr->build_kd_tree();
+}
+
+KdTree* Scene::get_kd_tree() const {
+	return kd_tree_ptr;
 }
 
 } /* _462 */

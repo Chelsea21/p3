@@ -16,6 +16,8 @@ p3/CMakeFiles/p3.dir/main.cpp.o
  /home/chelsea/Documents/GraphicsProjects/p3/src/math/vector.hpp
  /home/chelsea/Documents/GraphicsProjects/p3/src/p3/main.cpp
  /home/chelsea/Documents/GraphicsProjects/p3/src/p3/raytracer.hpp
+ /home/chelsea/Documents/GraphicsProjects/p3/src/scene/boundingbox.hpp
+ /home/chelsea/Documents/GraphicsProjects/p3/src/scene/kd_tree.hpp
  /home/chelsea/Documents/GraphicsProjects/p3/src/scene/material.hpp
  /home/chelsea/Documents/GraphicsProjects/p3/src/scene/mesh.hpp
  /home/chelsea/Documents/GraphicsProjects/p3/src/scene/ray.hpp
@@ -58,6 +60,8 @@ p3/CMakeFiles/p3.dir/raytracer.cpp.o
  /home/chelsea/Documents/GraphicsProjects/p3/src/math/vector.hpp
  /home/chelsea/Documents/GraphicsProjects/p3/src/p3/raytracer.cpp
  /home/chelsea/Documents/GraphicsProjects/p3/src/p3/raytracer.hpp
+ /home/chelsea/Documents/GraphicsProjects/p3/src/scene/boundingbox.hpp
+ /home/chelsea/Documents/GraphicsProjects/p3/src/scene/kd_tree.hpp
  /home/chelsea/Documents/GraphicsProjects/p3/src/scene/material.hpp
  /home/chelsea/Documents/GraphicsProjects/p3/src/scene/mesh.hpp
  /home/chelsea/Documents/GraphicsProjects/p3/src/scene/ray.hpp

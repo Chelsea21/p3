@@ -172,9 +172,9 @@ p3/preinstall:
 
 # All Build rule for target.
 p3/CMakeFiles/p3.dir/all: math/CMakeFiles/math.dir/all
-p3/CMakeFiles/p3.dir/all: application/CMakeFiles/application.dir/all
 p3/CMakeFiles/p3.dir/all: scene/CMakeFiles/scene.dir/all
 p3/CMakeFiles/p3.dir/all: tinyxml/CMakeFiles/tinyxml.dir/all
+p3/CMakeFiles/p3.dir/all: application/CMakeFiles/application.dir/all
 	$(MAKE) -f p3/CMakeFiles/p3.dir/build.make p3/CMakeFiles/p3.dir/depend
 	$(MAKE) -f p3/CMakeFiles/p3.dir/build.make p3/CMakeFiles/p3.dir/build
 	$(CMAKE_COMMAND) -E cmake_progress_report /home/chelsea/Documents/GraphicsProjects/p3/build/CMakeFiles  11 12
@@ -187,7 +187,7 @@ all: p3/CMakeFiles/p3.dir/all
 
 # Build rule for subdir invocation for target.
 p3/CMakeFiles/p3.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/chelsea/Documents/GraphicsProjects/p3/build/CMakeFiles 23
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/chelsea/Documents/GraphicsProjects/p3/build/CMakeFiles 24
 	$(MAKE) -f CMakeFiles/Makefile2 p3/CMakeFiles/p3.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/chelsea/Documents/GraphicsProjects/p3/build/CMakeFiles 0
 .PHONY : p3/CMakeFiles/p3.dir/rule
@@ -227,7 +227,7 @@ scene/preinstall:
 scene/CMakeFiles/scene.dir/all:
 	$(MAKE) -f scene/CMakeFiles/scene.dir/build.make scene/CMakeFiles/scene.dir/depend
 	$(MAKE) -f scene/CMakeFiles/scene.dir/build.make scene/CMakeFiles/scene.dir/build
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/chelsea/Documents/GraphicsProjects/p3/build/CMakeFiles  13 14 15 16 17 18 19 20
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/chelsea/Documents/GraphicsProjects/p3/build/CMakeFiles  13 14 15 16 17 18 19 20 21
 	@echo "Built target scene"
 .PHONY : scene/CMakeFiles/scene.dir/all
 
@@ -237,7 +237,7 @@ all: scene/CMakeFiles/scene.dir/all
 
 # Build rule for subdir invocation for target.
 scene/CMakeFiles/scene.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/chelsea/Documents/GraphicsProjects/p3/build/CMakeFiles 8
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/chelsea/Documents/GraphicsProjects/p3/build/CMakeFiles 9
 	$(MAKE) -f CMakeFiles/Makefile2 scene/CMakeFiles/scene.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/chelsea/Documents/GraphicsProjects/p3/build/CMakeFiles 0
 .PHONY : scene/CMakeFiles/scene.dir/rule
@@ -277,7 +277,7 @@ tinyxml/preinstall:
 tinyxml/CMakeFiles/tinyxml.dir/all:
 	$(MAKE) -f tinyxml/CMakeFiles/tinyxml.dir/build.make tinyxml/CMakeFiles/tinyxml.dir/depend
 	$(MAKE) -f tinyxml/CMakeFiles/tinyxml.dir/build.make tinyxml/CMakeFiles/tinyxml.dir/build
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/chelsea/Documents/GraphicsProjects/p3/build/CMakeFiles  21 22 23
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/chelsea/Documents/GraphicsProjects/p3/build/CMakeFiles  22 23 24
 	@echo "Built target tinyxml"
 .PHONY : tinyxml/CMakeFiles/tinyxml.dir/all
 

@@ -97,6 +97,8 @@ scene/scene.hpp
 /home/chelsea/Documents/GraphicsProjects/p3/src/p3/scene/scene.hpp
 p3/raytracer.hpp
 /home/chelsea/Documents/GraphicsProjects/p3/src/p3/p3/raytracer.hpp
+scene/kd_tree.hpp
+/home/chelsea/Documents/GraphicsProjects/p3/src/p3/scene/kd_tree.hpp
 SDL.h
 -
 stdlib.h
@@ -113,6 +115,18 @@ math/random462.hpp
 /home/chelsea/Documents/GraphicsProjects/p3/src/p3/math/random462.hpp
 math/vector.hpp
 /home/chelsea/Documents/GraphicsProjects/p3/src/p3/math/vector.hpp
+
+/home/chelsea/Documents/GraphicsProjects/p3/src/scene/boundingbox.hpp
+scene/scene.hpp
+/home/chelsea/Documents/GraphicsProjects/p3/src/scene/scene/scene.hpp
+math/vector.hpp
+/home/chelsea/Documents/GraphicsProjects/p3/src/scene/math/vector.hpp
+
+/home/chelsea/Documents/GraphicsProjects/p3/src/scene/kd_tree.hpp
+scene/scene.hpp
+/home/chelsea/Documents/GraphicsProjects/p3/src/scene/scene/scene.hpp
+scene/boundingbox.hpp
+/home/chelsea/Documents/GraphicsProjects/p3/src/scene/scene/boundingbox.hpp
 
 /home/chelsea/Documents/GraphicsProjects/p3/src/scene/material.hpp
 math/color.hpp

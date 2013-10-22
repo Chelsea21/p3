@@ -18,6 +18,24 @@ scene/CMakeFiles/scene.dir/boundingbox.cpp.o: /usr/include/SDL/SDL_config.h
 scene/CMakeFiles/scene.dir/boundingbox.cpp.o: /usr/include/SDL/SDL_opengl.h
 scene/CMakeFiles/scene.dir/boundingbox.cpp.o: /usr/include/SDL/SDL_platform.h
 
+scene/CMakeFiles/scene.dir/kd_tree.cpp.o: /home/chelsea/Documents/GraphicsProjects/p3/src/application/opengl.hpp
+scene/CMakeFiles/scene.dir/kd_tree.cpp.o: /home/chelsea/Documents/GraphicsProjects/p3/src/math/camera.hpp
+scene/CMakeFiles/scene.dir/kd_tree.cpp.o: /home/chelsea/Documents/GraphicsProjects/p3/src/math/color.hpp
+scene/CMakeFiles/scene.dir/kd_tree.cpp.o: /home/chelsea/Documents/GraphicsProjects/p3/src/math/math.hpp
+scene/CMakeFiles/scene.dir/kd_tree.cpp.o: /home/chelsea/Documents/GraphicsProjects/p3/src/math/matrix.hpp
+scene/CMakeFiles/scene.dir/kd_tree.cpp.o: /home/chelsea/Documents/GraphicsProjects/p3/src/math/quaternion.hpp
+scene/CMakeFiles/scene.dir/kd_tree.cpp.o: /home/chelsea/Documents/GraphicsProjects/p3/src/math/vector.hpp
+scene/CMakeFiles/scene.dir/kd_tree.cpp.o: /home/chelsea/Documents/GraphicsProjects/p3/src/scene/boundingbox.hpp
+scene/CMakeFiles/scene.dir/kd_tree.cpp.o: /home/chelsea/Documents/GraphicsProjects/p3/src/scene/kd_tree.cpp
+scene/CMakeFiles/scene.dir/kd_tree.cpp.o: /home/chelsea/Documents/GraphicsProjects/p3/src/scene/kd_tree.hpp
+scene/CMakeFiles/scene.dir/kd_tree.cpp.o: /home/chelsea/Documents/GraphicsProjects/p3/src/scene/material.hpp
+scene/CMakeFiles/scene.dir/kd_tree.cpp.o: /home/chelsea/Documents/GraphicsProjects/p3/src/scene/mesh.hpp
+scene/CMakeFiles/scene.dir/kd_tree.cpp.o: /home/chelsea/Documents/GraphicsProjects/p3/src/scene/ray.hpp
+scene/CMakeFiles/scene.dir/kd_tree.cpp.o: /home/chelsea/Documents/GraphicsProjects/p3/src/scene/scene.hpp
+scene/CMakeFiles/scene.dir/kd_tree.cpp.o: /usr/include/SDL/SDL_config.h
+scene/CMakeFiles/scene.dir/kd_tree.cpp.o: /usr/include/SDL/SDL_opengl.h
+scene/CMakeFiles/scene.dir/kd_tree.cpp.o: /usr/include/SDL/SDL_platform.h
+
 scene/CMakeFiles/scene.dir/material.cpp.o: /home/chelsea/Documents/GraphicsProjects/p3/src/application/imageio.hpp
 scene/CMakeFiles/scene.dir/material.cpp.o: /home/chelsea/Documents/GraphicsProjects/p3/src/application/opengl.hpp
 scene/CMakeFiles/scene.dir/material.cpp.o: /home/chelsea/Documents/GraphicsProjects/p3/src/math/color.hpp
@@ -88,6 +106,8 @@ scene/CMakeFiles/scene.dir/scene.cpp.o: /home/chelsea/Documents/GraphicsProjects
 scene/CMakeFiles/scene.dir/scene.cpp.o: /home/chelsea/Documents/GraphicsProjects/p3/src/math/quaternion.hpp
 scene/CMakeFiles/scene.dir/scene.cpp.o: /home/chelsea/Documents/GraphicsProjects/p3/src/math/random462.hpp
 scene/CMakeFiles/scene.dir/scene.cpp.o: /home/chelsea/Documents/GraphicsProjects/p3/src/math/vector.hpp
+scene/CMakeFiles/scene.dir/scene.cpp.o: /home/chelsea/Documents/GraphicsProjects/p3/src/scene/boundingbox.hpp
+scene/CMakeFiles/scene.dir/scene.cpp.o: /home/chelsea/Documents/GraphicsProjects/p3/src/scene/kd_tree.hpp
 scene/CMakeFiles/scene.dir/scene.cpp.o: /home/chelsea/Documents/GraphicsProjects/p3/src/scene/material.hpp
 scene/CMakeFiles/scene.dir/scene.cpp.o: /home/chelsea/Documents/GraphicsProjects/p3/src/scene/mesh.hpp
 scene/CMakeFiles/scene.dir/scene.cpp.o: /home/chelsea/Documents/GraphicsProjects/p3/src/scene/ray.hpp

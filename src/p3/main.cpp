@@ -14,6 +14,8 @@
 #include "scene/scene.hpp"
 #include "p3/raytracer.hpp"
 
+#include "scene/kd_tree.hpp"
+
 #include <SDL.h>
 
 #include <stdlib.h>
@@ -138,6 +140,13 @@ bool RaytracerApplication::initialize()
         	geometries[i]->construct_boundingbox();
         }
 
+        // TODO kd tree
+        scene.build_kd_tree();
+        /*
+        std::cout << scene.get_kd_tree()->hit(Ray(Vector3(0, 1, 0),
+        								Vector3(0, -1, 0)), 0,
+        						std::numeric_limits<real_t>::infinity(), 0, NULL) << std::endl;
+        						*/
     }
     catch ( std::bad_alloc const& )
     {
@@ -162,7 +171,7 @@ bool RaytracerApplication::initialize()
         const SphereLight* lights = scene.get_lights();
 
         for ( size_t i = 0; i < NUM_GL_LIGHTS && i < scene.num_lights(); i++ )
-	{
+        {
             const SphereLight& light = lights[i];
             glEnable( LightConstants[i] );
             light.color.to_array( arr );

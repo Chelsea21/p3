@@ -21,6 +21,7 @@
 
 namespace _462 {
 class Boundingbox;
+class KdTree;
 class Geometry {
 public:
 	Geometry();
@@ -133,6 +134,9 @@ public:
 	void add_mesh(Mesh* m);
 	void add_light(const SphereLight& l);
 
+	void build_kd_tree();
+	KdTree* get_kd_tree() const;
+
 private:
 
 	typedef std::vector<SphereLight> SphereLightList;
@@ -142,6 +146,7 @@ private:
 	// TODO Change to octree?
 	typedef std::vector<Geometry*> GeometryList;
 
+	KdTree* kd_tree_ptr;
 	// list of all lights in the scene
 	SphereLightList point_lights;
 	// all materials used by geometries

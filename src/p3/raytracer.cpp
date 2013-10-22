@@ -10,6 +10,7 @@
 
 #include "raytracer.hpp"
 #include "scene/scene.hpp"
+#include "scene/kd_tree.hpp"
 
 #include <SDL_timer.h>
 #include <iostream>
@@ -26,7 +27,7 @@ namespace _462 {
 
 // TODO
 // max number of threads OpenMP can use. Change this if you like.
-#define MAX_THREADS 1
+#define MAX_THREADS 8
 
 static const unsigned STEP_SIZE = 8;
 
@@ -123,6 +124,7 @@ Color3 Raytracer::trace_point(const Scene* scene, Vector3 e, Vector3 d, unsigned
 	// Set t0 to be a small number for recursive ray cast.
 	real_t t0 = (depth > 1) ? 1e-3 : 0;
 	real_t t1 = std::numeric_limits<double>::infinity();
+/*
 	for (size_t i = 0; i < scene->num_geometries(); i++) {
 		for (size_t j = 0; j < scene->get_geometry(i)->num_models(); j++) {
 			if (scene->get_geometry(i)->hit(r, t0, t1, j, &record)) {
@@ -131,7 +133,8 @@ Color3 Raytracer::trace_point(const Scene* scene, Vector3 e, Vector3 d, unsigned
 					t1 = record.time;
 			}
 		}
-	}
+	}*/
+	scene->get_kd_tree()->hit(r, t0, t1, 0, &record);
 	Color3 res = shade(r, record, depth, refractive_indices);
 
 	return res;
@@ -163,7 +166,8 @@ Color3 Raytracer::shade(const Ray ray, const HitRecord record, unsigned int dept
 				Vector3 shadow_d = random_light_point - record.hit_point;
 				Ray shadow_ray(record.hit_point, shadow_d);
 
-				size_t j = 0;
+
+				/*size_t j = 0;
 				for (; j < scene->num_geometries(); j++) {
 					// D vector here is the vector pointing from the object surface to the light source.
 					for (size_t k = 0; k < scene->get_geometry(j)->num_models(); k++) {
@@ -172,9 +176,9 @@ Color3 Raytracer::shade(const Ray ray, const HitRecord record, unsigned int dept
 						} else
 							light_rays[i] = shadow_ray;
 					}
-				}
-				hit_found:
-				if (j == scene->num_geometries())
+				}*/
+				light_rays[i] = shadow_ray;
+				if (!scene->get_kd_tree()->hit(shadow_ray, 1e-3, 1, 0, NULL))
 					light_number.push_back(i);
 			}
 		}
