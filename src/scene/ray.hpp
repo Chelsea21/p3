@@ -15,6 +15,7 @@ struct ShadeFactors {
 	Color3 ambient;
 	Color3 diffuse;
 	Color3 specular;
+	Color3 texture;
 	real_t shininess;
 	real_t refractive_index;
 };
@@ -26,8 +27,8 @@ struct HitRecord {
 	Vector3 hit_point;
 	Vector3 normal;
 	Vector2 tex_coord;
-	const Material* material_ptr;
 	ShadeFactors shade_factors;
+	bool hit;
 };
 
 class Ray

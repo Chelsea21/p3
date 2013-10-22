@@ -142,13 +142,20 @@ bool Sphere::hit(const Ray ray, const real_t start, const real_t end,
 
 	if (record_ptr != NULL) {
 		record_ptr->time = t;
-		record_ptr->material_ptr = this->material;
-
+		record_ptr->hit = true;
 		Vector3 transformed_point = transformed_ray.e + record_ptr->time * transformed_ray.d;
 		Vector3 transformed_normal = normalize(transformed_point - Vector3(0, 0, 0));
 
 		record_ptr->hit_point = ray.e + record_ptr->time * ray.d;
 		record_ptr->normal = normalize(this->normMat * transformed_normal);
+
+		real_t theta = std::atan2(transformed_normal.z, transformed_normal.x);
+		real_t phi = std::asin(transformed_normal.y);
+
+		record_ptr->tex_coord = Vector2(0.5 + theta / PI / 2, 0.5 - phi / PI);
+		record_ptr->tex_coord = this->material->clap_texture(record_ptr->tex_coord);
+		record_ptr->shade_factors.texture = this->material->get_texture_pixel(record_ptr->tex_coord);
+
 		record_ptr->shade_factors.ambient = this->material->ambient;
 		record_ptr->shade_factors.diffuse = this->material->diffuse;
 		record_ptr->shade_factors.refractive_index = this->material->refractive_index;

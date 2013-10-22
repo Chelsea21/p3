@@ -74,7 +74,7 @@ bool KdTree::traverse(KdNode* root, const Ray ray, const real_t start, const rea
 
 		if (record_ptr == NULL)
 			return false;
-		return record_ptr->material_ptr != NULL;
+		return record_ptr->hit;
 	}
 
 	real_t t_plane;
@@ -96,7 +96,7 @@ bool KdTree::traverse(KdNode* root, const Ray ray, const real_t start, const rea
 		break;
 	}
 	std::cout << path << std::endl;
-	return record_ptr->material_ptr != NULL;
+	return record_ptr->hit;
 }
 
 int KdTree::classify_ray(const Ray ray, const KdNode* root,

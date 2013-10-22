@@ -71,8 +71,6 @@ bool Raytracer::initialize(Scene* scene, size_t num_samples, size_t width,
 	Ray::init(scene->camera);
 	scene->initialize();
 
-	//const SphereLight* lights = scene->get_lights();
-
 	// TODO any initialization or precompuation before the trace
 
 	return true;
@@ -117,9 +115,19 @@ Color3 Raytracer::trace_point(const Scene* scene, Vector3 e, Vector3 d, unsigned
 	if (depth > MAX_DEPTH)
 		return Color3::Black();
 
+	// Depth of scene: choose a random eye position from a square lens.
+	/*
+	real_t len_length = 0.05;
+	real_t rand_i = random_gaussian();
+	real_t rand_j = random_gaussian();
+	real_t i = len_length * ((rand_i > 0.5) ? 0.5 : ((rand_i < -0.5) ? -0.5 : rand_i)) + e.x;
+	real_t j = len_length * ((rand_j > 0.5) ? 0.5 : ((rand_j < -0.5) ? -0.5 : rand_j)) + e.y;
+	Vector3 e_rand = Vector3(i, j, e.z);
+	*/
+
 	Ray r(e, d);
 	HitRecord record;
-	record.material_ptr = NULL;
+	record.hit = false;
 
 	// Set t0 to be a small number for recursive ray cast.
 	real_t t0 = (depth > 1) ? 1e-3 : 0;
@@ -146,17 +154,13 @@ Color3 Raytracer::shade(const Ray ray, const HitRecord record, unsigned int dept
 	std::vector<unsigned int> light_number;
 	std::vector<Ray> light_rays(scene->num_lights());
 
-	if (record.material_ptr == NULL) {
+	if (!record.hit) {
 		result = scene->background_color;
 		return result;
 	}
 
 	if (record.shade_factors.refractive_index < 1e-3) {
-		Color3 ambient_color = (record.material_ptr->texture_filename.empty()) ?
-				record.shade_factors.ambient :
-				record.shade_factors.ambient * record.material_ptr->get_texture_pixel(record.tex_coord);
-
-		result = ambient_color * scene->ambient_light;
+		result = record.shade_factors.ambient * scene->ambient_light;
 		if (dot(ray.d, record.normal) < 0) {
 			for (size_t i = 0; i < scene->num_lights(); i++) {
 				// Random vector generate by the light source is a vector from the center to a random
@@ -165,7 +169,6 @@ Color3 Raytracer::shade(const Ray ray, const HitRecord record, unsigned int dept
 						scene->get_lights()[i].generate_random_point();
 				Vector3 shadow_d = random_light_point - record.hit_point;
 				Ray shadow_ray(record.hit_point, shadow_d);
-
 
 				/*size_t j = 0;
 				for (; j < scene->num_geometries(); j++) {
@@ -192,10 +195,7 @@ Color3 Raytracer::shade(const Ray ray, const HitRecord record, unsigned int dept
 				real_t dot_n_l = dot(record.normal,
 						normalize(light_rays[*itr].d));
 				real_t diffuse_cos = (dot_n_l > 0) ? dot_n_l : 0;
-				Color3 diffuse_color = (record.material_ptr->texture_filename.empty()) ?
-						record.shade_factors.diffuse :
-						record.shade_factors.diffuse * record.material_ptr->get_texture_pixel(record.tex_coord);
-				result += diffuse_color * light->color * diffuse_cos;
+				result += record.shade_factors.diffuse * light->color * diffuse_cos;
 			}
 		}
 	}
@@ -247,13 +247,21 @@ Color3 Raytracer::shade(const Ray ray, const HitRecord record, unsigned int dept
 	// Randomly trace refective ray or refractive ray.
 	real_t rand_r = 1. * random();
 	if (rand_r < R) {
-		// TODO glossy reflection.
 		if (record.shade_factors.specular != Color3::Black()) {
 			Vector3 r = ray.d - 2 * dot_n_d * normal;
+			Vector3 u = normalize(cross(normal, r));
+			Vector3 v = cross(r, v);
 
-			result += record.shade_factors.specular
-					* trace_point(scene, record.hit_point, normalize(r), ++depth,
+			real_t rand_u = -2e-2 / 2 + random_gaussian() *
+					2e-2;
+			real_t rand_v = -2e-2 / 2 + random_gaussian() *
+					2e-2;
+
+			Color3 reflective = record.shade_factors.specular
+					* trace_point(scene, record.hit_point,
+							r + rand_u * u + rand_v * v, ++depth,
 							refractive_indices);
+			result += reflective;
 		}
 	}
 	else {
@@ -264,9 +272,11 @@ Color3 Raytracer::shade(const Ray ray, const HitRecord record, unsigned int dept
 			refractive_indices.push_back(record.shade_factors.refractive_index);
 		}
 
-		result += trace_point(scene, record.hit_point, normalize(t), ++depth,
+		result += trace_point(scene, record.hit_point, t, ++depth,
 					refractive_indices);
 	}
+
+	result *= record.shade_factors.texture;
 
 	return result;
 }

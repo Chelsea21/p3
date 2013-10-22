@@ -140,6 +140,9 @@ const Vector2 Material::clap_texture(const Vector2 coord) const {
 }
 
 Color3 Material::get_texture_pixel(const Vector2 coord) const {
+	if (!tex_data)
+		return Color3::White();
+
 	int i = std::floor(coord.x);
 	int j = std::floor(coord.y);
 	real_t u = coord.x - i;

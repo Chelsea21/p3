@@ -36,7 +36,12 @@ void Model::render() const {
 
 bool Model::hit(const Ray ray, const real_t start, const real_t end,
 		const unsigned int model_index, HitRecord* record_ptr) {
-	if (!boundingbox.hit(ray, start, end, model_index, record_ptr))
+	size_t i;
+	for (i = 0; i < mesh->num_triangles(); i++) {
+		if (boundingbox_ptrs[i]->hit(ray, start, end, model_index, record_ptr))
+			break;
+	}
+	if (i == mesh->num_triangles())
 		return false;
 	Ray transformed_ray = ray.transform(this->invMat);
 	real_t beta;
@@ -44,10 +49,10 @@ bool Model::hit(const Ray ray, const real_t start, const real_t end,
 	bool hit_result = mesh->hit(transformed_ray, start, end, model_index, record_ptr, beta, gamma);
 
 	if (hit_result && record_ptr != NULL) {
+		record_ptr->hit = true;
 		record_ptr->hit_point = ray.e + record_ptr->time * ray.d;
-		record_ptr->material_ptr = this->material;
-		record_ptr->tex_coord = record_ptr->material_ptr->clap_texture(record_ptr->tex_coord);
-		//std::cout << record_ptr->tex_coord.x << "\t" << record_ptr->tex_coord.y << std::endl;
+		record_ptr->tex_coord = this->material->clap_texture(record_ptr->tex_coord);
+		record_ptr->shade_factors.texture = this->material->get_texture_pixel(record_ptr->tex_coord);
 		record_ptr->normal = normalize(this->normMat * record_ptr->normal);
 		record_ptr->shade_factors.ambient = this->material->ambient;
 		record_ptr->shade_factors.diffuse = this->material->diffuse;
@@ -63,8 +68,8 @@ size_t Model::num_models() const {
 	return mesh->num_triangles();
 }
 
-Boundingbox* Model::get_boundingbox() const {
-	return const_cast<Boundingbox*>(&boundingbox);
+std::vector<Boundingbox*> Model::get_boundingbox() const {
+	return boundingbox_ptr;
 }
 
 void Model::construct_boundingbox() {

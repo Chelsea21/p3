@@ -64,7 +64,7 @@ public:
 
 	virtual size_t num_models() const = 0;
 
-	virtual Boundingbox* get_boundingbox() const = 0;
+	virtual std::vector<Boundingbox*> get_boundingbox() const = 0;
 	virtual void construct_boundingbox() = 0;
 };
 

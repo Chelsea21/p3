@@ -37,7 +37,7 @@
         <refractive_index v="0.0"/>
     </material>
 
-    <material name="swirly" texture="images/swirly.png">
+    <material name="swirly" texture="../images/swirly.png">
         <ambient r="1.0" g="1.0" b="1.0"/>
         <diffuse r="1.0" g="1.0" b="1.0"/>
         <specular r="1.0" g="1.0" b="1.0"/>

@@ -101,14 +101,23 @@ bool Triangle::hit(const Ray ray, const real_t start, const real_t end,
 		return true;
 
 	record_ptr->time = time;
-	record_ptr->material_ptr = vertices[0].material;
+	record_ptr->hit = true;
 	record_ptr->hit_point = ray.e + record_ptr->time * ray.d;
 	record_ptr->normal = normalize(this->normMat * vertices[0].normal);
 
 	record_ptr->tex_coord = interpolate<Vector2>(beta, gamma,
 			vertices[0].tex_coord, vertices[1].tex_coord, vertices[2].tex_coord);
-	record_ptr->tex_coord = record_ptr->material_ptr->clap_texture(record_ptr->tex_coord);
-
+	std::vector<Color3> material_colors(3);
+	for (size_t i = 0; i < 3 ; i++) {
+		if (!vertices[i].material->texture_filename.empty()) {
+			Vector2 clapped = vertices[i].material->clap_texture(record_ptr->tex_coord);
+			material_colors[i] = vertices[i].material->get_texture_pixel(clapped);
+		}
+		else
+			material_colors[i] = Color3::White();
+	}
+	record_ptr->shade_factors.texture = interpolate<Color3>(beta, gamma,
+			material_colors[0], material_colors[1], material_colors[2]);
 	record_ptr->shade_factors.ambient = interpolate<Color3>(beta, gamma,
 			vertices[0].material->ambient, vertices[1].material->ambient, vertices[2].material->ambient);
 	record_ptr->shade_factors.diffuse = interpolate<Color3>(beta, gamma,
