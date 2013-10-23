@@ -80,8 +80,8 @@ size_t Boundingbox::num_models() const {
 	return 1;
 }
 
-Boundingbox* Boundingbox::get_boundingbox() const {
-	return const_cast<Boundingbox*>(this);
+std::vector<Boundingbox*> Boundingbox::get_boundingboxs() const {
+	return std::vector<Boundingbox*>(1, const_cast<Boundingbox*>(this));
 }
 
 void Boundingbox::construct_boundingbox() {

@@ -41,8 +41,7 @@ public:
     ~Mesh();
 
     // For bounding box.
-    Vector3 minPoint;
-    Vector3 maxPoint;
+    std::vector<std::pair<Vector3, Vector3>> min_max_points;
 
     /**
      * Loads the model into a list of triangles and vertices.

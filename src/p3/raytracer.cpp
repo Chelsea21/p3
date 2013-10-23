@@ -256,10 +256,10 @@ Color3 Raytracer::shade(const Ray ray, const HitRecord record, unsigned int dept
 					2e-2;
 			real_t rand_v = -2e-2 / 2 + random_gaussian() *
 					2e-2;
-
+			//  + rand_u * u + rand_v * v
 			Color3 reflective = record.shade_factors.specular
 					* trace_point(scene, record.hit_point,
-							r + rand_u * u + rand_v * v, ++depth,
+							r, ++depth,
 							refractive_indices);
 			result += reflective;
 		}
@@ -296,7 +296,7 @@ Color3 Raytracer::shade(const Ray ray, const HitRecord record, unsigned int dept
 bool Raytracer::raytrace(unsigned char* buffer, real_t* max_time) {
 	// TODO Add any modifications to this algorithm, if needed.
 
-	static const size_t PRINT_INTERVAL = 64;
+	static const size_t PRINT_INTERVAL = 1;
 
 	// the time in milliseconds that we should stop
 	unsigned int end_time = 0;
@@ -333,9 +333,11 @@ bool Raytracer::raytrace(unsigned char* buffer, real_t* max_time) {
 					printf("Raytracing (Row %d)\n", c_row);
 			}
 
-			for (size_t x = 0; x < width; x++) {
+			for (size_t x = 0; x < 1; x++) {
 			//for (size_t x = 0; x < 1; x++) {
 				// trace a pixel
+				if (c_row == 44)
+					std::cout << "here" << std::endl;
 				Color3 color = trace_pixel(scene, x, c_row, width, height);
 				// write the result to the buffer, always use 1.0 as the alpha
 				color.to_array(&buffer[4 * (c_row * width + x)]);

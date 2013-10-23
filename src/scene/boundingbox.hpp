@@ -16,15 +16,20 @@ namespace _462 {
 class Boundingbox: public Geometry {
 public:
 	Boundingbox()
-	: maxPoint(Vector3(0.0, 0.0, 0.0)), minPoint(Vector3(0.0, 0.0, 0.0)), isLoose(false)
+	: maxPoint(Vector3(0.0, 0.0, 0.0)), minPoint(Vector3(0.0, 0.0, 0.0)),
+	  model_index(-1), geometry(NULL), isLoose(false)
 	{ }
-	Boundingbox(const Vector3 maxPoint, const Vector3 minPoint)
-	: maxPoint(maxPoint), minPoint(minPoint), isLoose(false)
+	Boundingbox(const Vector3 maxPoint, const Vector3 minPoint,
+			const size_t model_index, Geometry* geometry)
+	: maxPoint(maxPoint), minPoint(minPoint), model_index(model_index), geometry(geometry), isLoose(false)
 	{ }
 	virtual ~Boundingbox();
 
 	Vector3 maxPoint;
 	Vector3 minPoint;
+
+	size_t model_index;
+	Geometry* geometry;
 
 	bool isLoose;
 
@@ -35,7 +40,7 @@ public:
 			const unsigned int model_index, HitRecord* record_ptr);
 
 	virtual size_t num_models() const;
-	virtual Boundingbox* get_boundingbox() const;
+	virtual std::vector<Boundingbox*> get_boundingboxs() const;
 
 	virtual void construct_boundingbox();
 

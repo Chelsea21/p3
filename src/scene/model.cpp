@@ -22,6 +22,9 @@ Model::Model() :
 		mesh(0), material(0) {
 }
 Model::~Model() {
+	for (size_t i = 0; i < boundingbox_ptrs.size(); i++) {
+		delete boundingbox_ptrs[i];
+	}
 }
 
 void Model::render() const {
@@ -36,6 +39,7 @@ void Model::render() const {
 
 bool Model::hit(const Ray ray, const real_t start, const real_t end,
 		const unsigned int model_index, HitRecord* record_ptr) {
+	/*
 	size_t i;
 	for (i = 0; i < mesh->num_triangles(); i++) {
 		if (boundingbox_ptrs[i]->hit(ray, start, end, model_index, record_ptr))
@@ -43,6 +47,7 @@ bool Model::hit(const Ray ray, const real_t start, const real_t end,
 	}
 	if (i == mesh->num_triangles())
 		return false;
+		*/
 	Ray transformed_ray = ray.transform(this->invMat);
 	real_t beta;
 	real_t gamma;
@@ -68,16 +73,23 @@ size_t Model::num_models() const {
 	return mesh->num_triangles();
 }
 
-std::vector<Boundingbox*> Model::get_boundingbox() const {
-	return boundingbox_ptr;
+std::vector<Boundingbox*> Model::get_boundingboxs() const {
+	return boundingbox_ptrs;
 }
 
 void Model::construct_boundingbox() {
-	boundingbox.mat = mat;
-	boundingbox.minPoint = mesh->minPoint;
-	boundingbox.maxPoint = mesh->maxPoint;
-	boundingbox.construct_boundingbox();
-	boundingbox.isLoose = true;
+	boundingbox_ptrs.resize(mesh->num_triangles(), NULL);
+	for (size_t i = 0; i < mesh->num_triangles(); i++) {
+		Boundingbox* new_box = new Boundingbox();
+		new_box->mat = mat;
+		new_box->minPoint = mesh->min_max_points[i].first;
+		new_box->maxPoint = mesh->min_max_points[i].second;
+		new_box->model_index = i;
+		new_box->geometry = this;
+		new_box->construct_boundingbox();
+		new_box->isLoose = true;
+		boundingbox_ptrs[i] = new_box;
+	}
 }
 
 } /* _462 */

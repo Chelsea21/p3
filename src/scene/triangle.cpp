@@ -53,9 +53,6 @@ bool Triangle::hit(const Ray ray, const real_t start, const real_t end,
 			const unsigned int model_index, HitRecord* record_ptr) {
 	(void) model_index;
 
-	if (!boundingbox.hit(ray, start, end, model_index, record_ptr))
-		return false;
-
 	Ray transformed_ray = ray.transform(this->invMat);
 	Vector3 a_minus_b = vertices[0].position - vertices[1].position;
 	Vector3 a_minus_c = vertices[0].position - vertices[2].position;
@@ -103,7 +100,8 @@ bool Triangle::hit(const Ray ray, const real_t start, const real_t end,
 	record_ptr->time = time;
 	record_ptr->hit = true;
 	record_ptr->hit_point = ray.e + record_ptr->time * ray.d;
-	record_ptr->normal = normalize(this->normMat * vertices[0].normal);
+	record_ptr->normal = normalize(this->normMat * interpolate<Vector3>(beta, gamma,
+			vertices[0].normal, vertices[1].normal, vertices[2].normal));
 
 	record_ptr->tex_coord = interpolate<Vector2>(beta, gamma,
 			vertices[0].tex_coord, vertices[1].tex_coord, vertices[2].tex_coord);
@@ -136,8 +134,8 @@ size_t Triangle::num_models() const {
 	return 1;
 }
 
-Boundingbox* Triangle::get_boundingbox() const {
-	return const_cast<Boundingbox*>(&boundingbox);
+std::vector<Boundingbox*> Triangle::get_boundingboxs() const {
+	return std::vector<Boundingbox*>(1, const_cast<Boundingbox*>(&boundingbox));
 }
 
 void Triangle::construct_boundingbox() {
@@ -148,7 +146,7 @@ void Triangle::construct_boundingbox() {
 	Vector3 newMaxPoint(-inf, -inf, -inf);
 
 	for (size_t i = 0; i < 3; i++) {
-		Vector3 transformed = this->mat.transform_point(vertices[i].position);
+		Vector3 transformed = vertices[i].position;
 		for (size_t j = 0; j < 3; j++) {
 			newMinPoint[j] =
 					(transformed[j] < newMinPoint[j]) ?
@@ -158,7 +156,8 @@ void Triangle::construct_boundingbox() {
 							transformed[j] : newMaxPoint[j];
 		}
 	}
-
+	boundingbox.geometry = this;
+	boundingbox.model_index = 0;
 	boundingbox.minPoint = newMinPoint;
 	boundingbox.maxPoint = newMaxPoint;
 	boundingbox.construct_boundingbox();

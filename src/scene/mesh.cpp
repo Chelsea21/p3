@@ -58,10 +58,6 @@ Mesh::~Mesh() {
 bool Mesh::load() {
 	std::cout << "Loading mesh from '" << filename << "'..." << std::endl;
 
-	real_t inf = std::numeric_limits<real_t>::infinity();
-	minPoint = Vector3(inf, inf, inf);
-	maxPoint = Vector3(-inf, -inf, -inf);
-
 	std::string line;
 	std::ifstream file(filename.c_str());
 
@@ -110,16 +106,10 @@ bool Mesh::load() {
 
 			// Read vertices positions and find the min and max point at the same time.
 			stream >> position.x;
-			minPoint.x = (position.x < minPoint.x) ? position.x : minPoint.x;
-			maxPoint.x = (position.x > maxPoint.x) ? position.x : maxPoint.x;
 
 			stream >> position.y;
-			minPoint.y = (position.y < minPoint.y) ? position.y : minPoint.y;
-			maxPoint.y = (position.y > maxPoint.y) ? position.y : maxPoint.y;
 
 			stream >> position.z;
-			minPoint.z = (position.z < minPoint.z) ? position.z : minPoint.z;
-			maxPoint.z = (position.z > maxPoint.z) ? position.z : maxPoint.z;
 
 			if (stream.fail()) {
 				std::cerr << "position syntax error on line " << line_num
@@ -278,6 +268,7 @@ bool Mesh::load() {
 
 	triangles.reserve(face_list.size());
 	vertices.reserve(face_list.size() * 2);
+	min_max_points.reserve(face_list.size());
 
 	// current vertex index, for creating new vertices
 	unsigned int vert_idx_counter = 0;
@@ -285,6 +276,9 @@ bool Mesh::load() {
 	for (size_t i = 0; i < face_list.size(); ++i) {
 		const Face& face = face_list[i];
 		MeshTriangle tri;
+		real_t inf = std::numeric_limits<double>::infinity();
+		Vector3 newMinPoint(inf, inf, inf);
+		Vector3 newMaxPoint(-inf, -inf, -inf);
 		for (size_t j = 0; j < 3; ++j) {
 			// two vertices are only actually the same one if the vertex,
 			// normal, and tcoord are all the same. use the map to check this.
@@ -302,8 +296,17 @@ bool Mesh::load() {
 			}
 
 			tri.vertices[j] = rv.first->second;
+			for (size_t k = 0; k < 3; k++) {
+				newMinPoint[k] =
+						(vertices[tri.vertices[j]].position[k] < newMinPoint[k]) ?
+						vertices[tri.vertices[j]].position[k] : newMinPoint[k];
+				newMaxPoint[k] =
+						(vertices[tri.vertices[j]].position[k] > newMaxPoint[k]) ?
+						vertices[tri.vertices[j]].position[k] : newMaxPoint[k];
+			}
 		}
 		triangles.push_back(tri);
+		min_max_points.push_back(std::pair<Vector3, Vector3>(newMinPoint, newMaxPoint));
 	}
 
 	initialize();
