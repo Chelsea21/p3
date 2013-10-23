@@ -16,12 +16,10 @@ KdTree::KdTree(GeometryList geometries)
 	for (size_t i = 0; i < geometries.size(); i++) {
 		num_models += geometries[i]->num_models();
 	}
-	geometry_boundingbox_ptrs = BoundingboxPointers(num_models);
-
+	geometry_boundingbox_ptrs.reserve(num_models);
 	for (size_t i = 0; i < geometries.size(); i++) {
 		for (size_t j = 0; j < geometries[i]->get_boundingboxs().size(); j++)
-			geometry_boundingbox_ptrs.list[geometry_boundingbox_ptrs.size++] =
-					geometries[i]->get_boundingboxs()[j];
+			geometry_boundingbox_ptrs.push_back(geometries[i]->get_boundingboxs()[j]);
 	}
 }
 
@@ -31,8 +29,8 @@ KdTree::~KdTree() {
 
 void KdTree::destory_kd_tree(KdNode* root) {
 	if (root->left == NULL && root->right == NULL) {
-		for (size_t i = 0; i < root->boundingbox_ptrs.size; i++) {
-			delete root->boundingbox_ptrs.list[i];
+		for (size_t i = 0; i < root->boundingbox_ptrs.size(); i++) {
+			delete root->boundingbox_ptrs[i];
 		}
 		delete root;
 
@@ -57,17 +55,17 @@ bool KdTree::traverse(KdNode* root, const Ray ray, const real_t start, const rea
 	if (root->left == NULL && root->right == NULL) {
 		real_t t0 = start;
 		real_t t1 = end;
-		for (size_t i = 0; i < root->boundingbox_ptrs.size; i++) {
-			size_t model_num = root->boundingbox_ptrs.list[i]->model_index;
+		for (size_t i = 0; i < root->boundingbox_ptrs.size(); i++) {
+			size_t model_num = root->boundingbox_ptrs[i]->model_index;
 			//std::cout << model_num << std::endl;
 			//std::cout << i << ": " << root->boundingbox_ptrs.size << ": " <<
 				//	model_num << std::endl;
-			if (root->boundingbox_ptrs.list[i]->hit(ray, t0, t1, 0, record_ptr)) {
+			if (root->boundingbox_ptrs[i]->hit(ray, t0, t1, 0, record_ptr)) {
 				//std::cout << root->boundingbox_ptrs.list[i]->geometry->num_models()<< std::endl;
 				//std::cout << model_num << std::endl;
 				//std::cout << record_ptr->hit << std::endl;
 				//std::cout << "1" << std::endl;
-				bool geo_hit = root->boundingbox_ptrs.list[i]->geometry->hit(ray, t0, t1,
+				bool geo_hit = root->boundingbox_ptrs[i]->geometry->hit(ray, t0, t1,
 							model_num, record_ptr);
 				//std::cout << "2" << std::endl;
 				if (geo_hit) {
@@ -143,13 +141,13 @@ KdNode* KdTree::build_kd_tree(KdNode* tree, const BoundingboxPointers& list) {
 	if (divisible) {
 		tree = new KdNode();
 		tree->left = tree->right = NULL;
-		BoundingboxPointers left_list(list.size / 3);
-		BoundingboxPointers right_list(list.size / 3);
-		BoundingboxPointers share_list(list.size / 3);
+		BoundingboxPointers left_list(list.size() / 3);
+		BoundingboxPointers right_list(list.size() / 3);
+		BoundingboxPointers share_list(list.size() / 3);
 		classify(list, axis, plane, left_list, right_list, share_list, true);
 		tree->plane = plane;
 		tree->axis = axis;
-		if (left_list.size > THRESHOLD)
+		if (left_list.size() > THRESHOLD)
 			tree->left = build_kd_tree(tree->left, left_list);
 		if (tree->left == NULL) {
 			KdNode* leaf = new KdNode();
@@ -157,7 +155,7 @@ KdNode* KdTree::build_kd_tree(KdNode* tree, const BoundingboxPointers& list) {
 			leaf->boundingbox_ptrs = left_list;
 			tree->left = leaf;
 		}
-		if (right_list.size > THRESHOLD)
+		if (right_list.size() > THRESHOLD)
 			tree->right = build_kd_tree(tree->right, right_list);
 		if (tree->right == NULL) {
 			KdNode* leaf = new KdNode();
@@ -180,7 +178,7 @@ bool KdTree::choose_plane(BoundingboxPointers list, size_t& axis, real_t& plane)
 
 	real_t min;
 	real_t max;
-	BoundingboxPointers current_list(list.size);
+	BoundingboxPointers current_list(list.size());
 	current_list = list;
 	find_min_max(current_list, current_axis, min, max);
 	real_t choice;
@@ -188,17 +186,17 @@ bool KdTree::choose_plane(BoundingboxPointers list, size_t& axis, real_t& plane)
 	size_t left_count = 0;
 	size_t right_count = 0;
 	size_t share_count = 0;
-	BoundingboxPointers left_list(list.size / 3);
-	BoundingboxPointers right_list(list.size / 3);
-	BoundingboxPointers share_list(list.size / 3);
+	BoundingboxPointers left_list(list.size() / 3);
+	BoundingboxPointers right_list(list.size() / 3);
+	BoundingboxPointers share_list(list.size() / 3);
 	int previous_move = UNKNOWN;
 
 	while (metric > THRESHOLD && current_axis < 3) {
 		choice = (min + max) / 2;
 		classify(current_list, current_axis, choice, left_list, right_list, share_list, false);
-		size_t current_left_count = left_list.size;
-		size_t current_right_count = right_list.size;
-		size_t current_share_count = list.size - current_left_count - current_right_count;
+		size_t current_left_count = left_list.size();
+		size_t current_right_count = right_list.size();
+		size_t current_share_count = list.size() - current_left_count - current_right_count;
 
 /*
 		std::cout << "axis: " << current_axis << std::endl;
@@ -229,13 +227,13 @@ bool KdTree::choose_plane(BoundingboxPointers list, size_t& axis, real_t& plane)
 			axis = current_axis;
 		}
 		if (left_count > right_count) {
-			left_list.push_back_list(share_list);
+			left_list.insert(left_list.end(), share_list.begin(), share_list.end());
 			current_list = left_list;
 			max = choice;
 			previous_move = LEFT;
 		}
 		else if (left_count < right_count) {
-			right_list.push_back_list(share_list);
+			right_list.insert(right_list.end(), share_list.begin(), share_list.end());
 			current_list = right_list;
 			min = choice;
 			previous_move = RIGHT;
@@ -256,7 +254,7 @@ bool KdTree::choose_plane(BoundingboxPointers list, size_t& axis, real_t& plane)
 
 		// Use share here, because there's chance that we can still improve it.
 		// Example: left: 2, right: 0, share: 1.
-		if (std::fabs(max - min) < RESOLUTION || share_count == list.size) {
+		if (std::fabs(max - min) < RESOLUTION || share_count == list.size()) {
 			current_axis++;
 			if (current_axis > 2)
 				break;
@@ -267,7 +265,7 @@ bool KdTree::choose_plane(BoundingboxPointers list, size_t& axis, real_t& plane)
 		}
 	}
 
-	return best_metric < list.size;
+	return best_metric < list.size();
 }
 
 void KdTree::find_min_max(const BoundingboxPointers ptr_list, const size_t current_axis, real_t& min,
@@ -275,38 +273,35 @@ void KdTree::find_min_max(const BoundingboxPointers ptr_list, const size_t curre
 	min = std::numeric_limits<real_t>::infinity();
 	max = -std::numeric_limits<real_t>::infinity();
 
-	for (size_t i = 0; i < ptr_list.size; i++) {
-		if (ptr_list.list[i]->minPoint[current_axis] < min)
-			min = ptr_list.list[i]->minPoint[current_axis];
-		if (ptr_list.list[i]->maxPoint[current_axis] > max)
-			max = ptr_list.list[i]->maxPoint[current_axis];
+	for (size_t i = 0; i < ptr_list.size(); i++) {
+		if (ptr_list[i]->minPoint[current_axis] < min)
+			min = ptr_list[i]->minPoint[current_axis];
+		if (ptr_list[i]->maxPoint[current_axis] > max)
+			max = ptr_list[i]->maxPoint[current_axis];
 	}
 }
 
 void KdTree::classify(const BoundingboxPointers list, size_t axis, real_t plane,
 		BoundingboxPointers& left_list, BoundingboxPointers& right_list, BoundingboxPointers& share_list,
 		const bool shared) const {
-	left_list.list.clear();
-	right_list.list.clear();
-	share_list.list.clear();
-	left_list.size = 0;
-	right_list.size = 0;
-	share_list.size = 0;
+	left_list.clear();
+	right_list.clear();
+	share_list.clear();
 
-	for (size_t i = 0; i < list.size; i++) {
-		Boundingbox* boundingbox_ptr = list.list[i];
+	for (size_t i = 0; i < list.size(); i++) {
+		Boundingbox* boundingbox_ptr = list[i];
 		if (boundingbox_ptr->maxPoint[axis] < plane) {
-			left_list.push_back(list.list[i]);
+			left_list.push_back(list[i]);
 		}
 		else if (boundingbox_ptr->minPoint[axis] > plane) {
-			right_list.push_back(list.list[i]);
+			right_list.push_back(list[i]);
 		}
 		else if (shared) {
-			left_list.push_back(list.list[i]);
-			right_list.push_back(list.list[i]);
+			left_list.push_back(list[i]);
+			right_list.push_back(list[i]);
 		}
 		else {
-			share_list.push_back(list.list[i]);
+			share_list.push_back(list[i]);
 		}
 	}
 }

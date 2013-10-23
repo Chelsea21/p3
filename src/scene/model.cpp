@@ -78,7 +78,7 @@ std::vector<Boundingbox*> Model::get_boundingboxs() const {
 }
 
 void Model::construct_boundingbox() {
-	boundingbox_ptrs.resize(mesh->num_triangles(), NULL);
+	boundingbox_ptrs.reserve(mesh->num_triangles());
 	for (size_t i = 0; i < mesh->num_triangles(); i++) {
 		Boundingbox* new_box = new Boundingbox();
 		new_box->mat = mat;
@@ -88,7 +88,7 @@ void Model::construct_boundingbox() {
 		new_box->geometry = this;
 		new_box->construct_boundingbox();
 		new_box->isLoose = true;
-		boundingbox_ptrs[i] = new_box;
+		boundingbox_ptrs.push_back(new_box);
 	}
 }
 

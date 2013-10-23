@@ -72,7 +72,10 @@ void Material::get_texture_size( int* width, int* height ) const
 
 Color3 Material::get_texture_pixel( int x, int y ) const
 {
-    return tex_data ? Color3( tex_data + 4 * (x + y * tex_width) ) : Color3::White();
+	size_t offset = ((x + y * tex_width) > tex_width * tex_height - 1) ?
+			tex_width * tex_height - 1 :
+			x + y * tex_width;
+    return tex_data ? Color3( tex_data + 4 * offset ) : Color3::White();
 }
 
 bool Material::create_gl_data()

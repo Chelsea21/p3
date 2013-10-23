@@ -18,42 +18,7 @@ namespace _462 {
 
 // TODO add a number field
 typedef std::vector<Geometry*> GeometryList;
-typedef std::vector<Boundingbox*>
-struct BoundingboxPointers {
-	size_t size;
-	 std::vector<Boundingbox*> list;
-
-	 BoundingboxPointers() {
-		 size = 0;
-	 }
-
-	 BoundingboxPointers(size_t capability) {
-		 size = 0;
-		 list.resize(capability, NULL);
-	 }
-
-	 void push_back(Boundingbox* boundingbox) {
-		 if (list.size() < ++size)
-			 list.resize(size + 10, NULL);
-		 list[size - 1] = boundingbox;
-	 }
-
-	 void push_back_list(const BoundingboxPointers list) {
-		 for (size_t i = 0; i < list.size; i++) {
-			 this->push_back(list.list[i]);
-		 }
-	 }
-
-	 BoundingboxPointers& operator=( const BoundingboxPointers& value) {
-		 if (this->list.size() < value.size)
-			 this->list.reserve(value.size);
-		 this->size = value.size;
-		 this->list.clear();
-		 this->list.insert(this->list.end(), value.list.begin(), value.list.end());
-
-		 return *this;
-	 }
-};
+typedef std::vector<Boundingbox*> BoundingboxPointers;
 
 struct KdNode {
 	KdNode* left;
