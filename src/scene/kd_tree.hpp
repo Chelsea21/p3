@@ -16,7 +16,6 @@ namespace _462 {
 #define THRESHOLD 2
 #define RESOLUTION 1e-2
 
-// TODO add a number field
 typedef std::vector<Geometry*> GeometryList;
 typedef std::vector<Boundingbox*> BoundingboxPointers;
 

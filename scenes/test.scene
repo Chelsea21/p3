@@ -41,13 +41,13 @@
         <specular r="0.4" g="1.0" b="0.2"/>
     </material>
 
-    <vertex name="1" material="cyan">
+    <vertex name="1" material="magenta">
         <position x="-1.0" y="-1.0" z="0.0"/>
         <normal x="0.0" y="0.0" z="1.0"/>
         <tex_coord u="0.0" v="0.0"/>
     </vertex>
 
-    <vertex name="2" material="yellow">
+    <vertex name="2" material="magenta">
         <position x="1.0" y="-1.0" z="0.0"/>
         <normal x="0.0" y="0.0" z="1.0"/>
         <tex_coord u="1.0" v="0.0"/>

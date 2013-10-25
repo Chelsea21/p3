@@ -410,11 +410,15 @@ bool Mesh::initialize() {
 	return true;
 }
 
+/**
+ * Checks whether the give ray hits a specific triangle.
+ */
 bool Mesh::hit(const Ray ray, const real_t start, const real_t end,
 		const unsigned int list_num, HitRecord* record_ptr, real_t& beta, real_t& gamma) const {
 	if (list_num >= this->num_triangles())
 		return false;
 
+	// Use the barycentric coordinate.
 	unsigned int v0 = triangles[list_num].vertices[0];
 	unsigned int v1 = triangles[list_num].vertices[1];
 	unsigned int v2 = triangles[list_num].vertices[2];

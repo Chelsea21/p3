@@ -37,22 +37,18 @@ void Model::render() const {
 		material->reset_gl_state();
 }
 
+/**
+ * Hit function inherited from Geometry class. Checks whether the given ray
+ * hits a triangle of mesh.
+ */
 bool Model::hit(const Ray ray, const real_t start, const real_t end,
 		const unsigned int model_index, HitRecord* record_ptr) {
-	/*
-	size_t i;
-	for (i = 0; i < mesh->num_triangles(); i++) {
-		if (boundingbox_ptrs[i]->hit(ray, start, end, model_index, record_ptr))
-			break;
-	}
-	if (i == mesh->num_triangles())
-		return false;
-		*/
 	Ray transformed_ray = ray.transform(this->invMat);
 	real_t beta;
 	real_t gamma;
 	bool hit_result = mesh->hit(transformed_ray, start, end, model_index, record_ptr, beta, gamma);
 
+	// If hits. Copy the material information.
 	if (hit_result && record_ptr != NULL) {
 		record_ptr->hit = true;
 		record_ptr->hit_point = ray.e + record_ptr->time * ray.d;
@@ -77,6 +73,9 @@ std::vector<Boundingbox*> Model::get_boundingboxs() const {
 	return boundingbox_ptrs;
 }
 
+/**
+ * Builds the bounding boxes for all triangles inside.
+ */
 void Model::construct_boundingbox() {
 	boundingbox_ptrs.reserve(mesh->num_triangles());
 	for (size_t i = 0; i < mesh->num_triangles(); i++) {

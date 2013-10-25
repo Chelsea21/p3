@@ -136,12 +136,22 @@ void Material::reset_gl_state() const
     glBindTexture( GL_TEXTURE_2D, 0 );
 }
 
+/**
+ * Claps texture coordinate into [0, 1]^2, then transform it into
+ * the pixel position in the image.
+ * @param coord		The texture coordinates from the input file.
+ * @return 			The pixel position.
+ */
 const Vector2 Material::clap_texture(const Vector2 coord) const {
 	if (coord.x > 1 || coord.y > 1)
 		return Vector2(std::fmod(coord.x, 1.0) * tex_width, std::fmod(coord.y, 1.0) * tex_height);
 	return Vector2(coord.x * tex_width, coord.y * tex_height);
 }
 
+/**
+ * Interpolates the color using bilinear interpolation.
+ * @param coord 	The pixel position.
+ */
 Color3 Material::get_texture_pixel(const Vector2 coord) const {
 	if (!tex_data)
 		return Color3::White();

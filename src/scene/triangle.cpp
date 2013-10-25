@@ -58,8 +58,6 @@ bool Triangle::hit(const Ray ray, const real_t start, const real_t end,
 	Vector3 a_minus_c = vertices[0].position - vertices[2].position;
 	Vector3 a_minus_e = vertices[0].position - transformed_ray.e;
 
-	//std::cout << transformed_ray.e.x << "\t" << transformed_ray.e.y << "\t" << transformed_ray.e.z << std::endl;
-
 	real_t a = a_minus_b.x;
 	real_t b = a_minus_b.y;
 	real_t c = a_minus_b.z;
@@ -105,6 +103,8 @@ bool Triangle::hit(const Ray ray, const real_t start, const real_t end,
 
 	record_ptr->tex_coord = interpolate<Vector2>(beta, gamma,
 			vertices[0].tex_coord, vertices[1].tex_coord, vertices[2].tex_coord);
+
+	// Get texture color for interpolation.
 	std::vector<Color3> material_colors(3);
 	for (size_t i = 0; i < 3 ; i++) {
 		if (!vertices[i].material->texture_filename.empty()) {

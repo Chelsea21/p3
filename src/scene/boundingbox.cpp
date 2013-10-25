@@ -15,12 +15,21 @@ void Boundingbox::render() const {
 	std::cerr << "Cannot render boundingbox." << std::endl;
 }
 
+/**
+ * Check whether the ray hits the bounding box.
+ * @param ray 			the ray.
+ * @param start			the t parameter for the starting point.
+ * @param end			the t parameter for the ending point.
+ * @param model_index	unused.
+ * @param record_ptr	the pointer of record struct.
+ */
 bool Boundingbox::hit(const Ray ray, const real_t start, const real_t end,
 			const unsigned int model_index, HitRecord* record_ptr) {
 	(void) model_index;
 	if (!isLoose)
 		construct_boundingbox();
 
+	// Check the plane perpendicular to x-axis.
 	real_t denominator_x = 1 / ray.d.x;
 	real_t tmin;
 	real_t tmax;
@@ -32,6 +41,8 @@ bool Boundingbox::hit(const Ray ray, const real_t start, const real_t end,
 		tmin = denominator_x * (maxPoint.x - ray.e.x);
 		tmax = denominator_x * (minPoint.x - ray.e.x);
 	}
+
+	// Check the plane perpendicular to y-axis.
 	real_t denominator_y = 1 / ray.d.y;
 	real_t tmin_y;
 	real_t tmax_y;
@@ -44,11 +55,14 @@ bool Boundingbox::hit(const Ray ray, const real_t start, const real_t end,
 		tmax_y = denominator_y * (minPoint.y - ray.e.y);
 	}
 
+	// If ray hits the plane perpendicular to x-axis first, then
+	// the ray missed the box.
 	if (tmin > tmax_y || tmax < tmin_y)
 		return false;
 	tmin = (tmin > tmin_y) ? tmin : tmin_y;
 	tmax = (tmax < tmax_y) ? tmax : tmax_y;
 
+	// Do the same checking to the plane perpendicular to z-axis.
 	real_t denominator_z = 1 / ray.d.z;
 	real_t tmin_z;
 	real_t tmax_z;
@@ -70,20 +84,30 @@ bool Boundingbox::hit(const Ray ray, const real_t start, const real_t end,
 
 	if (record_ptr != NULL) {
 		record_ptr->time = tmin;
-		record_ptr->time_max = tmax;
 	}
 
 	return true;
 }
 
+/**
+ * Returns the number of objects inside.
+ */
 size_t Boundingbox::num_models() const {
 	return 1;
 }
 
+/**
+ * Returns a list of pointers of bounding boxes. For Boundingbox class,
+ * the list contains this pointer.
+ */
 std::vector<Boundingbox*> Boundingbox::get_boundingboxs() const {
 	return std::vector<Boundingbox*>(1, const_cast<Boundingbox*>(this));
 }
 
+/**
+ * Constructs the axis aligned bounding box according to the
+ * bounding box in object coordinate.
+ */
 void Boundingbox::construct_boundingbox() {
 	std::vector<Vector3> vertices(8);
 	vertices[0] = Vector3(maxPoint.x, minPoint.y, minPoint.z);

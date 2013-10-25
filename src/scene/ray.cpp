@@ -35,6 +35,9 @@ Vector3 Ray::get_pixel_dir(real_t ni, real_t nj)
     return normalize(dir + dist*(nj*cU + AR*ni*cR));
 }
 
+/**
+ * Transforms itself by the given matrix.
+ */
 Ray Ray::transform(const Matrix4 matrix) const {
 	Ray result;
 	result.e = matrix.transform_point(e);

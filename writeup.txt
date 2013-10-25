@@ -1,6 +1,18 @@
+Project 3
+Author: Chenxi Liu (chenxil)
 
-Describe the required features you have implemented, and which you have not.
-if you have missing features, be sure to explain how much you accomplished.
-Describe any major design decisions and descriptions of your algorithms.
-You should detail anything you think we need to know to understand your code.
+1. Features
+   - Kd-tree with axis aligned bounding boxes.
+   - Russian roulette sampling for refractive and reflective rays.
+   - Glossy reflection.
+   - Bilinear interpolation for texture.
+   - (Depth of field implemented but deleted from the code, because of poor
+     effect. See comments in trace_point function.)
 
+2. Data Structure - Kd-tree
+In this project, I chose kd-tree as the spatial data structure. Because kd-tree divides space along three coordinate planes, the relatively tight bounding boxes are rearrange to axis-aligned. By using AABBs, the time used to build kd-tree is reduced and it is more likely to divide bounding boxes into two areas. 
+When building bounding box, a Mesh instance is treated as individual triangles. Each triangle has a bounding box. Although this decision may result in a large kd-tree, it actually saves time for rendering.
+
+3. Citation
+[1]. Shirley, Peter. Fundumentals of Computer Graphics. 2009.
+[2]. Fussell, Subramanian. Fast Ray Tracing Using K-D Tree. 1988.

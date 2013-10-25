@@ -13,6 +13,7 @@
 
 namespace _462 {
 
+// The axis aligned bounding box.
 class Boundingbox: public Geometry {
 public:
 	Boundingbox()
@@ -25,12 +26,20 @@ public:
 	{ }
 	virtual ~Boundingbox();
 
+	// Two corners that define the bounding box.
 	Vector3 maxPoint;
 	Vector3 minPoint;
 
+	// Since a model may have multiple bounding box for triangles,
+	// we use bounding boxes to find the models and the triangles
+	// inside.
 	size_t model_index;
 	Geometry* geometry;
 
+
+	// The bounding box is constructed in the object coordinate.
+	// We need to add another axis aligned bounding box outside
+	// the original one.
 	bool isLoose;
 
 	virtual void render() const;

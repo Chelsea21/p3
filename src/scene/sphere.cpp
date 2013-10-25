@@ -97,10 +97,14 @@ void Sphere::render() const
         material->reset_gl_state();
 }
 
+/**
+ * Hit function inherited from Geometry class.
+ */
 bool Sphere::hit(const Ray ray, const real_t start, const real_t end,
     			const unsigned int model_index, HitRecord* record_ptr) {
 	(void) model_index;
 
+	// Transform the ray into object coordinate.
 	Ray transformed_ray = ray.transform(this->invMat);
 
 	Vector3 e_minus_c = transformed_ray.e;
@@ -132,11 +136,6 @@ bool Sphere::hit(const Ray ray, const real_t start, const real_t end,
 	if (t == end || t == start)
 		return false;
 
-	/*
-	if (material->refractive_index == 2 &&
-				abs(length(ray.e - Vector3(0.378684,-1.03496,1.78278))) < 1e-3)
-			std::cout << t << " in [" << start << ", " << end << "]" << std::endl;*/
-
 	if (record_ptr != NULL) {
 		record_ptr->time = t;
 		record_ptr->hit = true;
@@ -146,6 +145,7 @@ bool Sphere::hit(const Ray ray, const real_t start, const real_t end,
 		record_ptr->hit_point = ray.e + record_ptr->time * ray.d;
 		record_ptr->normal = normalize(this->normMat * transformed_normal);
 
+		// Computes the texture coordinate.
 		real_t theta = std::atan2(transformed_normal.z, transformed_normal.x);
 		real_t phi = std::asin(transformed_normal.y);
 
