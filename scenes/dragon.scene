@@ -28,7 +28,7 @@
     </material> 
  
 
-    <mesh name="bunny" filename="../models/dragon.obj"/>
+    <mesh name="bunny" filename="models/dragon.obj"/>
 
     <model material="default" mesh="bunny">
         <position x="0.0" y="0.0" z="0.0"/>

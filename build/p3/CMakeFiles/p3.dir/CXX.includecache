@@ -135,6 +135,8 @@ math/random462.hpp
 /home/chelsea/Documents/GraphicsProjects/p3/src/p3/math/random462.hpp
 math/vector.hpp
 /home/chelsea/Documents/GraphicsProjects/p3/src/p3/math/vector.hpp
+scene/scene.hpp
+/home/chelsea/Documents/GraphicsProjects/p3/src/p3/scene/scene.hpp
 
 /home/chelsea/Documents/GraphicsProjects/p3/src/scene/boundingbox.hpp
 scene/scene.hpp
@@ -143,6 +145,12 @@ math/vector.hpp
 /home/chelsea/Documents/GraphicsProjects/p3/src/scene/math/vector.hpp
 
 /home/chelsea/Documents/GraphicsProjects/p3/src/scene/kd_tree.hpp
+iostream
+-
+queue
+-
+math/vector.hpp
+/home/chelsea/Documents/GraphicsProjects/p3/src/scene/math/vector.hpp
 scene/scene.hpp
 /home/chelsea/Documents/GraphicsProjects/p3/src/scene/scene/scene.hpp
 scene/boundingbox.hpp

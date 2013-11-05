@@ -19,19 +19,19 @@
         <color r="1.0" g="1.0" b="1.0"/>
     </point_light>
 
-    <material name="wood" texture="../images/wood2.png">
+    <material name="wood" texture="images/wood2.png">
         <refractive_index v="0.0"/>
         <ambient r="0.8" g="0.8" b="0.8"/>
         <diffuse r="0.8" g="0.8" b="0.8"/>
         <specular r="0.4" g="0.4" b="0.4"/>
     </material>
-    <material name="floor" texture="../images/stones.png">
+    <material name="floor" texture="images/stones.png">
         <refractive_index v="0.0"/>
         <ambient r="0.8" g="0.8" b="0.8"/>
         <diffuse r="0.8" g="0.8" b="0.8"/>
         <specular r="0.0" g="0.0" b="0.0"/>
     </material> 
-    <material name="wall" texture="../images/wall.png">
+    <material name="wall" texture="images/wall.png">
         <refractive_index v="0.0"/>
         <ambient r="0.8" g="0.8" b="0.8"/>
         <diffuse r="0.8" g="0.8" b="0.8"/>
@@ -39,13 +39,17 @@
     </material>
  
 
-    <mesh name="toyplane" filename="../models/toyplane.obj"/>
+    <mesh name="toyplane" filename="models/toyplane.obj"/>
 
     <model material="wood" mesh="toyplane">
         <position x="-3.0" y="0.0" z="0.0"/>
         <scale x="0.1" y="0.1" z="0.1" />
         <orientation a="-0.8" x="1.0" y="1.0" z="1.0"/>
     </model> 
+
+
+
+
 
     <vertex name="f1" material="floor">
         <position x="-10.0" y="0.0" z="-7.5"/>

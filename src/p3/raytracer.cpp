@@ -50,7 +50,7 @@ Raytracer::~Raytracer() {
  * @param width The width of the image being raytraced.
  * @param height The height of the image being raytraced.
  * @return true on success, false on error. The raytrace will abort if
- *  false is returned.
+ * false is returned.
  */
 bool Raytracer::initialize(Scene* scene, size_t num_samples, size_t width,
 		size_t height) {
@@ -104,36 +104,40 @@ Color3 Raytracer::trace_pixel(const Scene* scene, size_t x, size_t y,
 		std::vector<real_t> refractive_indices;
 		refractive_indices.resize(1);
 		refractive_indices[0] = scene->refractive_index;
-		res += trace_point(scene, scene->camera.get_position(), Ray::get_pixel_dir(i, j), 1,
-							refractive_indices);
+		Ray ray(scene->camera.get_position(), Ray::get_pixel_dir(i, j));
+		TracingResult result;
+		result.is_photon = false;
+		trace_point(scene, ray, 1, refractive_indices, result);
+		res += result.color;
 	}
 	return res * (real_t(1) / num_samples);
 }
 
 /**
  * Traces a point using the given eye ray.
- * @param scene					The scene.
- * @param e						Eye position.
- * @param d						The direction of eye ray.
- * @param depth					The tracing depth for reflection and refraction.
- * @param refractive_indices	The refractive indices stack.
+ * @param scene                                        The scene.
+ * @param e                                                Eye position.
+ * @param d                                                The direction of eye ray.
+ * @param depth                                        The tracing depth for reflection and refraction.
+ * @param refractive_indices        The refractive indices stack.
  */
-Color3 Raytracer::trace_point(const Scene* scene, Vector3 e, Vector3 d, unsigned int depth,
-							std::vector<real_t> refractive_indices) const {
-	if (depth > MAX_DEPTH)
-		return Color3::Black();
+void Raytracer::trace_point(const Scene* scene, const Ray ray,
+		unsigned int depth, std::vector<real_t> refractive_indices, TracingResult& result) const {
+	if (depth > MAX_DEPTH) {
+		result.color = Color3::Black();
+		return;
+	}
 
 	// Depth of scene: choose a random eye position from a square lens.
 	/*
-	real_t len_length = 0.05;
-	real_t rand_i = random_gaussian();
-	real_t rand_j = random_gaussian();
-	real_t i = len_length * ((rand_i > 0.5) ? 0.5 : ((rand_i < -0.5) ? -0.5 : rand_i)) + e.x;
-	real_t j = len_length * ((rand_j > 0.5) ? 0.5 : ((rand_j < -0.5) ? -0.5 : rand_j)) + e.y;
-	Vector3 e_rand = Vector3(i, j, e.z);
-	*/
+	 real_t len_length = 0.05;
+	 real_t rand_i = random_gaussian();
+	 real_t rand_j = random_gaussian();
+	 real_t i = len_length * ((rand_i > 0.5) ? 0.5 : ((rand_i < -0.5) ? -0.5 : rand_i)) + e.x;
+	 real_t j = len_length * ((rand_j > 0.5) ? 0.5 : ((rand_j < -0.5) ? -0.5 : rand_j)) + e.y;
+	 Vector3 e_rand = Vector3(i, j, e.z);
+	 */
 
-	Ray r(e, d);
 	HitRecord record;
 	record.hit = false;
 
@@ -142,37 +146,20 @@ Color3 Raytracer::trace_point(const Scene* scene, Vector3 e, Vector3 d, unsigned
 	real_t t1 = std::numeric_limits<double>::infinity();
 
 	// Uses kd-tree to find hit point.
-	scene->get_kd_tree()->hit(r, t0, t1, 0, &record);
-	Color3 res = shade(r, record, depth, refractive_indices);
-
-	return res;
+	scene->get_kd_tree()->hit(ray, t0, t1, 0, &record);
+	shade(ray, record, depth, refractive_indices, result);
 }
 
-/**
- * Shades a hit point using the given eye ray.
- * @param ray 		the eye ray.
- * @param record 	the struct keeping the hit information.
- * @param depth		the tracing depth for reflective ray and refractive ray.
-*/
-Color3 Raytracer::shade(const Ray ray, const HitRecord record, unsigned int depth,
-			std::vector<real_t> refractive_indices) const {
-	Color3 result;
+void Raytracer::shade_ambient_diffuse(const Ray ray, const HitRecord record, TracingResult& result) const {
 	// The indices of lights hitting this point.
 	std::vector<unsigned int> light_number;
 	// The shadow rays from the point to the light sources.
 	std::vector<Ray> shadow_rays(scene->num_lights());
 
-
-	// The eye ray hits nothing.
-	if (!record.hit) {
-		result = scene->background_color;
-		return result;
-	}
-
 	// Checks whether the object is transparent. Only shades ambient and diffuse color
 	// for objects with refractive indices equal to zero.
 	if (record.shade_factors.refractive_index < 1e-3) {
-		result = record.shade_factors.ambient * scene->ambient_light;
+		result.color = record.shade_factors.ambient * scene->ambient_light;
 		if (dot(ray.d, record.normal) < 0) {
 			for (size_t i = 0; i < scene->num_lights(); i++) {
 				// Uses randomness to sample the volumn light source.
@@ -198,13 +185,30 @@ Color3 Raytracer::shade(const Ray ray, const HitRecord record, unsigned int dept
 				real_t dot_n_l = dot(record.normal,
 						normalize(shadow_rays[*itr].d));
 				real_t diffuse_cos = (dot_n_l > 0) ? dot_n_l : 0;
-				result += record.shade_factors.diffuse * light->color * diffuse_cos;
+				result.color += record.shade_factors.diffuse * light->color
+						* diffuse_cos;
 			}
 		}
+	} else {
+		result.color = Color3::Black();
 	}
-	else {
-		result = Color3::Black();
+}
+
+/**
+ * Shades a hit point using the given eye ray.
+ * @param ray                 the eye ray.
+ * @param record         the struct keeping the hit information.
+ * @param depth                the tracing depth for reflective ray and refractive ray.
+ */
+void Raytracer::shade(const Ray ray, const HitRecord record, unsigned int depth,
+		std::vector<real_t> refractive_indices, TracingResult& result) const {
+	// The eye ray hits nothing.
+	if (!record.hit) {
+		result.color = scene->background_color;
+		return ;
 	}
+
+	shade_ambient_diffuse(ray, record, result);
 
 	// Refraction and reflection.
 	Vector3 normal = record.normal;
@@ -232,13 +236,13 @@ Color3 Raytracer::shade(const Ray ray, const HitRecord record, unsigned int dept
 		}
 
 		real_t n_over_n_t = n / n_t;
-		real_t cos_t_square = 1 - n_over_n_t * n_over_n_t * (1 - dot_n_d * dot_n_d);
+		real_t cos_t_square = 1
+				- n_over_n_t * n_over_n_t * (1 - dot_n_d * dot_n_d);
 
 		// Total internal refraction will skip this step.
 		if (cos_t_square > 0) {
 			real_t cos_t = sqrt(cos_t_square);
-			t = n_over_n_t * (ray.d - dot_n_d * normal)
-					- normal * cos_t;
+			t = n_over_n_t * (ray.d - dot_n_d * normal) - normal * cos_t;
 			R = (n_t - 1) / (n_t + 1);
 			R *= R;
 			cos_t = (cos_t < -dot_n_d) ? cos_t : -dot_n_d;
@@ -260,35 +264,35 @@ Color3 Raytracer::shade(const Ray ray, const HitRecord record, unsigned int dept
 			Vector3 v = cross(r, v);
 
 			// The parameter is 2e-2.
-			real_t rand_u = -2e-2 / 2 + random_gaussian() *
-					2e-2;
-			real_t rand_v = -2e-2 / 2 + random_gaussian() *
-					2e-2;
-			Color3 reflective = record.shade_factors.specular
-					* trace_point(scene, record.hit_point,
-							r+ rand_u * u + rand_v * v, ++depth,
-							refractive_indices);
-			result += reflective;
+			real_t rand_u = -2e-2 / 2 + random_gaussian() * 2e-2;
+			real_t rand_v = -2e-2 / 2 + random_gaussian() * 2e-2;
+			TracingResult reflective_result;
+			reflective_result.is_photon = false;
+			Ray reflective_ray(record.hit_point, r + rand_u * u + rand_v * v);
+			trace_point(scene, reflective_ray, ++depth,
+							refractive_indices, reflective_result);
+			Color3 reflective = record.shade_factors.specular * reflective_result.color;
+			result.color += reflective;
 		}
-	}
-	else {
+	} else {
 		// Traces refractive ray with probability (1 - R).
 		// Maintains the refractive indices stack.
-		if (!is_same_material(refractive_indices.back(), scene->refractive_index)) {
+		if (!is_same_material(refractive_indices.back(),
+				scene->refractive_index)) {
 			refractive_indices.pop_back();
-		}
-		else {
+		} else {
 			refractive_indices.push_back(record.shade_factors.refractive_index);
 		}
 
-		result += trace_point(scene, record.hit_point, t, ++depth,
-					refractive_indices);
+		Ray refractive_ray(record.hit_point, t);
+		TracingResult refractive_result;
+		refractive_result.is_photon = false;
+		trace_point(scene, refractive_ray, ++depth, refractive_indices, refractive_result);
+		result.color += refractive_result.color;
 	}
 
 	// Adds texture.
-	result *= record.shade_factors.texture;
-
-	return result;
+	result.color *= record.shade_factors.texture;
 }
 
 /**
@@ -296,12 +300,12 @@ Color3 Raytracer::shade(const Ray ray, const HitRecord record, unsigned int dept
  * max_time duration and then return, even if the raytrace is not copmlete.
  * The results should be placed in the given buffer.
  * @param buffer The buffer into which to place the color data. It is
- *  32-bit RGBA (4 bytes per pixel), in row-major order.
+ * 32-bit RGBA (4 bytes per pixel), in row-major order.
  * @param max_time, If non-null, the maximum suggested time this
- *  function raytrace before returning, in seconds. If null, the raytrace
- *  should run to completion.
+ * function raytrace before returning, in seconds. If null, the raytrace
+ * should run to completion.
  * @return true if the raytrace is complete, false if there is more
- *  work to be done.
+ * work to be done.
  */
 bool Raytracer::raytrace(unsigned char* buffer, real_t* max_time) {
 	// TODO Add any modifications to this algorithm, if needed.
@@ -332,7 +336,7 @@ bool Raytracer::raytrace(unsigned char* buffer, real_t* max_time) {
 		// This tells OpenMP that this loop can be parallelized.
 #pragma omp parallel for
 		for (int c_row = current_row; c_row < loop_upper; c_row++) {
-		//for (int c_row = current_row; c_row < 1; c_row++) {
+			//for (int c_row = current_row; c_row < 1; c_row++) {
 			/*
 			 * This defines a critical region of code that should be
 			 * executed sequentially.
@@ -344,7 +348,7 @@ bool Raytracer::raytrace(unsigned char* buffer, real_t* max_time) {
 			}
 
 			for (size_t x = 0; x < width; x++) {
-			//for (size_t x = 0; x < 1; x++) {
+				//for (size_t x = 0; x < 1; x++) {
 				// trace a pixel
 				Color3 color = trace_pixel(scene, x, c_row, width, height);
 				// write the result to the buffer, always use 1.0 as the alpha

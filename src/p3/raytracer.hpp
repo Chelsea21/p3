@@ -16,6 +16,7 @@
 #include "math/color.hpp"
 #include "math/random462.hpp"
 #include "math/vector.hpp"
+#include "scene/scene.hpp"
 
 namespace _462 {
 
@@ -23,6 +24,14 @@ struct HitRecord;
 class Scene;
 class Ray;
 struct Intersection;
+
+struct TracingResult {
+	bool is_photon;
+
+	Color3 color;
+	Photon photon;
+};
+
 class Raytracer
 {
 public:
@@ -45,12 +54,14 @@ private:
 		       size_t height);
 
     // Traces a point using the given eye ray.
-    Color3 trace_point(const Scene* scene, Vector3 e, Vector3 d, unsigned int depth,
-    					std::vector<real_t> refractive_indices) const;
+    void trace_point(const Scene* scene, const Ray ray, unsigned int depth,
+    					std::vector<real_t> refractive_indices, TracingResult& result) const;
 
     // Shades a hit point using the given eye ray.
-    Color3 shade(const Ray ray, const HitRecord record, unsigned int depth,
-    			std::vector<real_t> refractive_indices) const;
+    void shade(const Ray ray, const HitRecord record, unsigned int depth,
+    			std::vector<real_t> refractive_indices, TracingResult& result) const;
+
+    void shade_ambient_diffuse(const Ray ray, const HitRecord record, TracingResult& result) const;
 
     // the scene to trace
     Scene* scene;

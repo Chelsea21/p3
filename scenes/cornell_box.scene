@@ -19,13 +19,6 @@
 		<radius v="1.0"/>
     </point_light>
 
-    <material name="cyan">
-        <refractive_index v="0.0"/>
-        <ambient r="0.0" g="1.0" b="1.0"/>
-        <diffuse r="0.2" g="0.9" b="0.8"/>
-        <specular r="0.4" g="0.4" b="1.0"/>
-    </material>
-
     <material name="white">
         <refractive_index v="0.0"/>
         <ambient r="1.0" g="1.0" b="1.0"/>

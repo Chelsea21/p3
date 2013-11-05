@@ -22,6 +22,13 @@
 namespace _462 {
 class Boundingbox;
 class KdTree;
+
+struct Photon {
+	Color3 color;
+	Vector3 position;
+	real_t angle;
+};
+
 class Geometry {
 public:
 	Geometry();

@@ -8,6 +8,9 @@
 #ifndef KD_TREE_H_
 #define KD_TREE_H_
 
+#include <iostream>
+#include <queue>
+#include "math/vector.hpp"
 #include "scene/scene.hpp"
 #include "scene/boundingbox.hpp"
 
@@ -18,6 +21,8 @@ namespace _462 {
 
 typedef std::vector<Geometry*> GeometryList;
 typedef std::vector<Boundingbox*> BoundingboxPointers;
+typedef std::vector<Photon*> PhotonPointers;
+typedef std::vector<Photon> PhotonList;
 
 struct KdNode {
 	KdNode* left;
@@ -25,12 +30,33 @@ struct KdNode {
 	real_t plane;
 	size_t axis;
 	BoundingboxPointers boundingbox_ptrs;
+	PhotonPointers photon_ptrs;
+
+	void add(BoundingboxPointers boundingbox_ptrs) {
+		this->boundingbox_ptrs = boundingbox_ptrs;
+	}
+
+	void add(PhotonPointers photon_ptrs) {
+		this->photon_ptrs = photon_ptrs;
+	}
+};
+
+struct PhotonDistanceComparor {
+	Photon* center_ptr;
+	Photon* photon_ptr;
+
+	// TODO check
+	bool operator() (PhotonDistanceComparor cmp1, PhotonDistanceComparor cmp2) {
+		return length(cmp1.photon_ptr->position - cmp1.center_ptr->position) <
+				length(cmp2.photon_ptr->position - cmp2.center_ptr->position);
+	}
 };
 
 class KdTree {
 public:
 	KdTree() : root(NULL), geometry_boundingbox_ptrs(BoundingboxPointers(1)) { }
 	KdTree(GeometryList geometries);
+	KdTree(PhotonList photons) : root(NULL), photons(photons) { }
 	virtual ~KdTree();
 
 	enum ClassifiedSide { RIGHT, LEFT, RIGHT_LEFT, LEFT_RIGHT, UNKNOWN };
@@ -39,15 +65,26 @@ public:
 	virtual bool hit(const Ray ray, const real_t start, const real_t end,
 			const unsigned int model_index, HitRecord* record_ptr);
 
+	void find_k_nn(const Photon photon, const size_t nn_num, PhotonPointers& knn_ptr_list) const;
+
 	void destory_kd_tree(KdNode* root);
 	void build_kd_tree();
 
 private:
 	KdNode* root;
 	BoundingboxPointers geometry_boundingbox_ptrs;
+	PhotonList photons;
 
-	KdNode* build_kd_tree(KdNode* tree, const BoundingboxPointers& list);
+	template<typename T> KdNode* build_kd_tree(KdNode* tree, const T& list);
 	bool choose_plane(BoundingboxPointers list, size_t& axis, real_t& plane) const;
+	bool choose_plane(PhotonPointers list, size_t& axis, real_t& plane) const;
+	void find_k_nn_queue(KdNode* root, const Photon* photon_ptr, const size_t nn_num,
+			std::priority_queue<PhotonDistanceComparor,
+			std::vector<PhotonDistanceComparor>,
+			PhotonDistanceComparor>& knn_ptr_queue) const;
+	void classify(const PhotonPointers list_ptr, size_t axis, real_t plane,
+				PhotonPointers& left_list, PhotonPointers& right_list, PhotonPointers& share_list,
+				const bool shared) const;
 	void classify(const BoundingboxPointers list_ptr, size_t axis, real_t plane,
 			BoundingboxPointers& left_list, BoundingboxPointers& right_list, BoundingboxPointers& share_list,
 			const bool shared) const;

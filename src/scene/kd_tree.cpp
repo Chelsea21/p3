@@ -37,6 +37,9 @@ void KdTree::destory_kd_tree(KdNode* root) {
 		for (size_t i = 0; i < root->boundingbox_ptrs.size(); i++) {
 			delete root->boundingbox_ptrs[i];
 		}
+		for (size_t i = 0; i < root->photon_ptrs.size(); i++) {
+			delete root->photon_ptrs[i];
+		}
 		// Deletes node.
 		delete root;
 
@@ -146,12 +149,27 @@ int KdTree::classify_ray(const Ray ray, const KdNode* root,
 
 // Builds kd-tree.
 void KdTree::build_kd_tree() {
-	root = build_kd_tree(root, geometry_boundingbox_ptrs);
-	// The tree only contains root.
-	if (root == NULL) {
-		root = new KdNode();
-		root->left = root->right = NULL;
-		root->boundingbox_ptrs = geometry_boundingbox_ptrs;
+	if (photons.size() == 0) {
+		root = build_kd_tree(root, geometry_boundingbox_ptrs);
+		// The tree only contains root.
+		if (root == NULL) {
+			root = new KdNode();
+			root->left = root->right = NULL;
+			root->boundingbox_ptrs = geometry_boundingbox_ptrs;
+		}
+	}
+	else {
+		PhotonPointers photon_ptrs;
+		for (size_t i = 0; i < photons.size(); i++) {
+			photon_ptrs[i] = &photons[i];
+		}
+		root = build_kd_tree(root, photon_ptrs);
+		// The tree only contains root.
+		if (root == NULL) {
+			root = new KdNode();
+			root->left = root->right = NULL;
+			root->photon_ptrs = photon_ptrs;
+		}
 	}
 }
 
@@ -161,7 +179,7 @@ void KdTree::build_kd_tree() {
  * @param list		The list of bounding boxes contained by the subtree.
  * @return 			The current node.
  */
-KdNode* KdTree::build_kd_tree(KdNode* tree, const BoundingboxPointers& list) {
+template<typename T> KdNode* KdTree::build_kd_tree(KdNode* tree, const T& list) {
 	real_t plane;
 	size_t axis;
 	bool divisible;
@@ -172,9 +190,9 @@ KdNode* KdTree::build_kd_tree(KdNode* tree, const BoundingboxPointers& list) {
 	if (divisible) {
 		tree = new KdNode();
 		tree->left = tree->right = NULL;
-		BoundingboxPointers left_list(list.size() / 3);
-		BoundingboxPointers right_list(list.size() / 3);
-		BoundingboxPointers share_list(list.size() / 3);
+		T left_list(list.size() / 3);
+		T right_list(list.size() / 3);
+		T share_list(list.size() / 3);
 
 		// Divides the list into three. Left and right list also contains boxes
 		// in shared list.
@@ -188,7 +206,7 @@ KdNode* KdTree::build_kd_tree(KdNode* tree, const BoundingboxPointers& list) {
 		if (tree->left == NULL) {
 			KdNode* leaf = new KdNode();
 			leaf->left = leaf->right = NULL;
-			leaf->boundingbox_ptrs = left_list;
+			leaf->add(right_list);
 			tree->left = leaf;
 		}
 		if (right_list.size() > THRESHOLD)
@@ -196,7 +214,7 @@ KdNode* KdTree::build_kd_tree(KdNode* tree, const BoundingboxPointers& list) {
 		if (tree->right == NULL) {
 			KdNode* leaf = new KdNode();
 			leaf->left = leaf->right = NULL;
-			leaf->boundingbox_ptrs = right_list;
+			leaf->add(right_list);
 			tree->right = leaf;
 		}
 
@@ -204,6 +222,102 @@ KdNode* KdTree::build_kd_tree(KdNode* tree, const BoundingboxPointers& list) {
 	}
 
 	return NULL;
+}
+
+void KdTree::find_k_nn(const Photon photon, const size_t nn_num, PhotonPointers& knn_ptr_list) const {
+	std::priority_queue<PhotonDistanceComparor,
+						std::vector<PhotonDistanceComparor>,
+						PhotonDistanceComparor> queue;
+	find_k_nn_queue(root, &photon, nn_num, queue);
+
+	while (queue.size()) {
+		Photon* top_ptr = queue.top().photon_ptr;
+		knn_ptr_list.push_back(top_ptr);
+		queue.pop();
+	}
+}
+
+void KdTree::find_k_nn_queue(KdNode* root, const Photon* photon_ptr, const size_t nn_num,
+			std::priority_queue<PhotonDistanceComparor,
+			std::vector<PhotonDistanceComparor>,
+			PhotonDistanceComparor>& knn_ptr_queue) const {
+	if (root->right == NULL && root->left == NULL) {
+		for (size_t i = 0; i < root->photon_ptrs.size(); i++) {
+			PhotonDistanceComparor cmp;
+			cmp.center_ptr = const_cast<Photon*>(photon_ptr);
+			cmp.photon_ptr = root->photon_ptrs[i];
+			knn_ptr_queue.push(cmp);
+		}
+		for (size_t i = 0; i < knn_ptr_queue.size() - nn_num; i++) {
+			knn_ptr_queue.pop();
+		}
+
+		return ;
+	}
+
+	if (photon_ptr->position[root->axis] < root->plane) {
+		find_k_nn_queue(root->left, photon_ptr, nn_num, knn_ptr_queue);
+		PhotonDistanceComparor farthest = knn_ptr_queue.top();
+
+		// Compares the distance from the center to the farthest neighbor and to
+		// the separating plane.
+		if (length(farthest.photon_ptr->position - farthest.center_ptr->position) <
+				std::fabs(photon_ptr->position[root->axis] - root->plane)) {
+			return ;
+		}
+		find_k_nn_queue(root->right, photon_ptr, nn_num, knn_ptr_queue);
+	}
+	else {
+		find_k_nn_queue(root->right, photon_ptr, nn_num, knn_ptr_queue);
+		PhotonDistanceComparor farthest = knn_ptr_queue.top();
+
+		// Compares the distance from the center to the farthest neighbor and to
+		// the separating plane.
+		if (length(farthest.photon_ptr->position - farthest.center_ptr->position) <
+				std::fabs(photon_ptr->position[root->axis] - root->plane)) {
+			return ;
+		}
+		find_k_nn_queue(root->left, photon_ptr, nn_num, knn_ptr_queue);
+	}
+}
+
+struct PhotonComparor {
+	int axis;
+
+	bool operator() (Photon* ptr1, Photon* ptr2) {
+		return ptr1->position[axis] < ptr2->position[axis];
+	}
+};
+
+bool KdTree::choose_plane(PhotonPointers list, size_t& axis, real_t& plane) const {
+	for (size_t current_axis = 0; current_axis < 3; current_axis++) {
+		PhotonComparor comparor;
+		comparor.axis = current_axis;
+		std::sort(list.begin(), list.end(), comparor);
+		int middle = list.size() / 2;
+		size_t before_middle = (middle - 1 < 0) ? middle : middle - 1;
+		plane = (list[middle]->position[axis] + list[before_middle]->position[axis]) / 2;
+		if (plane != list[middle]->position[axis]) {
+			axis = current_axis;
+			return true;
+		}
+	}
+
+	return false;
+}
+
+void KdTree::classify(const PhotonPointers list_ptr, size_t axis, real_t plane,
+				PhotonPointers& left_list, PhotonPointers& right_list, PhotonPointers& share_list,
+				const bool shared) const {
+	(void) share_list;
+	(void) shared;
+
+	for (size_t i = 0; i < list_ptr.size(); i++) {
+		if (list_ptr[i]->position[axis] < plane)
+			left_list.push_back(list_ptr[i]);
+		else
+			right_list.push_back(list_ptr[i]);
+	}
 }
 
 /**

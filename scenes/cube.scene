@@ -74,7 +74,7 @@
 
 
     <model material="cube" mesh="cube">
-        <position x="0.0" y="2.0" z="0.0"/>
+        <position x="0.0" y="1.0" z="0.0"/>
         <orientation a="1.3" x="0.0" y="1.0" z="0.0"/>
     </model> 
 
