@@ -28,6 +28,10 @@ KdTree::~KdTree() {
 	destory_kd_tree(root);
 }
 
+void KdTree::add_photon(const Photon photon) {
+	photons.push_back(photon);
+}
+
 /**
  * Destories the kd-tree and bounding boxes.
  */

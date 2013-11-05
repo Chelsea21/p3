@@ -11,6 +11,7 @@
 #include "math/math.hpp"
 #include <iostream>
 #include <cassert>
+#include <cmath>
 
 namespace _462 {
 
@@ -160,6 +161,10 @@ Color3 clamp( const Color3& c, real_t min, real_t max );
  * Outputs a color text formatted as "(r,g,b)".
  */
 std::ostream& operator<<( std::ostream& os, const Color3& rhs );
+
+inline real_t max_component(const Color3 c) {
+	return std::fmax(c.r, std::fmax(c.g, c.b));
+}
 
 } /* _462 */
 

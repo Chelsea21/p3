@@ -67,6 +67,8 @@ public:
 
 	void find_k_nn(const Photon photon, const size_t nn_num, PhotonPointers& knn_ptr_list) const;
 
+	void add_photon(const Photon photon);
+
 	void destory_kd_tree(KdNode* root);
 	void build_kd_tree();
 

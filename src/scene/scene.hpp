@@ -58,6 +58,8 @@ public:
 	// Normal transformation matrix
 	Matrix3 normMat;
 
+	KdTree* photon_map;
+
 	/**
 	 * Renders this geometry using OpenGL in the local coordinate space.
 	 */
@@ -125,6 +127,7 @@ public:
 	Geometry* get_geometry(unsigned int geometry_num) const;
 	size_t num_geometries() const;
 	const SphereLight* get_lights() const;
+	const SphereLight* get_light(size_t light_num) const;
 	size_t num_lights() const;
 	Material* const * get_materials() const;
 	size_t num_materials() const;
@@ -144,16 +147,20 @@ public:
 	void build_kd_tree();
 	KdTree* get_kd_tree() const;
 
+	void build_global_photon_map();
+	KdTree* get_global_photon_map() const;
+
 private:
 
 	typedef std::vector<SphereLight> SphereLightList;
 	typedef std::vector<Material*> MaterialList;
 	typedef std::vector<Mesh*> MeshList;
 
-	// TODO Change to octree?
 	typedef std::vector<Geometry*> GeometryList;
 
 	KdTree* kd_tree_ptr;
+	KdTree* global_photon_map_ptr;
+
 	// list of all lights in the scene
 	SphereLightList point_lights;
 	// all materials used by geometries

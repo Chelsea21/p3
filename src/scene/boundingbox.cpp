@@ -134,5 +134,31 @@ void Boundingbox::construct_boundingbox() {
 	maxPoint = newMaxPoint;
 }
 
+Vector3 Boundingbox::generate_rand_point() const {
+	Vector3 result;
+	real_t rand_axis = 3. * random();
+	int axis = std::floor(rand_axis);
+	real_t min_max = 1. * random();
+	result[axis] = (min_max < 0.5) ? minPoint[axis] : maxPoint[axis];
+	Vector3 face_point;
+	for (size_t i = 0; i < 3; i++) {
+		if (i != axis)
+			face_point[i] = (min_max >= 0.5) ? minPoint[i] : maxPoint[i];
+		else
+			face_point[i] = (min_max < 0.5) ? minPoint[i] : maxPoint[i];
+	}
+	for (size_t i = 0; i < 3; i++) {
+		if (i != axis) {
+			real_t inside = 1. * random();
+			if (min_max < 0.5)
+				result[i] = (face_point[i] - minPoint[i]) * inside + minPoint[i];
+			else
+				result[i] = (maxPoint[i] - face_point[i]) * inside + face_point[i];
+		}
+	}
+
+	return result;
+}
+
 }
 

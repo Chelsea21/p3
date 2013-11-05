@@ -10,6 +10,7 @@
 #include "scene/material.hpp"
 #include "application/opengl.hpp"
 #include "scene/triangle.hpp"
+#include "scene/kd_tree.hpp"
 #include <iostream>
 #include <cstring>
 #include <string>
@@ -20,11 +21,13 @@ namespace _462 {
 
 Model::Model() :
 		mesh(0), material(0) {
+	this->photon_map = new KdTree();
 }
 Model::~Model() {
 	for (size_t i = 0; i < boundingbox_ptrs.size(); i++) {
 		delete boundingbox_ptrs[i];
 	}
+	delete this->photon_map;
 }
 
 void Model::render() const {

@@ -7,6 +7,7 @@
  */
 
 #include "scene/sphere.hpp"
+#include "scene/kd_tree.hpp"
 #include "application/opengl.hpp"
 #include <cmath>
 
@@ -74,9 +75,13 @@ static void init_sphere()
 }
 
 Sphere::Sphere()
-    : radius(0), material(0) {}
+    : radius(0), material(0) {
+	this->photon_map = new KdTree();
+}
 
-Sphere::~Sphere() {}
+Sphere::~Sphere() {
+	delete this->photon_map;
+}
 
 void Sphere::render() const
 {

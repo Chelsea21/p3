@@ -51,11 +51,14 @@ Vector3 SphereLight::generate_random_point() const {
 Scene::Scene()
 {
 	kd_tree_ptr = NULL;
+	global_photon_map_ptr = new KdTree();
     reset();
 }
 
 Scene::~Scene()
 {
+	delete kd_tree_ptr;
+	delete global_photon_map_ptr;
     reset();
 }
 
@@ -82,6 +85,12 @@ Geometry* Scene::get_geometry(unsigned int geometry_num) const {
 size_t Scene::num_geometries() const
 {
     return geometries.size();
+}
+
+const SphereLight* Scene::get_light(size_t light_num) const {
+	if (light_num < num_lights())
+		return &(point_lights[light_num]);
+	return NULL;
 }
 
 const SphereLight* Scene::get_lights() const
@@ -167,6 +176,14 @@ void Scene::build_kd_tree() {
 
 KdTree* Scene::get_kd_tree() const {
 	return kd_tree_ptr;
+}
+
+void Scene::build_global_photon_map() {
+	global_photon_map_ptr->build_kd_tree();
+}
+
+KdTree* Scene::get_global_photon_map() const {
+	return global_photon_map_ptr;
 }
 
 } /* _462 */

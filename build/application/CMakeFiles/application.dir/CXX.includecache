@@ -49,6 +49,8 @@ iostream
 -
 cassert
 -
+cmath
+-
 
 /home/chelsea/Documents/GraphicsProjects/p3/src/math/math.hpp
 algorithm

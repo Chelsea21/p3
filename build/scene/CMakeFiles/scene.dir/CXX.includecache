@@ -25,6 +25,8 @@ iostream
 -
 cassert
 -
+cmath
+-
 
 /home/chelsea/Documents/GraphicsProjects/p3/src/math/math.hpp
 algorithm
@@ -141,6 +143,8 @@ application/opengl.hpp
 /home/chelsea/Documents/GraphicsProjects/p3/src/scene/application/opengl.hpp
 scene/triangle.hpp
 /home/chelsea/Documents/GraphicsProjects/p3/src/scene/scene/triangle.hpp
+scene/kd_tree.hpp
+/home/chelsea/Documents/GraphicsProjects/p3/src/scene/scene/kd_tree.hpp
 iostream
 -
 cstring
@@ -159,10 +163,6 @@ scene/mesh.hpp
 /home/chelsea/Documents/GraphicsProjects/p3/src/scene/scene/mesh.hpp
 scene/boundingbox.hpp
 /home/chelsea/Documents/GraphicsProjects/p3/src/scene/scene/boundingbox.hpp
-
-/home/chelsea/Documents/GraphicsProjects/p3/src/scene/ray.cpp
-ray.hpp
-/home/chelsea/Documents/GraphicsProjects/p3/src/scene/ray.hpp
 
 /home/chelsea/Documents/GraphicsProjects/p3/src/scene/ray.hpp
 math/vector.hpp

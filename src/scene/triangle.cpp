@@ -6,6 +6,7 @@
  */
 
 #include "scene/triangle.hpp"
+#include "scene/kd_tree.hpp"
 #include "application/opengl.hpp"
 
 namespace _462 {
@@ -15,9 +16,12 @@ Triangle::Triangle()
     vertices[0].material = 0;
     vertices[1].material = 0;
     vertices[2].material = 0;
+    this->photon_map = new KdTree();
 }
 
-Triangle::~Triangle() { }
+Triangle::~Triangle() {
+	delete this->photon_map;
+}
 
 void Triangle::render() const
 {

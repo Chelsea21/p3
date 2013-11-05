@@ -46,6 +46,7 @@ public:
     bool raytrace(unsigned char* buffer, real_t* max_time);
 
 private:
+    void emit_photons() const;
 
     Color3 trace_pixel(const Scene* scene,
 		       size_t x,
@@ -54,14 +55,15 @@ private:
 		       size_t height);
 
     // Traces a point using the given eye ray.
-    void trace_point(const Scene* scene, const Ray ray, unsigned int depth,
+    void trace_point(const Ray ray, unsigned int depth,
     					std::vector<real_t> refractive_indices, TracingResult& result) const;
 
     // Shades a hit point using the given eye ray.
     void shade(const Ray ray, const HitRecord record, unsigned int depth,
     			std::vector<real_t> refractive_indices, TracingResult& result) const;
 
-    void shade_ambient_diffuse(const Ray ray, const HitRecord record, TracingResult& result) const;
+    real_t shade_ambient_diffuse(const Ray ray, const HitRecord record, unsigned int depth,
+    		std::vector<real_t> refractive_indices, TracingResult& result) const;
 
     // the scene to trace
     Scene* scene;

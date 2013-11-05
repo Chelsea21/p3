@@ -43,6 +43,8 @@ iostream
 -
 cassert
 -
+cmath
+-
 
 /home/chelsea/Documents/GraphicsProjects/p3/src/math/math.hpp
 algorithm
@@ -106,26 +108,6 @@ stdlib.h
 iostream
 -
 cstring
--
-
-/home/chelsea/Documents/GraphicsProjects/p3/src/p3/raytracer.cpp
-raytracer.hpp
-/home/chelsea/Documents/GraphicsProjects/p3/src/p3/raytracer.hpp
-scene/scene.hpp
-/home/chelsea/Documents/GraphicsProjects/p3/src/p3/scene/scene.hpp
-scene/kd_tree.hpp
-/home/chelsea/Documents/GraphicsProjects/p3/src/p3/scene/kd_tree.hpp
-SDL_timer.h
--
-iostream
--
-random
--
-limits
--
-cmath
--
-omp.h
 -
 
 /home/chelsea/Documents/GraphicsProjects/p3/src/p3/raytracer.hpp
