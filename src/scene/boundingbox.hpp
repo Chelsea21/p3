@@ -53,6 +53,8 @@ public:
 
 	virtual void construct_boundingbox();
 
+	virtual bool is_refractive() const;
+
 	Vector3 generate_rand_point() const;
 
 };

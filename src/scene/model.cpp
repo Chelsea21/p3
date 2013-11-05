@@ -94,4 +94,8 @@ void Model::construct_boundingbox() {
 	}
 }
 
+bool Model::is_refractive() const {
+	return material->refractive_index > 1e-3;
+}
+
 } /* _462 */

@@ -34,6 +34,7 @@ public:
     virtual size_t num_models() const;
     virtual std::vector<Boundingbox*> get_boundingboxs() const;
     virtual void construct_boundingbox();
+    virtual bool is_refractive() const;
 };
 
 

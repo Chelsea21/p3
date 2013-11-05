@@ -202,6 +202,7 @@ void RaytracerApplication::update( real_t delta_time )
         // do part of the raytrace
         if ( !raytrace_finished ) {
             assert( buffer );
+
             raytrace_finished = raytracer.raytrace( buffer, &delta_time );
         }
     } else {

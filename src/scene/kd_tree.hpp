@@ -54,7 +54,7 @@ struct PhotonDistanceComparor {
 
 class KdTree {
 public:
-	KdTree() : root(NULL), geometry_boundingbox_ptrs(BoundingboxPointers(1)) { }
+	KdTree() : root(NULL), geometry_boundingbox_ptrs(BoundingboxPointers(0)) { }
 	KdTree(GeometryList geometries);
 	KdTree(PhotonList photons) : root(NULL), photons(photons) { }
 	virtual ~KdTree();
@@ -65,7 +65,7 @@ public:
 	virtual bool hit(const Ray ray, const real_t start, const real_t end,
 			const unsigned int model_index, HitRecord* record_ptr);
 
-	void find_k_nn(const Photon photon, const size_t nn_num, PhotonPointers& knn_ptr_list) const;
+	real_t find_k_nn(const Photon photon, const size_t nn_num, PhotonPointers& knn_ptr_list) const;
 
 	void add_photon(const Photon photon);
 

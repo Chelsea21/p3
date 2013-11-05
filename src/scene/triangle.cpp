@@ -168,4 +168,13 @@ void Triangle::construct_boundingbox() {
 	boundingbox.isLoose = true;
 }
 
+bool Triangle::is_refractive() const {
+	for (size_t i = 0; i < 3; i++) {
+		if (vertices[i].material->refractive_index > 1e-3)
+			return true;
+	}
+
+	return false;
+}
+
 } /* _462 */

@@ -134,11 +134,14 @@ void Boundingbox::construct_boundingbox() {
 	maxPoint = newMaxPoint;
 }
 
+bool Boundingbox::is_refractive() const {
+	return false;
+}
+
 Vector3 Boundingbox::generate_rand_point() const {
 	Vector3 result;
-	real_t rand_axis = 3. * random();
-	int axis = std::floor(rand_axis);
-	real_t min_max = 1. * random();
+	int axis = rand() % 3;
+	real_t min_max = ((double) rand() / (RAND_MAX));
 	result[axis] = (min_max < 0.5) ? minPoint[axis] : maxPoint[axis];
 	Vector3 face_point;
 	for (size_t i = 0; i < 3; i++) {

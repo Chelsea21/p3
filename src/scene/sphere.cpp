@@ -186,5 +186,9 @@ void Sphere::construct_boundingbox() {
 	boundingbox.isLoose = true;
 }
 
+bool Sphere::is_refractive() const {
+	return material->refractive_index > 1e-3;
+}
+
 } /* _462 */
 

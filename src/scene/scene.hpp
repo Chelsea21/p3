@@ -26,7 +26,7 @@ class KdTree;
 struct Photon {
 	Color3 color;
 	Vector3 position;
-	real_t angle;
+	real_t cosine_angle;
 };
 
 class Geometry {
@@ -75,6 +75,7 @@ public:
 
 	virtual std::vector<Boundingbox*> get_boundingboxs() const = 0;
 	virtual void construct_boundingbox() = 0;
+	virtual bool is_refractive() const = 0;
 };
 
 struct SphereLight {
