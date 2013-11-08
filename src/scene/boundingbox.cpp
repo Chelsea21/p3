@@ -140,7 +140,7 @@ bool Boundingbox::is_refractive() const {
 
 Vector3 Boundingbox::generate_rand_point() const {
 	Vector3 result;
-	int axis = rand() % 3;
+	size_t axis = rand() % 3;
 	real_t min_max = ((double) rand() / (RAND_MAX));
 	result[axis] = (min_max < 0.5) ? minPoint[axis] : maxPoint[axis];
 	Vector3 face_point;

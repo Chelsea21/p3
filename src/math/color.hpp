@@ -114,6 +114,10 @@ public:
         return *this;
     }
 
+    bool operator<(const Color3& c) {
+    	return (r < c.r && g < c.g && b < c.b);
+    }
+
     bool operator==( const Color3& rhs ) const {
         return r == rhs.r && g == rhs.g && b == rhs.b;
     }

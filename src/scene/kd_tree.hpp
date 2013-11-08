@@ -47,8 +47,8 @@ struct PhotonDistanceComparor {
 
 	// TODO check
 	bool operator() (PhotonDistanceComparor cmp1, PhotonDistanceComparor cmp2) {
-		return length(cmp1.photon_ptr->position - cmp1.center_ptr->position) <
-				length(cmp2.photon_ptr->position - cmp2.center_ptr->position);
+		return squared_length(cmp1.photon_ptr->position - cmp1.center_ptr->position) <
+				squared_length(cmp2.photon_ptr->position - cmp2.center_ptr->position);
 	}
 };
 
@@ -77,20 +77,20 @@ private:
 	BoundingboxPointers geometry_boundingbox_ptrs;
 	PhotonList photons;
 
-	template<typename T> KdNode* build_kd_tree(KdNode* tree, const T& list);
-	bool choose_plane(BoundingboxPointers list, size_t& axis, real_t& plane) const;
-	bool choose_plane(PhotonPointers list, size_t& axis, real_t& plane) const;
+	template<typename T> KdNode* build_kd_tree(KdNode* tree, T& list);
+	bool choose_plane(const BoundingboxPointers& list, size_t& axis, real_t& plane) const;
+	bool choose_plane(PhotonPointers& list, size_t& axis, real_t& plane) const;
 	void find_k_nn_queue(KdNode* root, const Photon* photon_ptr, const size_t nn_num,
 			std::priority_queue<PhotonDistanceComparor,
 			std::vector<PhotonDistanceComparor>,
 			PhotonDistanceComparor>& knn_ptr_queue) const;
-	void classify(const PhotonPointers list_ptr, size_t axis, real_t plane,
+	void classify(const PhotonPointers& list_ptr, size_t axis, real_t plane,
 				PhotonPointers& left_list, PhotonPointers& right_list, PhotonPointers& share_list,
 				const bool shared) const;
-	void classify(const BoundingboxPointers list_ptr, size_t axis, real_t plane,
+	void classify(const BoundingboxPointers& list_ptr, size_t axis, real_t plane,
 			BoundingboxPointers& left_list, BoundingboxPointers& right_list, BoundingboxPointers& share_list,
 			const bool shared) const;
-	void find_min_max(const BoundingboxPointers list, const size_t current_axis, real_t& min,
+	void find_min_max(const BoundingboxPointers& list, const size_t current_axis, real_t& min,
 						real_t& max) const;
 	bool traverse(KdNode* root, const Ray ray, const real_t start, const real_t end,
 					HitRecord* record_ptr);

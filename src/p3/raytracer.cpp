@@ -27,12 +27,12 @@ namespace _462 {
 
 // TODO
 // max number of threads OpenMP can use. Change this if you like.
-#define MAX_THREADS 8
+#define MAX_THREADS 1
 
 static const unsigned STEP_SIZE = 8;
-static const unsigned PHOTON_NUM = 1000;
-static const unsigned OBJECT_PHOTON_NUM = 100;
-static const unsigned K_NN_NUM = 10;
+static const unsigned PHOTON_NUM = 5000;
+static const unsigned OBJECT_PHOTON_NUM = 0;
+static const unsigned K_NN_NUM = 50;
 
 Raytracer::Raytracer() :
 		scene(0), width(0), height(0), current_row(0),
@@ -174,9 +174,10 @@ real_t Raytracer::shade_ambient_diffuse(const Ray ray, const HitRecord record, u
 				real_t incident = -dot(ray.d, record.normal);
 				// TODO back side?
 				Color3 color_store = result.photon.color;
-				result.photon.cosine_angle = incident;
+				//std::cout << "before: " << result.photon.color.r << std::endl;
 				result.photon.color = result.photon.color *
-								record.shade_factors.diffuse * (1 / diffuse_prob);
+								record.shade_factors.diffuse * (1. / diffuse_prob);
+				//std::cout << "after: " << result.photon.color.r << std::endl;
 				Vector3 rand_dir(random_gaussian(), random_gaussian(), random_gaussian());
 				rand_dir = normalize(rand_dir);
 				rand_dir = (dot(rand_dir, record.normal) < 0) ? -rand_dir : rand_dir;
@@ -184,16 +185,16 @@ real_t Raytracer::shade_ambient_diffuse(const Ray ray, const HitRecord record, u
 				trace_point(diffuse_ray, depth + 1, refractive_indices, result);
 				if (result.photon.position.x == std::numeric_limits<double>::infinity()) {
 					if (depth > 1 && depth < 4) {
+						result.photon.cosine_angle = incident;
 						result.photon.position = record.hit_point;
 						result.photon.color = color_store;
 					}
 				}
 			}
-
 			return diffuse_prob;
 		}
 
-		result.color = record.shade_factors.ambient * scene->ambient_light;
+		//result.color = record.shade_factors.ambient * scene->ambient_light;
 
 		if (dot(ray.d, record.normal) < 0) {
 			for (size_t i = 0; i < scene->num_lights(); i++) {
@@ -241,10 +242,21 @@ Color3 Raytracer::shade_photon_map(const Vector3 hit_position) const {
 	k_nn.clear();
 	real_t radius = scene->get_global_photon_map()->find_k_nn(center, K_NN_NUM, k_nn);
 	for (size_t i = 0; i < k_nn.size(); i++) {
-		global_color += k_nn[i]->color * k_nn[i]->cosine_angle;
+		/*
+		std::cout << k_nn[i]->color.r << " "
+				<< k_nn[i]->color.g << " "
+				<< k_nn[i]->color.b << std::endl;*/
+		global_color += k_nn[i]->color * std::fmax(k_nn[i]->cosine_angle, 0);
 	}
-	global_color *= (1 / PI / radius / radius);
-
+	//std::cout << std::endl;
+	global_color *= 1. / (PI * radius * radius) * 90;
+	global_color = clamp(global_color, 1e-3, 0.9);
+	/*
+	std::cout << global_color.r << "\t" <<
+			global_color.g << "\t" <<
+			global_color.b << "\t" << std::endl;
+	 */
+	//std::cout << global_color.r << std::endl;
 	Color3 local_color_sum = Color3::Black();
 
 	return global_color + local_color_sum;
@@ -344,23 +356,26 @@ void Raytracer::shade(const Ray ray, const HitRecord record, unsigned int depth,
 								random_gaussian() * 2e-2;
 				TracingResult reflective_result;
 				reflective_result.is_photon = result.is_photon;
+				reflective_result.photon = result.photon;
 				Ray reflective_ray(record.hit_point, r + rand_u * u + rand_v * v);
 				int new_depth = (result.is_photon) ? depth : depth + 1;
 				trace_point(reflective_ray, new_depth, refractive_indices, reflective_result);
 
 				if (!result.is_photon) {
 					Color3 reflective = record.shade_factors.specular * reflective_result.color;
-					result.color += reflective;
+					//result.color += reflective;
 				}
 				else {
-					result.photon.position = reflective_result.photon.position;
+					result.photon = reflective_result.photon;
 				}
 			}
 			else {
+				result.photon.cosine_angle = -dot(record.normal, ray.d);
 				result.photon.position = record.hit_point;
 			}
 		}
 		else if (result.is_photon) {
+			result.photon.cosine_angle = -dot(record.normal, ray.d);
 			result.photon.position = record.hit_point;
 		}
 	}
@@ -377,12 +392,13 @@ void Raytracer::shade(const Ray ray, const HitRecord record, unsigned int depth,
 		Ray refractive_ray(record.hit_point, t);
 		TracingResult refractive_result;
 		refractive_result.is_photon = result.is_photon;
+		refractive_result.photon = result.photon;
 		int new_depth = (result.is_photon) ? depth : depth + 1;
 		trace_point(refractive_ray, new_depth, refractive_indices, refractive_result);
 		if (!result.is_photon)
 			result.color += refractive_result.color;
 		else
-			result.photon.position = refractive_result.photon.position;
+			result.photon = refractive_result.photon;
 	}
 
 	// Adds texture.
@@ -483,11 +499,12 @@ void Raytracer::emit_photons() const {
 	for (size_t i = 0; i < scene->num_lights(); i++) {
 		size_t num_photons = std::ceil(light_powers[i] * PHOTON_NUM / total_power);
 		SphereLight* light = const_cast<SphereLight*>(scene->get_light(i));
+
 		for (size_t j = 0; j < num_photons; j++) {
 			Ray photon_ray(light->position, light->generate_random_point() - light->position);
 			TracingResult photon_result;
 			photon_result.is_photon = true;
-			photon_result.photon.color = light->color * (1 / num_photons);
+			photon_result.photon.color = light->color * (1. / num_photons);
 			photon_result.photon.position = Vector3(std::numeric_limits<real_t>::infinity(),
 													std::numeric_limits<real_t>::infinity(),
 													std::numeric_limits<real_t>::infinity());

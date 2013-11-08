@@ -29,6 +29,10 @@ KdTree::~KdTree() {
 }
 
 void KdTree::add_photon(const Photon photon) {
+	if (photon.color.r > 1 || photon.color.g > 1 || photon.color.b > 1) {
+		std::cout << "adding: " << photon.color.r << "\t" << photon.color.g << "\t" <<
+				photon.color.b << std::endl;
+	}
 	photons.push_back(photon);
 }
 
@@ -175,6 +179,7 @@ void KdTree::build_kd_tree() {
 			root->left = root->right = NULL;
 			root->photon_ptrs = photon_ptrs;
 		}
+		std::cout << photons.size() << std::endl;
 	}
 }
 
@@ -184,7 +189,7 @@ void KdTree::build_kd_tree() {
  * @param list		The list of bounding boxes contained by the subtree.
  * @return 			The current node.
  */
-template<typename T> KdNode* KdTree::build_kd_tree(KdNode* tree, const T& list) {
+template<typename T> KdNode* KdTree::build_kd_tree(KdNode* tree, T& list) {
 	real_t plane;
 	size_t axis;
 	bool divisible;
@@ -255,7 +260,15 @@ void KdTree::find_k_nn_queue(KdNode* root, const Photon* photon_ptr, const size_
 			PhotonDistanceComparor cmp;
 			cmp.center_ptr = const_cast<Photon*>(photon_ptr);
 			cmp.photon_ptr = root->photon_ptrs[i];
-			knn_ptr_queue.push(cmp);
+			if (cmp.center_ptr == NULL || cmp.photon_ptr == NULL)
+				std::cout << cmp.center_ptr << "\t " << cmp.photon_ptr << std::endl;
+			if (std::fabs(photon_ptr->position.x - root->photon_ptrs[i]->position.x) < 1e-3 ||
+				std::fabs(photon_ptr->position.y - root->photon_ptrs[i]->position.y) < 1e-3 ||
+				std::fabs(photon_ptr->position.z - root->photon_ptrs[i]->position.z) < 1e-3) {
+				knn_ptr_queue.push(cmp);
+			}
+			//std::cout << root->photon_ptrs[i]->color.r << std::endl;
+
 		}
 
 		if (knn_ptr_queue.size() > nn_num)
@@ -268,33 +281,37 @@ void KdTree::find_k_nn_queue(KdNode* root, const Photon* photon_ptr, const size_
 
 	if (photon_ptr->position[root->axis] < root->plane) {
 		find_k_nn_queue(root->left, photon_ptr, nn_num, knn_ptr_queue);
+		if (knn_ptr_queue.size() >= nn_num) {
 		PhotonDistanceComparor farthest = knn_ptr_queue.top();
 
-		// Compares the distance from the center to the farthest neighbor and to
-		// the separating plane.
-		if (length(farthest.photon_ptr->position - farthest.center_ptr->position) <
-				std::fabs(photon_ptr->position[root->axis] - root->plane)) {
-			if (knn_ptr_queue.size() > nn_num)
-				for (size_t i = 0; i < knn_ptr_queue.size() - nn_num; i++) {
-					knn_ptr_queue.pop();
-				}
-			return ;
+			// Compares the distance from the center to the farthest neighbor and to
+			// the separating plane.
+			if (length(farthest.photon_ptr->position - farthest.center_ptr->position) <
+					std::fabs(photon_ptr->position[root->axis] - root->plane)) {
+				if (knn_ptr_queue.size() > nn_num)
+					for (size_t i = 0; i < knn_ptr_queue.size() - nn_num; i++) {
+						knn_ptr_queue.pop();
+					}
+				return ;
+			}
 		}
 		find_k_nn_queue(root->right, photon_ptr, nn_num, knn_ptr_queue);
 	}
 	else {
 		find_k_nn_queue(root->right, photon_ptr, nn_num, knn_ptr_queue);
-		PhotonDistanceComparor farthest = knn_ptr_queue.top();
+		if (knn_ptr_queue.size() >= nn_num) {
+				PhotonDistanceComparor farthest = knn_ptr_queue.top();
 
-		// Compares the distance from the center to the farthest neighbor and to
-		// the separating plane.
-		if (length(farthest.photon_ptr->position - farthest.center_ptr->position) <
-				std::fabs(photon_ptr->position[root->axis] - root->plane)) {
-			if (knn_ptr_queue.size() > nn_num)
-				for (size_t i = 0; i < knn_ptr_queue.size() - nn_num; i++) {
-					knn_ptr_queue.pop();
-				}
-			return ;
+			// Compares the distance from the center to the farthest neighbor and to
+			// the separating plane.
+			if (length(farthest.photon_ptr->position - farthest.center_ptr->position) <
+					std::fabs(photon_ptr->position[root->axis] - root->plane)) {
+				if (knn_ptr_queue.size() > nn_num)
+					for (size_t i = 0; i < knn_ptr_queue.size() - nn_num; i++) {
+						knn_ptr_queue.pop();
+					}
+				return ;
+			}
 		}
 		find_k_nn_queue(root->left, photon_ptr, nn_num, knn_ptr_queue);
 	}
@@ -308,16 +325,26 @@ struct PhotonComparor {
 	}
 };
 
-bool KdTree::choose_plane(PhotonPointers list, size_t& axis, real_t& plane) const {
+bool KdTree::choose_plane(PhotonPointers& list, size_t& axis, real_t& plane) const {
 	if (list.size() > 0)
 		for (size_t current_axis = 0; current_axis < 3; current_axis++) {
 			PhotonComparor comparor;
 			comparor.axis = current_axis;
 			std::sort(list.begin(), list.end(), comparor);
+
 			int middle = list.size() / 2;
 			size_t before_middle = (middle - 1 < 0) ? middle : middle - 1;
 			plane = (list[middle]->position[current_axis] + list[before_middle]->position[current_axis]) / 2;
-			if (plane != list[middle]->position[current_axis]) {
+
+			/*
+			for (size_t i = 0; i < list.size(); i++) {
+				std::cout << list[i]->position[current_axis] << " ";
+			}
+			std::cout << std::endl;
+			std::cout << plane << " - " << list[middle]->position[current_axis] << std::endl;
+			*/
+			if (std::fabs(plane - list[middle]->position[current_axis]) > 1e-6) {
+				//std::cout << "p: " << plane << std::endl;
 				axis = current_axis;
 				return true;
 			}
@@ -326,7 +353,7 @@ bool KdTree::choose_plane(PhotonPointers list, size_t& axis, real_t& plane) cons
 	return false;
 }
 
-void KdTree::classify(const PhotonPointers list_ptr, size_t axis, real_t plane,
+void KdTree::classify(const PhotonPointers& list_ptr, size_t axis, real_t plane,
 				PhotonPointers& left_list, PhotonPointers& right_list, PhotonPointers& share_list,
 				const bool shared) const {
 	(void) share_list;
@@ -334,12 +361,15 @@ void KdTree::classify(const PhotonPointers list_ptr, size_t axis, real_t plane,
 	left_list.clear();
 	right_list.clear();
 
+	//std::cout << "start " << list_ptr.size() << std::endl;
 	for (size_t i = 0; i < list_ptr.size(); i++) {
 		if (list_ptr[i]->position[axis] < plane)
 			left_list.push_back(list_ptr[i]);
 		else
 			right_list.push_back(list_ptr[i]);
 	}
+	//std::cout << left_list.size() << " : " << right_list.size() << std::endl;
+	//std::cout << "end" << std::endl;
 }
 
 /**
@@ -348,7 +378,7 @@ void KdTree::classify(const PhotonPointers list_ptr, size_t axis, real_t plane,
  * @param axis		Return value. The chosen axis.
  * @param plane		Return value. The chosen plane.
  */
-bool KdTree::choose_plane(BoundingboxPointers list, size_t& axis, real_t& plane) const {
+bool KdTree::choose_plane(const BoundingboxPointers& list, size_t& axis, real_t& plane) const {
 	size_t current_axis = 0;
 	real_t metric;
 	real_t best_metric;
@@ -459,7 +489,7 @@ bool KdTree::choose_plane(BoundingboxPointers list, size_t& axis, real_t& plane)
  * @param min			Return value. The lower bound.
  * @param max			Return value. The upper bound.
  */
-void KdTree::find_min_max(const BoundingboxPointers ptr_list, const size_t current_axis, real_t& min,
+void KdTree::find_min_max(const BoundingboxPointers& ptr_list, const size_t current_axis, real_t& min,
 						real_t& max) const {
 	min = std::numeric_limits<real_t>::infinity();
 	max = -std::numeric_limits<real_t>::infinity();
@@ -482,7 +512,7 @@ void KdTree::find_min_max(const BoundingboxPointers ptr_list, const size_t curre
  * @param share_list Return value. Shared list.
  * @param shared	Whether adds shared objects to both left and right list.
  */
-void KdTree::classify(const BoundingboxPointers list, size_t axis, real_t plane,
+void KdTree::classify(const BoundingboxPointers& list, size_t axis, real_t plane,
 		BoundingboxPointers& left_list, BoundingboxPointers& right_list, BoundingboxPointers& share_list,
 		const bool shared) const {
 	left_list.clear();
