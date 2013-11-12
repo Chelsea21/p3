@@ -44,11 +44,21 @@ struct KdNode {
 struct PhotonDistanceComparor {
 	Photon* center_ptr;
 	Photon* photon_ptr;
+	real_t squared_distance_buffer;
+
+	PhotonDistanceComparor()
+	: center_ptr(NULL), photon_ptr(NULL), squared_distance_buffer(-1) { }
 
 	// TODO check
 	bool operator() (PhotonDistanceComparor cmp1, PhotonDistanceComparor cmp2) {
-		return squared_length(cmp1.photon_ptr->position - cmp1.center_ptr->position) <
-				squared_length(cmp2.photon_ptr->position - cmp2.center_ptr->position);
+		cmp1.squared_distance_buffer = (cmp1.squared_distance_buffer < 0) ?
+				squared_length(cmp1.photon_ptr->position - cmp1.center_ptr->position) :
+				cmp1.squared_distance_buffer;
+		cmp2.squared_distance_buffer = (cmp2.squared_distance_buffer < 0) ?
+						squared_length(cmp2.photon_ptr->position - cmp2.center_ptr->position) :
+						cmp2.squared_distance_buffer;
+
+		return cmp1.squared_distance_buffer < cmp2.squared_distance_buffer;
 	}
 };
 

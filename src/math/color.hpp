@@ -9,6 +9,7 @@
 #define _462_MATH_COLOR_HPP_
 
 #include "math/math.hpp"
+#include "math/vector.hpp"
 #include <iostream>
 #include <cassert>
 #include <cmath>
@@ -168,6 +169,11 @@ std::ostream& operator<<( std::ostream& os, const Color3& rhs );
 
 inline real_t max_component(const Color3 c) {
 	return std::fmax(c.r, std::fmax(c.g, c.b));
+}
+
+inline real_t power(const Color3 c) {
+	Vector3 v(c.r, c.g, c.b);
+	return length(v);
 }
 
 } /* _462 */

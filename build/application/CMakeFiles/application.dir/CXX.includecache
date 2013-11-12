@@ -45,6 +45,8 @@ math/quaternion.hpp
 /home/chelsea/Documents/GraphicsProjects/p3/src/math/color.hpp
 math/math.hpp
 /home/chelsea/Documents/GraphicsProjects/p3/src/math/math/math.hpp
+math/vector.hpp
+/home/chelsea/Documents/GraphicsProjects/p3/src/math/math/vector.hpp
 iostream
 -
 cassert

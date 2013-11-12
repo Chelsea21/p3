@@ -240,7 +240,8 @@ real_t KdTree::find_k_nn(const Photon photon, const size_t nn_num, PhotonPointer
 						PhotonDistanceComparor> queue;
 	find_k_nn_queue(root, &photon, nn_num, queue);
 	real_t radius = 0;
-	radius = length(queue.top().photon_ptr->position - queue.top().center_ptr->position);
+	if (queue.size() > 0)
+		radius = length(queue.top().photon_ptr->position - queue.top().center_ptr->position);
 
 	while (queue.size() > 0) {
 		Photon* top_ptr = queue.top().photon_ptr;
@@ -260,12 +261,16 @@ void KdTree::find_k_nn_queue(KdNode* root, const Photon* photon_ptr, const size_
 			PhotonDistanceComparor cmp;
 			cmp.center_ptr = const_cast<Photon*>(photon_ptr);
 			cmp.photon_ptr = root->photon_ptrs[i];
-			if (cmp.center_ptr == NULL || cmp.photon_ptr == NULL)
-				std::cout << cmp.center_ptr << "\t " << cmp.photon_ptr << std::endl;
 			if (std::fabs(photon_ptr->position.x - root->photon_ptrs[i]->position.x) < 1e-3 ||
 				std::fabs(photon_ptr->position.y - root->photon_ptrs[i]->position.y) < 1e-3 ||
 				std::fabs(photon_ptr->position.z - root->photon_ptrs[i]->position.z) < 1e-3) {
 				knn_ptr_queue.push(cmp);
+				//std::cout << "center: " << photon_ptr->position.x << "\t"
+						//<< photon_ptr->position.y << "\t"
+						//<< photon_ptr->position.z << std::endl;
+				//std::cout << root->photon_ptrs[i]->position.x << "\t"
+										//<< root->photon_ptrs[i]->position.y << "\t"
+										//<< root->photon_ptrs[i]->position.z << std::endl;
 			}
 			//std::cout << root->photon_ptrs[i]->color.r << std::endl;
 

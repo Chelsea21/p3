@@ -11,7 +11,8 @@
 #ifndef _462_RAYTRACER_HPP_
 #define _462_RAYTRACER_HPP_
 
-#define MAX_DEPTH 1
+#define MAX_DEPTH 5
+#define PHOTON_DEPTH 8
 
 #include "math/color.hpp"
 #include "math/random462.hpp"
@@ -61,7 +62,7 @@ private:
     void shade(const Ray ray, const HitRecord record, unsigned int depth,
     			std::vector<real_t> refractive_indices, TracingResult& result) const;
 
-    real_t shade_ambient_diffuse(const Ray ray, const HitRecord record, unsigned int depth,
+    real_t shade_diffuse(const Ray ray, const HitRecord record, unsigned int depth,
     		std::vector<real_t> refractive_indices, TracingResult& result) const;
 
     Color3 shade_photon_map(const Vector3 hit_position) const;
